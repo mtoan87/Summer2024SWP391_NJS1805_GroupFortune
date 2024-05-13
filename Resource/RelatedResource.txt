@@ -1,0 +1,3 @@
+SRS document: https://docs.google.com/document/d/1IbJgdlMSLRjdFQl4de3sVSOIGHNUJqyO/edit?usp=sharing&ouid=110609117332580275557&rtpof=true&sd=true
+
+ERD logical: https://drive.google.com/file/d/19YlSH-4bf-5wY87_lBf9pz3kNkoT5zth/view?usp=sharing
