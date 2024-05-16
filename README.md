@@ -1,4 +1,4 @@
-#Jewelry Auction System 
+# Jewelry Auction System 
 ## Các thành viên trong nhóm
 ### Huỳnh Minh Toàn (Leader)
 ### Tăng Dư Yến
