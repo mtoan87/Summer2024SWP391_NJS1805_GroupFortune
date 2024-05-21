@@ -1,6 +1,16 @@
+import Auctions from "../../molecules/auctions/auctions"
+import Introduction from "../../molecules/introduction/introduction"
+import Jewelry from "../../molecules/jewelry/jewelry"
+import Rules from "../../molecules/rules/rules"
+
 function GuestHomeTemp() {
   return (
-    <div>This is the body</div>
+    <>
+      <Introduction />
+      <Auctions />
+      <Jewelry />
+      <Rules />
+    </>
   )
 }
 
