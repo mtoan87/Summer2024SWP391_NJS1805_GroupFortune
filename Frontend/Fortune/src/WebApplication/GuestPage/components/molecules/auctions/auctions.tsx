@@ -35,12 +35,9 @@ function Auctions() {
             <div className="auctions-container">
                 {auctions.map((auction) => (
                     <div key={auction.auctionId} className="auction-item">
-                        <h3>Auction ID: {auction.auctionId}</h3>
-                        <p>Account ID: {auction.accountId}</p>
-                        <p>Status: {auction.status}</p>
+                        <img src="../../../../../../src/assets/img/jewelry_introduction.jpg" alt="" />
                         <p>Start Time: {auction.starttime}</p>
                         <p>End Time: {auction.endtime}</p>
-                        <p>Jewelry ID: {auction.jewelryId}</p>
                     </div>
                 ))}
             </div>
