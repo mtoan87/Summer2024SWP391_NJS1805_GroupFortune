@@ -29,8 +29,9 @@ function Auctions() {
     }, []);
 
     return (
-        <>
-            <h1>Upcoming auctions</h1>
+        <><div className="auctions-content">
+            <h1>Auctions</h1>
+        </div>
             <div className="auctions-container">
                 {auctions.map((auction) => (
                     <div key={auction.auctionId} className="auction-item">

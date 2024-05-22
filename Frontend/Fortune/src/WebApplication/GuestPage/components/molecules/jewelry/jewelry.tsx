@@ -19,19 +19,25 @@ function Jewelry() {
   }, []);
 
   return (
-    <div className="jewelry-container">
-      {jewelry.map((item, index) => (
-        <div key={index} className="jewelry-item">
-          <h3>{item.name}</h3>
-          <p>Description: {item.description}</p>
-          <p>Collection: {item.collection}</p>
-          <p>Gold Age: {item.goldage}</p>
-          <p>Materials: {item.materials}</p>
-          <p>Weight: {item.weight}</p>
-          {/* Add additional fields as needed */}
-        </div>
-      ))}
-    </div>
+    <>
+      <div className="jewel-content">
+        <h1>Jewelry</h1>
+      </div>
+      <div className="jewelry-container">
+        {jewelry.map((item, index) => (
+          <div key={index} className="jewelry-item">
+            <img src="../../../../../../src/assets/img/jewelry_introduction.jpg" alt="" />
+            <h3>{item.name}</h3>
+            <p>Description: {item.description}</p>
+            <p>Collection: {item.collection}</p>
+            <p>Gold Age: {item.goldage}</p>
+            <p>Materials: {item.materials}</p>
+            <p>Weight: {item.weight}</p>
+            {/* Add additional fields as needed */}
+          </div>
+        ))}
+      </div></>
+
   );
 }
 
