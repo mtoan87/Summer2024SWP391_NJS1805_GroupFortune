@@ -5,11 +5,8 @@ import { Route, Routes } from 'react-router-dom';
 import Loginpg from './WebApplication/AccountRegister/components/pages/Loginpg';
 
 function App() {
-  // Retrieve the item from sessionStorage
 const storedUser = sessionStorage.getItem("loginedUser");
 console.log(storedUser);
-
-// Check if the retrieved item is not null before parsing
 const user = storedUser ? JSON.parse(storedUser) : null;
   return (
     <>
@@ -48,9 +45,6 @@ const user = storedUser ? JSON.parse(storedUser) : null;
           }
         </Route>
       </Routes>
-      {/* <GuestHomePg /> */}
-      {/* <RegisterPg /> */}
-      {/* <Loginpg /> */}
     </>
   )
 }
