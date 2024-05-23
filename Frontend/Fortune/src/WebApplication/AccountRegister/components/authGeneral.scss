@@ -1,17 +1,17 @@
-.guest-introduction {
+.form-introduction {
     width: 100%;
 
-    .content-wrapper {
+    .content-wrapper1 {
         position: relative;
         width: 100%;
         height: auto;
-        .background-image {
+        .background-image1 {
             width: 100%;
             height: auto;
             display: block;
         }
 
-        .overlay {
+        .overlay1 {
             position: absolute;
             top: 0;
             left: 0;
@@ -21,7 +21,7 @@
             z-index: 1;
         }
 
-        .text-overlay {
+        .text-overlay1 {
             position: absolute;
             top: 50%;
             left: 50%;
@@ -31,35 +31,13 @@
             z-index: 2;
             width: 100%; 
             height: 100%;
+            
             h1 {
                 margin: auto;
                 padding: 2rem;
                 font-size: 5rem;
                 font-family: 'Times New Roman', Times, serif;
                 color: bisque;
-            }
-
-            h2 {
-                margin: 0;
-                padding: 2rem;
-            }
-
-            .action-button {
-                margin-top: 1rem;
-                padding: 1rem 1rem;
-                border: 2px solid white;
-                border-radius: 25px;
-                background: none;
-                color: white;
-                font-size: 2rem;
-                font-family: 'Times New Roman', Times, serif;
-                cursor: pointer;
-                transition: background 0.3s, color 0.3s;
-
-                &:hover {
-                    background: white;
-                    color: black;
-                }
             }
         }
     }

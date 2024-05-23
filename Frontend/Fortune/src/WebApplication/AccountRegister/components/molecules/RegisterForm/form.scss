@@ -1,60 +1,62 @@
 .form-container {
-  max-width: 700px;
-  height: 60%; /* Adjust max-width to make the form bigger */
+  max-width: 500px;
+  height: 50%; 
   margin: 0 auto; /* Center the form horizontally */
-  padding: 30px; /* Adjust padding for a bigger feel */
-  background-color: rgb(250, 250, 250);
+  background-color: rgba(250, 250, 250, 0.295);
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-  color: black; /* Ensure text inside the form is visible */
-  text-align: center; /* Center all text within the form */
+  text-align: left; /* Align text to the left */
+  padding: 2rem; /* Add padding to the container for better spacing */
 }
-form{
-  padding-top: 6%;
+
+form {
+  padding-top: 1rem;
 }
+
 .form-container .form-label,
 .form-container .form-check-label {
   font-weight: bold;
-  display: block; /* Make sure labels are block elements */
-  text-align: center; /* Center text within labels */
- 
-  font-size: 25px;
+  display: block;
+  font-size: 1.5rem;
   font-family: 'Times New Roman', Times, serif;
   color: bisque;
+  margin-bottom: 0.5rem; 
 }
 
-.form-container .form-control:focus {
-  border-color: #80bdff;
-  outline: 0;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(128, 189, 255, 0.6); /* Focus shadow */
-}
-.form-control{
-  width: 50%;
+
+.form-control {
+  width: 100%; 
   font-size: 1rem;
-  height: 30px;
-  border: #007bff;
+  height: 2.5rem;
+  border: 0.5px;
+  border-radius: 4px; 
 }
+
 .form-container .btn-primary {
-  background-color: #007bff;
-  border-color: #007bff;
-  width: 80%;
-  padding: 10px; /* Add padding for button */
-  font-size: 1rem; /* Adjust font size */
+  background-color: bisque;
+  border: 0.5px;
+  width: 30%; 
+  padding: 0.5rem;
+  font-size: 1rem; 
+  border-radius: 10px;
+  display: block; 
+  margin: 0 auto; 
 }
 
 .form-container .form-text {
   font-size: 1rem;
   color: #6c757d;
-  text-align: center; /* Center the form text */
+  text-align: center; 
 }
 
 .form-container .form-check {
   display: flex;
-  justify-content: center; /* Center checkbox */
+  justify-content: center; 
 }
-.mb-3{
+
+.mb-3 {
   padding-bottom: 10px;
 }
-.bt{
+
+.bt {
   padding-top: 25px;
 }

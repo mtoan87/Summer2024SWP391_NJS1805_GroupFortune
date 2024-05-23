@@ -1,42 +1,25 @@
-import './guest-footer.scss'
+import React from 'react';
+import './guest-footer.scss';
 
-function GuestFooter() {
+const GuestFooter: React.FC = () => {
   return (
-    <>
-      <div className="guest-footer-high-page">
-        <ul className="call-us">
-          <li>Gọi chúng tôi</li>
-          <li>
-            <img src="/src/SWP_RESOURCE/icon/output-onlinegiftools.gif" />
-            1900 43 22 31
-          </li>
-        </ul>
-
-        <ul className="mail-us">
-          <li>Gửi tin nhắn cho chúng tôi</li>
-          <li>
-            <img src="/src/SWP_RESOURCE/icon/output-onlinegiftools (1).gif" />
-            fortune@gmail.com
-          </li>
-        </ul>
-
-        <ul className="follow-us">
-          <li>Theo dõi chúng tôi</li>
-          <div className="icon">
-            <li>
-              <img src="/src/SWP_RESOURCE/icon/facebook (1).png" />
-            </li>
-            <li>
-              <img src="/src/SWP_RESOURCE/icon/twitter.png" />
-            </li>
-            <li>
-              <img src="/src/SWP_RESOURCE/icon/instagram.png" />
-            </li>
+    <footer className="guest-footer">
+      <div className="container">
+        <div className="footer-content">
+          <div className="company-info">
+            <h2>FORTUNE</h2>
+            <p>&copy; {new Date().getFullYear()} FORTUNE. All rights reserved.</p>
           </div>
-        </ul>
+          <div className="footer-links">
+            <a href="/about-us">About Us</a>
+            <a href="/contact">Contact</a>
+            <a href="/privacy-policy">Privacy Policy</a>
+            <a href="/terms-of-service">Terms of Service</a>
+          </div>
+        </div>
       </div>
-    </>
-  )
+    </footer>
+  );
 }
 
-export default GuestFooter
+export default GuestFooter;
