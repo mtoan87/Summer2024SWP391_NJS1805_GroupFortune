@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import './form.scss'; // Import the custom CSS file
-import useFetch from './api';
+import './form.scss'; 
 function BasicExample() {
   // Define state for each input
   const [accountName, setAccountName] = useState('');
@@ -105,7 +104,7 @@ function BasicExample() {
           />
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formBasicCheckbox">
+        {/* <Form.Group className="mb-3" controlId="formBasicCheckbox">
           <Form.Check
             type="checkbox"
             label={
@@ -119,7 +118,7 @@ function BasicExample() {
             checked={agree}
             onChange={(e) => setAgree(e.target.checked)}
           />
-        </Form.Group>
+        </Form.Group> */}
 
         <div className='bt'>
           <Button className="Summitbt" variant="primary" type="submit">

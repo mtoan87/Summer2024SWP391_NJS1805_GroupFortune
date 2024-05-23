@@ -33,7 +33,6 @@ function Jewelry() {
             <p>Gold Age: {item.goldage}</p>
             <p>Materials: {item.materials}</p>
             <p>Weight: {item.weight}</p>
-            {/* Add additional fields as needed */}
           </div>
         ))}
       </div></>
