@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import './jewelry.scss';
 import api from '../../../../../config/axios';
 
-function Jewelry() {
+function MemberJewelry() {
   const [jewelry, setJewelry] = useState([]);
 
   useEffect(() => {
@@ -40,4 +40,4 @@ function Jewelry() {
   );
 }
 
-export default Jewelry;
+export default MemberJewelry;

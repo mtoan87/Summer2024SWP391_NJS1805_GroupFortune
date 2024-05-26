@@ -14,23 +14,30 @@ const GuestHeader: React.FC = () => {
             <img src={logo} alt="logo" className='logo' />
           </div>
           <div className="guest-header-items">
-            <Link to='guest-introduction'>
-              <li className="inline-block">HOME</li>
+            <Link to='guest-introduction' spy={true} offset={-100} duration={500}>
+              <li className="inline-block">
+                <a href="">HOME</a>
+              </li>
             </Link>
           </div>
           <div className="guest-header-items">
-            <Link to='auctions-content'>
-              <li className="inline-block">AUCTIONS</li>
+            <Link to='auctions-content' spy={true} offset={-100} duration={500}>
+              <li className="inline-block">
+                <a href="">AUCTIONS</a>
+              </li>
             </Link>
           </div>
           <div className="guest-header-items">
-            <Link to='jewel-content'>
-              <li className="inline-block">JEWELRY</li>
-            </Link>
+            <li className="inline-block">
+              <Link to='jewel-content' spy={true} offset={-100} duration={500}>
+                <a href="">JEWELRY</a>
+              </Link></li>
           </div>
           <div className="guest-header-items">
-            <Link to='auctions-rule'>
-              <li className="inline-block">RULE</li>
+            <Link to='auctions-rule' spy={true} offset={-100} duration={500}>
+              <li className="inline-block">
+                <a href="">RULE</a>
+              </li>
             </Link>
           </div>
           <div className="guest-header-items">

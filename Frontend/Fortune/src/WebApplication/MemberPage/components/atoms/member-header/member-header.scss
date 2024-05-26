@@ -1,4 +1,4 @@
-.guest-header-home {
+.member-header-home {
     .logo {
         height: 100px;
     }
@@ -12,7 +12,7 @@
         height: 100px;
         justify-content: center;
 
-        .guest-header-items {
+        .member-header-items {
             display: inline-block;
             margin: auto;
 
@@ -28,8 +28,6 @@
             white-space: nowrap;
             color: #824D4D;
             font-size: 20px;
-
-            
 
             a {
                 text-decoration: none;

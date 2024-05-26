@@ -1,52 +1,69 @@
-import './App.scss'
-import GuestHomePg from './WebApplication/GuestPage/components/pages/guest-home-pg/guest-home-pg/guest-home-pg'
-import RegisterPg from './WebApplication/AccountRegister/components/pages/Register-pg'
-import { Route, Routes } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import './App.scss';
+import GuestHomePg from './WebApplication/GuestPage/components/pages/guest-home-pg/guest-home-pg/guest-home-pg';
+import RegisterPg from './WebApplication/AccountRegister/components/pages/Register-pg';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import Loginpg from './WebApplication/AccountRegister/components/pages/Loginpg';
+import MemberHomePg from './WebApplication/MemberPage/components/pages/member-home-pg/member-home-pg';
+import { UserProvider, useUser } from './WebApplication/Data/UserContext';
 
-function App() {
-const storedUser = sessionStorage.getItem("loginedUser");
-console.log(storedUser);
-const user = storedUser ? JSON.parse(storedUser) : null;
+const App: React.FC = () => {
+  const { user, setUser } = useUser();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedUser = sessionStorage.getItem("loginedUser");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, [setUser]);
+
   return (
     <>
       <Routes>
         <Route path='/'>
-          {
-            user === null ? ( 
-              <>
-                <Route index element={<GuestHomePg />} />
-                <Route path='register' element={<RegisterPg />} />
-                <Route path='login' element={<Loginpg />} />
-              </>
-            ) : ( 
-              <>
-               <Route path='/login' element={<Loginpg />} />
-                {user.roleId === 1 && (
-                    <> 
-                    </>
-                  )}
-                  {user.roleId === 2 && (
-                    <>
-                    </>
-                  )}
-                  {user.roleId === 3 && (
-                    <>
-                      
-                    </>
-                  )}
-                  {user.roleId === 4 && (
-                    <>
-                    
-                    </>
-                  )}
-              </>
-            )
-          }
+          {user === null ? (
+            <>
+              <Route index element={<GuestHomePg />} />
+              <Route path='register' element={<RegisterPg />} />
+              <Route path='login' element={<Loginpg />} />
+            </>
+          ) : (
+            <>
+              <Route path='/login' element={<Loginpg />} />
+              {user.role === 1 && (
+                <>
+                  {/* Add your admin routes here */}
+                </>
+              )}
+              {user.role === 2 && (
+                <>
+                  <Route index element={<MemberHomePg />} />
+                  <Route path='/user' element={<MemberHomePg />} />
+                </>
+              )}
+              {user.role === 3 && (
+                <>
+                  {/* Add your staff routes here */}
+                </>
+              )}
+              {user.role === 4 && (
+                <>
+                  {/* Add your manager routes here */}
+                </>
+              )}
+            </>
+          )}
         </Route>
       </Routes>
     </>
-  )
-}
+  );
+};
 
-export default App;
+const AppWrapper: React.FC = () => (
+  <UserProvider>
+    <App />
+  </UserProvider>
+);
+
+export default AppWrapper;
