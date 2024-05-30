@@ -11,7 +11,7 @@ interface Auction {
     jewelryId: number | null;
 }
 
-function Auctions() {
+function MemberAuctions() {
     const [auctions, setAuctions] = useState<Auction[]>([]);
 
     useEffect(() => {
@@ -45,4 +45,4 @@ function Auctions() {
     );
 };
 
-export default Auctions;
+export default MemberAuctions;

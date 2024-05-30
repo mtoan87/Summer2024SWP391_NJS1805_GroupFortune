@@ -2,9 +2,8 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import './form.scss'; 
-import { useNavigate } from "react-router-dom";
-import Alerts from './alerts';
-import { Alert } from 'react-bootstrap';
+import api from '../../../../../config/axios';
+
 function BasicExample() {
   // Define state for each input
   const [accountName, setAccountName] = useState('');
@@ -13,7 +12,7 @@ function BasicExample() {
   const [accountPhone, setPhone] = useState('');
   const [agree, setAgree] = useState(false);
   const [message, setMessage] = useState('');
-  const navigate = useNavigate();
+
   const handleSubmit = async (event: { preventDefault: () => void; }) => {
     event.preventDefault();
 
@@ -27,42 +26,40 @@ function BasicExample() {
     console.log('Request Data:', requestData);
     
     try {
-      const response = await fetch('https://localhost:44361/api/Login/register', {
-        method: 'POST',
+      const response = await api.post('api/Login/register', requestData, {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(requestData),
       });
-      console.log('response Data:', response);
-      if (!response.ok) {
+      
+      console.log('Response:', response);
+      
+      if (response.status !== 200) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-     if(response.ok===true){
-       // Clear form inputs
-       setAccountName('');
-       setEmail('');
-       setPassword('');
-       setPhone('');
-       setAgree(false);
-       
-       // Set success message
-       setMessage('Account created successfully!');
-       Alerts();
-     }
-      // If you need to handle the response from the server, you can do so here
-      const responseData = await response.json();
-      console.log('Response Data:', responseData);
+
+      // Clear form inputs
+      setAccountName('');
+      setEmail('');
+      setPassword('');
+      setPhone('');
+      setAgree(false);
+      
+      // Set success message
+      setMessage('Account created successfully!');
+
+      // Handle the response from the server if needed
+      console.log('Response Data:', response.data);
     } catch (error) {
       console.error('Error:', error);
+      setMessage('Failed to create account. Please check your inputs.');
     }
   };
-  const handleLoginBt = ()=>{
-  navigate('/login');
-  }
+
   const handleInputChange = () => {
     setMessage('');
   };
+
   return (
     <div className="form-container">
       <Form onSubmit={handleSubmit}>
@@ -85,7 +82,10 @@ function BasicExample() {
             type="email"
             placeholder="Example@gmail.com"
             value={accountEmail}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              handleInputChange(); 
+            }}
           />
           <Form.Text className="text-muted" />
         </Form.Group>
@@ -96,7 +96,10 @@ function BasicExample() {
             type="password"
             placeholder="Password"
             value={accountPassword}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              handleInputChange(); 
+            }}
           />
         </Form.Group>
 
@@ -106,37 +109,18 @@ function BasicExample() {
             type="text"
             placeholder="Phone Number"
             value={accountPhone}
-            onChange={(e) => setPhone(e.target.value)}
+            onChange={(e) => {
+              setPhone(e.target.value);
+              handleInputChange(); 
+            }}
           />
         </Form.Group>
-
-        {/* <Form.Group className="mb-3" controlId="formBasicCheckbox">
-          <Form.Check
-            type="checkbox"
-            label={
-              <span>
-                I agree to the{' '}
-                <a href="/terms-and-conditions" target="_blank" rel="noopener noreferrer">
-                  terms and conditions
-                </a>
-              </span>
-            }
-            checked={agree}
-            onChange={(e) => setAgree(e.target.checked)}
-          />
-        </Form.Group> */}
-
-        <div className='bt'>
-          <Button className="Summitbt" variant="primary" type="submit">
-            Submit
-          </Button>
-        </div>
-        <div className='bt'>
-          <Button className="Summitbt" variant="primary" type="submit" onClick={(e)=> handleLoginBt()}>
-            Login
-          </Button>
-        </div>
-        <> {message && <p>{message}</p>}</>
+        
+        <Button className="Summitbt" variant="primary" type="submit">
+          Submit
+        </Button>
+        
+        {message && <p>{message}</p>}
       </Form>
      
     </div>

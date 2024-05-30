@@ -1,0 +1,36 @@
+.auctions-content {
+    display: flex;
+    justify-content: center;
+    h1 {
+        font-size: 5rem;
+        font-family: 'Times New Roman', Times, serif;
+    }
+}
+.auctions-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5rem; 
+    padding: 16px;
+    justify-content: center;
+}
+
+.auction-item {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    width: 20rem; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.auction-item h3 {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+}
+
+.auction-item p {
+    margin: 4px 0;
+}
