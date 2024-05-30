@@ -30,8 +30,8 @@ const LoginForm: React.FC = () => {
       sessionStorage.setItem("loginedUser", JSON.stringify(data));
       navigate('/');
     } catch (error) {
-      console.log(error);
-      toast.error("Đăng nhập không thành công. Vui lòng thử lại.");
+      console.log(error);~
+      toast.error("Login failed. Try again!");
     }
   };
 

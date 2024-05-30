@@ -3,7 +3,7 @@ import { Link as Forward } from 'react-router-dom';
 import './guest-header.scss';
 import logo from '../../../../../../src/assets/img/logo2.png';
 import account from '../../../../../../src/assets/img/account.png';
-import { Link } from 'react-scroll'
+import { Link as ScrollLink } from 'react-scroll';
 
 const GuestHeader: React.FC = () => {
   return (
@@ -14,31 +14,32 @@ const GuestHeader: React.FC = () => {
             <img src={logo} alt="logo" className='logo' />
           </div>
           <div className="guest-header-items">
-            <Link to='guest-introduction' spy={true} offset={-100} duration={500}>
-              <li className="inline-block">
-                <a href="">HOME</a>
-              </li>
-            </Link>
-          </div>
-          <div className="guest-header-items">
-            <Link to='auctions-content' spy={true} offset={-100} duration={500}>
-              <li className="inline-block">
-                <a href="">AUCTIONS</a>
-              </li>
-            </Link>
+            <li className="inline-block">
+              <ScrollLink to='guest-introduction' spy={true} offset={-100} duration={500}>
+                HOME
+              </ScrollLink>
+            </li>
           </div>
           <div className="guest-header-items">
             <li className="inline-block">
-              <Link to='jewel-content' spy={true} offset={-100} duration={500}>
-                <a href="">JEWELRY</a>
-              </Link></li>
+              <ScrollLink to='auctions-content' spy={true} offset={-100} duration={500}>
+                AUCTIONS
+              </ScrollLink>
+            </li>
           </div>
           <div className="guest-header-items">
-            <Link to='auctions-rule' spy={true} offset={-100} duration={500}>
-              <li className="inline-block">
-                <a href="">RULE</a>
-              </li>
-            </Link>
+            <li className="inline-block">
+              <ScrollLink to='jewel-content' spy={true} offset={-100} duration={500}>
+                JEWELRY
+              </ScrollLink>
+            </li>
+          </div>
+          <div className="guest-header-items">
+            <li className="inline-block">
+              <ScrollLink to='auctions-rule' spy={true} offset={-100} duration={500}>
+                RULE
+              </ScrollLink>
+            </li>
           </div>
           <div className="guest-header-items">
             <li className="inline-block">

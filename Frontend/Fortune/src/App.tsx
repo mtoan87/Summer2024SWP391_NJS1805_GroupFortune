@@ -9,8 +9,6 @@ import { UserProvider, useUser } from './WebApplication/Data/UserContext';
 
 const App: React.FC = () => {
   const { user, setUser } = useUser();
-  const navigate = useNavigate();
-
   useEffect(() => {
     const storedUser = sessionStorage.getItem("loginedUser");
     if (storedUser) {
