@@ -1,0 +1,27 @@
+.guest-header-home {
+    .logo {
+        height: 100px;
+    }
+
+    .account {
+        height: 50px;
+    }
+    ul {
+        display: flex;
+        height: 100px;
+        justify-content: center;
+
+        .guest-header-items {
+            display: inline-block;
+            margin: auto;
+
+        }
+
+        li {
+            list-style: none;
+            white-space: nowrap;
+            color: #824D4D;
+            font-size: 20px;
+        }
+    }
+}

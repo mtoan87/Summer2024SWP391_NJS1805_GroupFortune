@@ -17,7 +17,7 @@ function Auctions() {
     useEffect(() => {
         const fetchAuctions = async () => {
             try {
-                const response = await api.get<Auction[]>('Auctions');
+                const response = await api.get<Auction[]>('Auctions/GetAllAuctions');
                 console.log('API response:', response.data);
                 setAuctions(response.data);
             } catch (err) {

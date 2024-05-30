@@ -2,6 +2,9 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import './form.scss'; 
+import { useNavigate } from "react-router-dom";
+import Alerts from './alerts';
+import { Alert } from 'react-bootstrap';
 function BasicExample() {
   // Define state for each input
   const [accountName, setAccountName] = useState('');
@@ -10,22 +13,21 @@ function BasicExample() {
   const [accountPhone, setPhone] = useState('');
   const [agree, setAgree] = useState(false);
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
   const handleSubmit = async (event: { preventDefault: () => void; }) => {
     event.preventDefault();
 
     // Log the data before sending the request
     const requestData = {
-      accountId: 88,
       accountName,
       accountEmail,
       accountPassword,
       accountPhone,
-      roleId: 1, // Assuming roleId is fixed for this request
     };
     console.log('Request Data:', requestData);
     
     try {
-      const response = await fetch('https://localhost:7152/Account/Create%20Account', {
+      const response = await fetch('https://localhost:44361/api/Login/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -46,6 +48,7 @@ function BasicExample() {
        
        // Set success message
        setMessage('Account created successfully!');
+       Alerts();
      }
       // If you need to handle the response from the server, you can do so here
       const responseData = await response.json();
@@ -54,6 +57,9 @@ function BasicExample() {
       console.error('Error:', error);
     }
   };
+  const handleLoginBt = ()=>{
+  navigate('/login');
+  }
   const handleInputChange = () => {
     setMessage('');
   };
@@ -125,8 +131,14 @@ function BasicExample() {
             Submit
           </Button>
         </div>
-        {message && <p>{message}</p>}
+        <div className='bt'>
+          <Button className="Summitbt" variant="primary" type="submit" onClick={(e)=> handleLoginBt()}>
+            Login
+          </Button>
+        </div>
+        <> {message && <p>{message}</p>}</>
       </Form>
+     
     </div>
   );
 }
