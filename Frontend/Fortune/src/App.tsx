@@ -6,7 +6,7 @@ import { Route, Routes, useNavigate } from 'react-router-dom';
 import Loginpg from './WebApplication/AccountRegister/components/pages/Loginpg';
 import MemberHomePg from './WebApplication/MemberPage/components/pages/member-home-pg/member-home-pg';
 import { UserProvider, useUser } from './WebApplication/Data/UserContext';
-
+import MemberAuctionPg from './WebApplication/MemberPage/components/pages/member-auction-pg/memberauctionPg';
 const App: React.FC = () => {
   const { user, setUser } = useUser();
   useEffect(() => {
@@ -38,6 +38,8 @@ const App: React.FC = () => {
                 <>
                   <Route index element={<MemberHomePg />} />
                   <Route path='/user' element={<MemberHomePg />} />
+                  <Route index element={<MemberAuctionPg />} />
+                  <Route path='/userAuc' element={<MemberAuctionPg />} />
                 </>
               )}
               {user.role === 3 && (

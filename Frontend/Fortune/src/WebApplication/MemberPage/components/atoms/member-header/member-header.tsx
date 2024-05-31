@@ -33,9 +33,7 @@ const MemberHeader: React.FC = () => {
                     </div>
                     <div className="member-header-items">
                         <li className="inline-block">
-                            <ScrollLink to='auctions-content' spy={true} offset={-100} duration={500}>
-                                AUCTIONS
-                            </ScrollLink>
+                           <a onClick={()=> navigate('/userAuc')}>AUCTIONS</a>
                         </li>
                     </div>
                     <div className="member-header-items">
