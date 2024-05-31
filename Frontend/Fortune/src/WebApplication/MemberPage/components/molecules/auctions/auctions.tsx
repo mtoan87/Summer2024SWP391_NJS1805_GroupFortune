@@ -17,7 +17,7 @@ function MemberAuctions() {
     useEffect(() => {
         const fetchAuctions = async () => {
             try {
-                const response = await api.get<Auction[]>('api/Auctions');
+                const response = await api.get<Auction[]>('api/Auctions/GetAllAuctions');
                 console.log('API response:', response.data);
                 setAuctions(response.data);
             } catch (err) {

@@ -1,17 +1,33 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import api from "../../../../../../src/config/axios";
 import '../../authGeneral.scss';
 import './login.scss';
 import { useUser } from '../../../../../WebApplication/Data/UserContext';
-
+import Alert from 'react-bootstrap/Alert';
+import "bootstrap/dist/css/bootstrap.min.css"
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const navigate = useNavigate();
+  const location = useLocation();
   const { setUser } = useUser();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const message = params.get('successMessage');
+    if (message) {
+      setSuccessMessage(message);
+      // Clear the message after 5 seconds
+      const timer = setTimeout(() => {
+        setSuccessMessage(null);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [location.search]);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -22,15 +38,15 @@ const LoginForm: React.FC = () => {
 
     try {
       const response = await api.post("api/Login/login", {
-        email: email,
-        password: password
+        accountEmail: email,
+        accountPassword: password
       });
       const data = response.data;
       setUser(data);  // Update user context
       sessionStorage.setItem("loginedUser", JSON.stringify(data));
-      navigate('/');
+      navigate('/user');
     } catch (error) {
-      console.log(error);~
+      console.log(error);
       toast.error("Login failed. Try again!");
     }
   };
@@ -49,6 +65,12 @@ const LoginForm: React.FC = () => {
 
   return (
     <div className="login-form">
+      <div className="LoadedMessage">
+        {successMessage && (
+          <Alert key={'success'} variant={'success'}>
+            {successMessage}
+          </Alert>
+        )}</div>
       <form onSubmit={handleLogin}>
         <div className="rectangle-border">
           <div className="inputField">

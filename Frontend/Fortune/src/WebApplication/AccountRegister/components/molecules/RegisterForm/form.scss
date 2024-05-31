@@ -2,7 +2,7 @@
   max-width: 500px;
   height: auto; 
   margin: 0 auto; /* Center the form horizontally */
-  background-color: rgba(250, 250, 250, 0.295);
+  background-color: rgb(255, 255, 255);
   border-radius: 10px;
   text-align: left; /* Align text to the left */
   padding: 2rem; /* Add padding to the container for better spacing */
@@ -17,8 +17,8 @@ form {
   font-weight: bold;
   display: block;
   font-size: 1.5rem;
-  font-family: 'Times New Roman', Times, serif;
-  color: bisque;
+  font-family: 'Open Sans';
+  color: rgb(0, 0, 0);
   margin-bottom: 0.5rem; 
 }
 
@@ -34,12 +34,13 @@ form {
 .form-container .btn-primary {
   background-color: bisque;
   border: 0.5px;
-  width: 30%; 
+  width: 100%; 
   padding: 0.5rem;
   font-size: 1rem; 
   border-radius: 10px;
   display: block; 
   margin: 0 auto; 
+  color: black;
 }
 
 .form-container .form-text {
@@ -59,4 +60,9 @@ form {
 
 .bt {
   padding-top: 25px;
+}
+.Alert{
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
 }

@@ -3,7 +3,9 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import './form.scss'; 
 import api from '../../../../../config/axios';
-
+import { useNavigate } from "react-router-dom";
+import Alert from 'react-bootstrap/Alert';
+import 'bootstrap/dist/css/bootstrap.min.css'
 function BasicExample() {
   // Define state for each input
   const [accountName, setAccountName] = useState('');
@@ -12,8 +14,9 @@ function BasicExample() {
   const [accountPhone, setPhone] = useState('');
   const [agree, setAgree] = useState(false);
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = async (event: { preventDefault: () => void; }) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     // Log the data before sending the request
@@ -45,10 +48,9 @@ function BasicExample() {
       setPhone('');
       setAgree(false);
       
-      // Set success message
+      // Set success message and navigate to login page with the message in URL parameters
       setMessage('Account created successfully!');
-
-      // Handle the response from the server if needed
+      navigate("/login?successMessage=Account+created+successfully!");
       console.log('Response Data:', response.data);
     } catch (error) {
       console.error('Error:', error);
@@ -62,6 +64,10 @@ function BasicExample() {
 
   return (
     <div className="form-container">
+              <div className='Alert'>
+              {message && <Alert key={'danger'} variant={'danger'}>
+          {message}
+        </Alert>}</div>
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="formBasicAccountName">
           <Form.Label>Account Name</Form.Label>
@@ -117,10 +123,9 @@ function BasicExample() {
         </Form.Group>
         
         <Button className="Summitbt" variant="primary" type="submit">
-          Submit
+          Register
         </Button>
-        
-        {message && <p>{message}</p>}
+
       </Form>
      
     </div>
