@@ -3,11 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import './member-header.scss';
 import logo from '../../../../../../src/assets/img/logo2.png';
 import { Link as ScrollLink } from 'react-scroll';
-import account from '../../../../../../src/assets/img/account.png';
-
-
+import { FaRegUser } from "react-icons/fa";
+import Dropdown from 'react-bootstrap/Dropdown';
 const MemberHeader: React.FC = () => {
     const [isHovered, setIsHovered] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const storedUser = sessionStorage.getItem("loginedUser");
     const user = storedUser ? JSON.parse(storedUser) : null;
     const navigate = useNavigate();
@@ -15,6 +15,10 @@ const MemberHeader: React.FC = () => {
     const handleLogout = () => {
         sessionStorage.removeItem("loginedUser");
         navigate('/');
+    };
+
+    const toggleDropdown = () => {
+        setIsDropdownOpen(!isDropdownOpen);
     };
 
     return (
@@ -33,7 +37,7 @@ const MemberHeader: React.FC = () => {
                     </div>
                     <div className="member-header-items">
                         <li className="inline-block">
-                           <a onClick={()=> navigate('/userAuc')}>AUCTIONS</a>
+                            <a onClick={() => navigate('/userAuc')}>AUCTIONS</a>
                         </li>
                     </div>
                     <div className="member-header-items">
@@ -51,18 +55,31 @@ const MemberHeader: React.FC = () => {
                         </li>
                     </div>
                     {user && (
-                        <div className="member-header-items">
-                            <li 
-                                className="inline-block" 
+                        <div className="member-header-items" onClick={toggleDropdown}>
+                            <li
+                                className="inline-block"
                                 onMouseEnter={() => setIsHovered(true)}
                                 onMouseLeave={() => setIsHovered(false)}
+
+                                style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
                             >
-                                <span>{user.name}</span>
-                                {isHovered && (
-                                    <button onClick={handleLogout} className="logout-button">
-                                        Logout
-                                    </button>
-                                )}
+                                <Dropdown>
+                                <Dropdown.Toggle variant="success" id="dropdown-basic" style={{ display: 'flex', alignItems: 'center' }}>
+                                            <FaRegUser className="user-icon" />
+                                            {isHovered && (
+                                                <h3 className="user-name" style={{ margin: '0 0 0 5px' }}>{user.name}</h3>
+                                            )}
+                                        </Dropdown.Toggle>
+                                    <Dropdown.Menu>
+                                        <Dropdown.Item href="http://localhost:5173/userAuc">My auctions</Dropdown.Item>
+                                        <Dropdown.Item href="#/action-2">My jewelries</Dropdown.Item>
+                                        <Dropdown.Item href="#/action-3">About account</Dropdown.Item>
+                                        <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+                                    </Dropdown.Menu>
+                                </Dropdown>
+
+
+
                             </li>
                         </div>
                     )}
@@ -71,5 +88,7 @@ const MemberHeader: React.FC = () => {
         </div>
     );
 };
-
+{/* <button onClick={handleLogout} className="logout-button">
+                                            Logout
+                                        </button> */}
 export default MemberHeader;
