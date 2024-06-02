@@ -5,9 +5,9 @@ import logo from '../../../../../../src/assets/img/logo2.png';
 import { Link as ScrollLink } from 'react-scroll';
 import { FaRegUser } from "react-icons/fa";
 import Dropdown from 'react-bootstrap/Dropdown';
+
 const MemberHeader: React.FC = () => {
     const [isHovered, setIsHovered] = useState(false);
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const storedUser = sessionStorage.getItem("loginedUser");
     const user = storedUser ? JSON.parse(storedUser) : null;
     const navigate = useNavigate();
@@ -15,10 +15,6 @@ const MemberHeader: React.FC = () => {
     const handleLogout = () => {
         sessionStorage.removeItem("loginedUser");
         navigate('/');
-    };
-
-    const toggleDropdown = () => {
-        setIsDropdownOpen(!isDropdownOpen);
     };
 
     return (
@@ -36,7 +32,7 @@ const MemberHeader: React.FC = () => {
                         </li>
                     </div>
                     <div className="member-header-items">
-                    <li className="inline-block">
+                        <li className="inline-block">
                             <ScrollLink to='auctions-container' spy={true} offset={-100} duration={500}>
                                 AUCTION
                             </ScrollLink>
@@ -57,21 +53,20 @@ const MemberHeader: React.FC = () => {
                         </li>
                     </div>
                     {user && (
-                        <div className="member-header-items" onClick={toggleDropdown}>
+                        <div className="member-header-items">
                             <li
                                 className="inline-block"
                                 onMouseEnter={() => setIsHovered(true)}
                                 onMouseLeave={() => setIsHovered(false)}
-
                                 style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
                             >
                                 <Dropdown>
-                                <Dropdown.Toggle variant="success" id="dropdown-basic" style={{ display: 'flex', alignItems: 'center' }}>
-                                            <FaRegUser className="user-icon" />
-                                            {isHovered && (
-                                                <h3 className="user-name" style={{ margin: '0 0 0 5px' }}>{user.name}</h3>
-                                            )}
-                                        </Dropdown.Toggle>
+                                    <Dropdown.Toggle variant="success" id="dropdown-basic" style={{ display: 'flex', alignItems: 'center' }}>
+                                        <FaRegUser className="user-icon" />
+                                        {isHovered && (
+                                            <h3 className="user-name" style={{ margin: '0 0 0 5px' }}>{user.name}</h3>
+                                        )}
+                                    </Dropdown.Toggle>
                                     <Dropdown.Menu>
                                         <Dropdown.Item href="http://localhost:5173/userAuc">My auctions</Dropdown.Item>
                                         <Dropdown.Item href="#/action-2">My jewelries</Dropdown.Item>
@@ -79,9 +74,6 @@ const MemberHeader: React.FC = () => {
                                         <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
                                     </Dropdown.Menu>
                                 </Dropdown>
-
-
-
                             </li>
                         </div>
                     )}
@@ -90,7 +82,5 @@ const MemberHeader: React.FC = () => {
         </div>
     );
 };
-{/* <button onClick={handleLogout} className="logout-button">
-                                            Logout
-                                        </button> */}
+
 export default MemberHeader;
