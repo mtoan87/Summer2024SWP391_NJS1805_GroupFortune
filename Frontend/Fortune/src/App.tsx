@@ -8,6 +8,7 @@ import MemberHomePg from './WebApplication/MemberPage/components/pages/member-ho
 import { UserProvider, useUser } from './WebApplication/Data/UserContext';
 import MemberAuctionPg from './WebApplication/MemberPage/components/pages/member-auction-pg/memberauctionPg';
 import JewelryUploadPg from './WebApplication/MemberPage/components/pages/member-jewelry-upload-pg/jewelry-upload-pg';
+import MemberJewelryPg from './WebApplication/MemberPage/components/pages/member-Jewelry-pg/member-jewelry-pg';
 const App: React.FC = () => {
   const { user, setUser } = useUser();
   useEffect(() => {
@@ -42,6 +43,7 @@ const App: React.FC = () => {
                   {/* <Route index element={<MemberAuctionPg />} /> */}
                   <Route path='/userAuc' element={<MemberAuctionPg />} />
                   <Route path='/userJew' element={<JewelryUploadPg />} />
+                  <Route path='/userJewel' element={<MemberJewelryPg />} />
                 </>
               )}
               {user.role === 3 && (

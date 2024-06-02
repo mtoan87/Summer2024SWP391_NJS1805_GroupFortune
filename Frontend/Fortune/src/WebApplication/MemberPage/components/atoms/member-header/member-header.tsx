@@ -72,8 +72,8 @@ const hometag=()=>{
                                         )}
                                     </Dropdown.Toggle>
                                     <Dropdown.Menu>
-                                        <Dropdown.Item href="http://localhost:5173/userAuc">My auctions</Dropdown.Item>
-                                        <Dropdown.Item href="#/action-2">My jewelries</Dropdown.Item>
+                                        <Dropdown.Item href="/userAuc">My auctions</Dropdown.Item>
+                                        <Dropdown.Item href="/userJewel">My jewelries</Dropdown.Item>
                                         <Dropdown.Item href="#/action-3">About account</Dropdown.Item>
                                         <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
                                     </Dropdown.Menu>
