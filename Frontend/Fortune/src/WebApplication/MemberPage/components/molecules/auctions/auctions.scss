@@ -34,3 +34,42 @@
 .auction-item p {
     margin: 4px 0;
 }
+.searchBar {
+    display: grid;
+    place-items: center; /* Centers both horizontally and vertically */
+    margin-left: -22rem;
+  }
+.fui-input-label-animation {
+    display: inline-block;
+    place-items: center;
+    
+    position: relative;
+    .form-input {
+      width: 250%;
+      padding: 15px;
+      transition: 0.25s ease;
+      &:not(:placeholder-shown) + .form-label,
+      &:focus + .form-label {
+        top: 0;
+        padding: 0 5px;
+        display: inline-block;
+        left: 11px;
+        font-size: 14px;
+        font-weight: 500;
+      }
+      &:focus {
+        & + .form-label {
+          color: #9ca3af;
+        }
+      }
+    }
+    .form-label {
+      position: absolute;
+      top: 30%;
+      left: 21px;
+      user-select: none;
+      color: #9ca3af;
+      pointer-events: none;
+      transition: 0.25s ease;
+    }
+  }
