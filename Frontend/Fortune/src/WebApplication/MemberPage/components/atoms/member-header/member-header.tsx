@@ -16,13 +16,17 @@ const MemberHeader: React.FC = () => {
         sessionStorage.removeItem("loginedUser");
         navigate('/');
     };
-
+const hometag=()=>{
+    navigate('/');
+}
     return (
         <div className="member-header-home">
             <nav>
                 <ul>
                     <div className="member-header-items">
-                        <img src={logo} alt="logo" className='logo' />
+                    <li className="inline-block">
+                        <img src={logo} alt="logo" className='logo' onClick={()=>hometag()} />
+                        </li>
                     </div>
                     <div className="member-header-items">
                         <li className="inline-block">
