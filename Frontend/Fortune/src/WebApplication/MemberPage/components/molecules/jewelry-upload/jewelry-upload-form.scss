@@ -1,0 +1,63 @@
+/* jewelry-upload-form.scss */
+
+$form-padding: 20px;
+$form-border-color: #ccc;
+$form-background-color: #f9f9f9;
+$form-text-color: #333;
+$form-button-color: #007bff;
+$form-button-hover-color: darken($form-button-color, 10%);
+$form-label-color: #555;
+
+form {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: $form-padding;
+  border: 1px solid $form-border-color;
+  border-radius: 5px;
+  background-color: $form-background-color;
+  color: $form-text-color;
+
+  h3 {
+    text-align: center;
+  }
+  
+  div {
+    margin-bottom: 15px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: $form-label-color;
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid $form-border-color;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: $form-button-color;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: $form-button-hover-color;
+    }
+  }
+}

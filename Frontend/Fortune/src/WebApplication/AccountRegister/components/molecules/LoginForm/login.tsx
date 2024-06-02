@@ -44,7 +44,7 @@ const LoginForm: React.FC = () => {
       const data = response.data;
       setUser(data);  // Update user context
       sessionStorage.setItem("loginedUser", JSON.stringify(data));
-      navigate('/user');
+      navigate('/');
     } catch (error) {
       console.log(error);
       toast.error("Login failed. Try again!");
