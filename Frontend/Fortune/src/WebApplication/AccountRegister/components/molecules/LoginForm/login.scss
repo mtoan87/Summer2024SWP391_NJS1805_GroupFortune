@@ -1,72 +1,69 @@
 .login-form {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-left: -3.5rem;
-  
-    .rectangle-border {
-      background: rgba(255, 255, 255, 0.418); 
-      padding: 2rem;
-      border-radius: 8px;
-      width: 100%;
-  
-      .inputField {
-        display: flex;
-        align-items: center;
-        margin-bottom: 1.5rem;
-  
-        input {
-          flex: 1;
-          padding: 0.75rem 1rem;
-          border: 1px solid #d9d9d9;
-          border-radius: 4px;
-          font-size: 1rem;
-          outline: none;
-          transition: border-color 0.2s;
-  
-          &:focus {
-            border-color: #1890ff;
-          }
-        }
-      }
-    }
-  
-    .login-buttons {
-      display: flex;
-      justify-content: space-between;
-      margin-left: 5rem;
-  
-      button {
-        background: #1890ff;
-        color: #fff;
-        border: none;
-        padding: 0.75rem 1.5rem;
-        margin: 1rem;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background 0.3s;
-  
-        &:hover {
-          background: #40a9ff;
-        }
-  
-        p {
-          margin: 0;
-          font-size: 1rem;
-        }
-      }
-  
-      button[type="button"] {
-        background: #52c41a;
-  
-        &:hover {
-          background: #73d13d;
-        }
-      }
-    }
+  max-width: 500px;
+  height: auto; 
+  margin: 0 auto; /* Center the form horizontally */
+  background-color: rgb(255, 255, 255);
+  border-radius: 10px;
+  text-align: left; /* Align text to the left */
+  padding: 2rem; /* Add padding to the container for better spacing */
+
+  .form-label,
+  .form-check-label {
+    font-weight: bold;
+    display: block;
+    font-size: 1.5rem;
+    font-family: 'Open Sans';
+    color: rgb(0, 0, 0);
+    margin-bottom: 0.5rem; 
   }
-  .LoadedMessage{
+
+  .form-control {
+    width: 100%; 
+    font-size: 1rem;
+    height: 2.5rem;
+    border: 0.5px solid #ccc;
+    border-radius: 4px; 
+  }
+
+  .btn {
+    background-color: bisque;
+    border: 0.5px solid #ccc;
+    width: 100%; 
+    padding: 0.5rem;
+    font-size: 1rem; 
+    border-radius: 10px;
+    display: block; 
+    margin: 0 auto; 
+    color: black;
+    text-align: center; 
+  }
+
+  .btn-secondary {
+    margin-top: 1rem; /* Space between the buttons */
+  }
+
+  .form-text {
+    font-size: 1rem;
+    color: #6c757d;
+    text-align: center; 
+  }
+
+  .form-check {
+    display: flex;
+    justify-content: center; 
+  }
+
+  .mb-3 {
+    padding-bottom: 10px;
+  }
+
+  .bt {
+    padding-top: 25px;
+  }
+
+  .Alert {
     position: absolute;
     top: 1rem;
     right: 1rem;
   }
+}

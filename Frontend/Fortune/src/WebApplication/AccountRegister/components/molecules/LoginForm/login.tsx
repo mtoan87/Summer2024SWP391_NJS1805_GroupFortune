@@ -8,6 +8,7 @@ import './login.scss';
 import { useUser } from '../../../../../WebApplication/Data/UserContext';
 import Alert from 'react-bootstrap/Alert';
 import "bootstrap/dist/css/bootstrap.min.css"
+
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -67,33 +68,40 @@ const LoginForm: React.FC = () => {
     <div className="login-form">
       <div className="LoadedMessage">
         {successMessage && (
-          <Alert key={'success'} variant={'success'}>
+          <Alert key={'success'} variant={'success'} className="Alert">
             {successMessage}
           </Alert>
-        )}</div>
+        )}
+      </div>
       <form onSubmit={handleLogin}>
-        <div className="rectangle-border">
-          <div className="inputField">
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              autoComplete="on"
-            />
-          </div>
-          <div className="inputField">
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
+        <div className="mb-3">
+          <label htmlFor="email" className="form-label">Email</label>
+          <input
+            type="email"
+            id="email"
+            className="form-control"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            autoComplete="on"
+          />
         </div>
-        <div className="login-buttons">
-          <button type="submit">Sign in</button>
-          <button type="button" onClick={handleRegister}>
+        <div className="mb-3">
+          <label htmlFor="password" className="form-label">Password</label>
+          <input
+            type="password"
+            id="password"
+            className="form-control"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+        <div className="bt">
+          <button type="submit" className="btn btn-primary">Sign in</button>
+        </div>
+        <div className="bt">
+          <button type="button" className="btn btn-secondary" onClick={handleRegister}>
             Sign up
           </button>
         </div>

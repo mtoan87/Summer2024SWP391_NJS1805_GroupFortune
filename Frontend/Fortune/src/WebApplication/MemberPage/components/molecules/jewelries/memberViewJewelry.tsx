@@ -24,7 +24,7 @@ function MemberViewJewelry() {
   };
 
 const handleCreateButton = ()=> {
-    navigate('/userJew');
+    navigate('/userJewel/upload');
 }
 
   const filteredJewelry = jewelry.filter(jewelry => 

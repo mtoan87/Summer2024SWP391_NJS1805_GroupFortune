@@ -1,5 +1,3 @@
-/* jewelry-upload-form.scss */
-
 $form-padding: 20px;
 $form-border-color: #ccc;
 $form-background-color: #f9f9f9;
@@ -10,7 +8,7 @@ $form-label-color: #555;
 
 form {
   max-width: 600px;
-  margin: 50px auto;
+  margin: 0 auto;
   padding: $form-padding;
   border: 1px solid $form-border-color;
   border-radius: 5px;

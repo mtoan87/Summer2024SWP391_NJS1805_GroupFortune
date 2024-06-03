@@ -39,10 +39,8 @@ const App: React.FC = () => {
               {user.role === 2 && (
                 <>
                   <Route index element={<MemberHomePg />} />
-                  {/* <Route path='/user' element={<MemberHomePg />} /> */}
-                  {/* <Route index element={<MemberAuctionPg />} /> */}
                   <Route path='/userAuc' element={<MemberAuctionPg />} />
-                  <Route path='/userJew' element={<JewelryUploadPg />} />
+                  <Route path='/userJewel/upload' element={<JewelryUploadPg />} />
                   <Route path='/userJewel' element={<MemberJewelryPg />} />
                 </>
               )}
