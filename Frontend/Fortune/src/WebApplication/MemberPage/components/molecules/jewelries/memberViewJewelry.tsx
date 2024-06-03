@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import './jewelry.scss';
 import api from '../../../../../config/axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 function MemberViewJewelry() {
   const [jewelry, setJewelry] = useState([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -62,7 +62,6 @@ const handleCreateButton = ()=> {
             Create Jewelry
           </button>
         </div>
-
         {filteredJewelry.map((item, index) => (
           <div key={index} className="jewelry-item">
             <img src="../../../../../../src/assets/img/jewelry_introduction.jpg" alt={item.name} />
