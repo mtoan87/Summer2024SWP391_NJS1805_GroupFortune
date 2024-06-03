@@ -1,8 +1,10 @@
 $form-padding: 20px;
+$form-margin-top: 150px;
+$form-margin-bottom: 50px;
 $form-border-color: #ccc;
 $form-background-color: #f9f9f9;
 $form-text-color: #333;
-$form-button-color: #007bff;
+$form-button-color: #824D4D;
 $form-button-hover-color: darken($form-button-color, 10%);
 $form-label-color: #555;
 
@@ -10,6 +12,8 @@ form {
   max-width: 600px;
   margin: 0 auto;
   padding: $form-padding;
+  margin-top: $form-margin-top;
+  margin-bottom: $form-margin-bottom;
   border: 1px solid $form-border-color;
   border-radius: 5px;
   background-color: $form-background-color;
