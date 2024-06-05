@@ -2,24 +2,15 @@ import { useEffect, useState } from 'react';
 import api from '../../../../../config/axios';
 import './auctions.scss';
 
-interface Auction {
-    auctionId: number;
-    accountId: number | null;
-    status: string;
-    starttime: string;
-    endtime: string;
-    jewelryId: number | null;
-}
-
 function Auctions() {
-    const [auctions, setAuctions] = useState<Auction[]>([]);
+    const [auctions, setAuctions] = useState([]);
 
     useEffect(() => {
         const fetchAuctions = async () => {
             try {
-                const response = await api.get<Auction[]>('api/Auctions/GetAllAuctions');
-                console.log('API response:', response.data);
-                setAuctions(response.data);
+                const response = await api.get('api/Auctions/GetAllAuctions');
+                console.log('API response:', response.data.$values);
+                setAuctions(response.data.$values);
             } catch (err) {
                 console.error('Error fetching auctions:', err);
             }
