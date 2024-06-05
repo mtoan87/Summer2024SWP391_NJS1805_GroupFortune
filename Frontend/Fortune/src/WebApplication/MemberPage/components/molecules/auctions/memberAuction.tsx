@@ -14,18 +14,24 @@ interface Auction {
 function MemberViewAuctions() {
     const [auctions, setAuctions] = useState<Auction[]>([]);
     const [searchQuery, setSearchQuery] = useState<string>('');
-
+  const loginedUser = JSON.parse(sessionStorage.getItem('loginedUser'));
+  const accountId = loginedUser?.accountId;
     useEffect(() => {
         const fetchAuctions = async () => {
             try {
-                const response = await api.get<Auction[]>('api/Auctions/GetAllAuctions');
+                const response = await api.get(`/api/Auctions/GetAuctionAndJewelryByAccountId/${accountId}`);
                 console.log('API response:', response.data);
-                setAuctions(response.data);
+        
+                if (response.data && Array.isArray(response.data.$values)) {
+                    setAuctions(response.data.$values);
+                } else {
+                    console.error('Invalid response data format:', response.data);
+                }
             } catch (err) {
                 console.error('Error fetching auctions:', err);
             }
         };
-
+        
         fetchAuctions();
     }, []);
 
@@ -33,24 +39,18 @@ function MemberViewAuctions() {
         setSearchQuery(event.target.value);
     };
 
-    const filteredAuctions = auctions.filter(auction => 
-        auction.status.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        auction.starttime.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        auction.endtime.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
     return (
         <>
             <div className="auctions-content">
                 <h1>My Auctions</h1>
-                
             </div>
             <div className='searchBar'>
-                <div className="fui-input-label-animation ">
-      <input type="text" className="form-input" placeholder='' value={searchQuery} 
-                    onChange={handleSearchChange}  />
-      <label htmlFor="name" className="form-label">Search for Auctions</label>
-    </div></div>
+                <div className="fui-input-label-animation">
+                    <input type="text" className="form-input" placeholder='' value={searchQuery}
+                        onChange={handleSearchChange} />
+                    <label htmlFor="name" className="form-label">Search for Auctions</label>
+                </div>
+            </div>
             <div className="auctions-container">
                 {/* Create Auction Item */}
                 <div className="auction-item create-auction">
@@ -59,14 +59,16 @@ function MemberViewAuctions() {
                         Create Auction
                     </button>
                 </div>
-                {/* Auction Items */}
-                {filteredAuctions.map((auction) => (
-                    <div key={auction.auctionId} className="auction-item">
-                        <img src="../../../../../../src/assets/img/jewelry_introduction.jpg" alt="" />
-                        <p>Start Time: {auction.starttime}</p>
-                        <p>End Time: {auction.endtime}</p>
-                    </div>
-                ))}
+                {auctions.map((auction) => {
+    console.log("Auction ID:", auction.auctionId);
+    return (
+        <div key={auction.auctionId} className="auction-item">
+            <img src="../../../../../../src/assets/img/jewelry_introduction.jpg" alt="" />
+            <p>Start Time: {auction.starttime}</p>
+            <p>End Time: {auction.endtime}</p>
+        </div>
+    );
+})}
             </div>
         </>
     );

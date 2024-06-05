@@ -8,10 +8,11 @@
   .jewelry-details-container {
     display: flex;
     justify-content: center;
+    padding-bottom: 5rem;
   }
   
   .jewelry-details-item {
-    text-align: left;
+    text-align: center;
     border: 2px solid #ccc;
     border-radius: 8px;
     padding: 30px;
@@ -69,5 +70,44 @@
   
   .jewelry-details-item textarea {
     height: 150px;
+  }
+  .jewelry-details-item {
+    label {
+      margin-bottom: 5px;
+      display: block;
+      font-weight: bold;
+    }
+  
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      font-size: 16px;
+      border: 2px solid #ccc; /* Increase border size to 2px */
+      border-radius: 5px;
+      transition: border-color 0.3s ease;
+    }
+  
+    input[type="text"]:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #6a7ec1; /* Example focus color */
+    }
+  
+    button {
+      background-color: #6a7ec1;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+  
+    button:hover {
+      background-color: #405ba2; /* Example hover color */
+    }
   }
   
