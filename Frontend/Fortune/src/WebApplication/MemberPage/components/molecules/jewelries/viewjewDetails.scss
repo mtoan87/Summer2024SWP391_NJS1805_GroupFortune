@@ -1,0 +1,73 @@
+/* viewjewDetails.scss */
+
+.jewel-content {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .jewelry-details-container {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .jewelry-details-item {
+    text-align: left;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    padding: 30px;
+    max-width: 800px;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0 auto;
+  }
+  
+  .jewelry-details-item img {
+    position: relative;
+    max-width: 100%;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: filter 0.3s ease; /* Add transition for smooth effect */
+  }
+  
+  .jewelry-details-item img:hover {
+    filter: brightness(70%); /* Darken the image on hover */
+  }
+  
+  .upload-label-details {
+    position: relative;
+  }
+  
+  .upload-text-details {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18px;
+    color: #ffffff;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .upload-label-details:hover .upload-text-details {
+    opacity: 1;
+  }
+  
+  input[type="file"] {
+    display: none;
+  }
+  
+  .jewelry-details-item input[type="text"],
+  .jewelry-details-item textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    font-size: 18px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .jewelry-details-item textarea {
+    height: 150px;
+  }
+  

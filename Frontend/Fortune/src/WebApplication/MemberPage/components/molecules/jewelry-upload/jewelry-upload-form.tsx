@@ -11,10 +11,11 @@ interface Jewelry {
   goldage: string;
   collection: string;
 }
-
+const loginedUser = JSON.parse(sessionStorage.getItem('loginedUser'));
+  const accountId = loginedUser?.accountId;
 const JewelryUploadForm: React.FC = () => {
   const [jewelry, setJewelry] = useState<Jewelry>({
-    accountId: 4,
+    accountId: accountId,
     name: '',
     materials: '',
     description: '',
