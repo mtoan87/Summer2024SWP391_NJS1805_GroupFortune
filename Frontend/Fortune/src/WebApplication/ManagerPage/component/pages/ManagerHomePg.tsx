@@ -1,22 +1,34 @@
-import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
-import MemberHeader from '../../component/atoms/member-header/member-header'
-import MemberFooter from '../../component/atoms/member-footer/member-footer'
+// ManagerHomePg.js
+import React, { useState } from 'react';
+import MemberHeader from '../../component/atoms/member-header/member-header';
+import MemberFooter from '../../component/atoms/member-footer/member-footer';
 import ManagerHomeBody from '../template/ManagerHomeBody';
-import "./ManagerHomePg.scss"
+import Sidebar from '../../component/atoms/manager-SideBar/SideBar';
+import "./ManagerHomePg.scss";
+
 function ManagerHomePg() {
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+
+    const toggleSidebar = () => {
+        setSidebarOpen(!sidebarOpen);
+    };
+
     return (
         <>
-            <header>
-                <MemberHeader />
-            </header>
-            <div className='ManaHomeBody'>
-                <ManagerHomeBody />
+            <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+            <div className={`mainContent ${sidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
+                <header>
+                    <MemberHeader />
+                </header>
+                <div className='managerHomeBody'>
+                    <ManagerHomeBody />
+                </div>
+                <footer>
+                    <MemberFooter />
+                </footer>
             </div>
-            <footer>
-                <MemberFooter />
-            </footer>
         </>
-    )
+    );
 }
 
-export default ManagerHomePg
+export default ManagerHomePg;
