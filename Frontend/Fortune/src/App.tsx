@@ -10,6 +10,7 @@ import MemberAuctionPg from './WebApplication/MemberPage/components/pages/member
 import JewelryUploadPg from './WebApplication/MemberPage/components/pages/member-jewelry-upload-pg/jewelry-upload-pg';
 import MemberJewelryPg from './WebApplication/MemberPage/components/pages/member-Jewelry-pg/member-jewelry-pg';
 import MemberViewJewelryPg from './WebApplication/MemberPage/components/pages/member-Jewelry-pg/member-View-Jewelry-Details-Pg';
+import MemberRegisterJewelryAuctionPg from './WebApplication/MemberPage/components/pages/member-register-jewelry-auction/member-register-jewelry-auction-pg';
 const App: React.FC = () => {
   const { user, setUser } = useUser();
   useEffect(() => {
@@ -43,8 +44,9 @@ const App: React.FC = () => {
                   <Route path='/userAuc' element={<MemberAuctionPg />} />
                   <Route path='/userJewel/upload' element={<JewelryUploadPg />} />
                   <Route path='/userJewel' element={<MemberJewelryPg />} />
-                  <Route path='/userJewel/:id' element={<MemberJewelryPg />} />
-                  <Route path="/view-jewelry/:id" element={<MemberViewJewelryPg />} />
+                  {/* <Route path='/userJewel/:id' element={<MemberJewelryPg />} /> */}
+                  <Route path="/update-jewelry/:id" element={<MemberViewJewelryPg />} />
+                  <Route path="/register-jewelry-auction/:id" element={<MemberRegisterJewelryAuctionPg />} />
                 </>
               )}
               {user.role === 3 && (

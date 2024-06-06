@@ -19,6 +19,7 @@ function MemberViewJewelry() {
     const fetchJewelry = async () => {
       try {
         const response = await api.get(`api/Jewelries/GetAuctionAndJewelryByAccountId/${accountId}`);
+        console.log(response.data);
         setJewelry(response.data?.$values || []);
       } catch (err) {
         console.error('Error fetching jewelry', err);
@@ -41,9 +42,12 @@ function MemberViewJewelry() {
     }
   }, [successMessage]);
 
-  const handleViewDetails = (jewelryId) => {
-    // Navigate to the view jewelry details page
-    navigate(`/view-jewelry/${jewelryId}`);
+  const handleUpdateJewelry = (jewelryId) => {
+    navigate(`/update-jewelry/${jewelryId}`);
+  };
+
+  const handleRegisterAuction = (jewelryId) => {
+    navigate(`/register-jewelry-auction/${jewelryId}`, { state: { jewelryId } });
   };
 
   const handleSearchChange = (event) => {
@@ -65,28 +69,36 @@ function MemberViewJewelry() {
         <h1>My Jewelry</h1>
       </div>
       <div className='searchBar'>
-                <div className="fui-input-label-animation">
-                    <input type="text" className="form-input" placeholder='' value={searchQuery}
-                        onChange={handleSearchChange} />
-                    <label htmlFor="name" className="form-label">Search for Auctions</label>
-                </div>
-            </div>
+        <div className="fui-input-label-animation">
+          <input 
+            type="text" 
+            className="form-input" 
+            placeholder='' 
+            value={searchQuery}
+            onChange={handleSearchChange} 
+          />
+          <label htmlFor="name" className="form-label">Search for Auctions</label>
+        </div>
+      </div>
       <div className="jewelry-container">
-        
         <div className="auction-item create-auction">
           <img src='../../../../../../src/assets/img/Jewelry.png' alt="Create Jewelry" />
           <button onClick={() => navigate('/userJewel/upload')}>Create Jewelry</button>
         </div>
         {filteredJewelry.length > 0 ? (
-          filteredJewelry.map((item, index) => (
-            <div key={index} className="jewelry-item" onClick={() => handleViewDetails(item.jewelryId)}>
-              <img src="../../../../../../src/assets/img/jewelry_introduction.jpg" alt={item.name} />
-              <h3>{item.name}</h3>
-              <p>Description: {item.description}</p>
-              <p>Collection: {item.collection}</p>
-              <p>Gold Age: {item.goldage}</p>
-              <p>Materials: {item.materials}</p>
-              <p>Weight: {item.weight}</p>
+          filteredJewelry.map((jewelry) => (
+            <div key={jewelry.jewelryId} className="jewelry-item">
+              <img src="../../../../../../src/assets/img/jewelry_introduction.jpg" alt={jewelry.name} />
+              <h3>{jewelry.name}</h3>
+              <p>Description: {jewelry.description}</p>
+              <p>Collection: {jewelry.collection}</p>
+              <p>Gold Age: {jewelry.goldage}</p>
+              <p>Materials: {jewelry.materials}</p>
+              <p>Weight: {jewelry.weight}</p>
+              <div className="jewelry-item-buttons">
+                <button onClick={() => handleUpdateJewelry(jewelry.jewelryId)}>Update</button>
+                <button onClick={() => handleRegisterAuction(jewelry.jewelryId)}>Register Auction</button>
+              </div>
             </div>
           ))
         ) : (

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './member-header.scss';
 import logo from '../../../../../../src/assets/img/logo2.png';
 import { Link as ScrollLink } from 'react-scroll';
@@ -30,9 +30,9 @@ const MemberHeader: React.FC = () => {
                     </div>
                     <div className="member-header-items">
                         <li className="inline-block">
-                            <ScrollLink to='member-introduction' spy={true} offset={-100} duration={500}>
+                            <Link to='/'>
                                 HOME
-                            </ScrollLink>
+                            </Link>
                         </li>
                     </div>
                     <div className="member-header-items">
