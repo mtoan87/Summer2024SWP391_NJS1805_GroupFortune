@@ -10,7 +10,7 @@ import MemberAuctionPg from './WebApplication/MemberPage/components/pages/member
 import JewelryUploadPg from './WebApplication/MemberPage/components/pages/member-jewelry-upload-pg/jewelry-upload-pg';
 import MemberJewelryPg from './WebApplication/MemberPage/components/pages/member-Jewelry-pg/member-jewelry-pg';
 import MemberViewJewelryPg from './WebApplication/MemberPage/components/pages/member-Jewelry-pg/member-View-Jewelry-Details-Pg';
-import MemberRegisterJewelryAuctionPg from './WebApplication/MemberPage/components/pages/member-register-jewelry-auction/member-register-jewelry-auction-pg';
+import ManagerHomePg from './WebApplication/ManagerPage/component/pages/ManagerHomePg';
 const App: React.FC = () => {
   const { user, setUser } = useUser();
   useEffect(() => {
@@ -46,7 +46,7 @@ const App: React.FC = () => {
                   <Route path='/userJewel' element={<MemberJewelryPg />} />
                   {/* <Route path='/userJewel/:id' element={<MemberJewelryPg />} /> */}
                   <Route path="/update-jewelry/:id" element={<MemberViewJewelryPg />} />
-                  <Route path="/register-jewelry-auction/:id" element={<MemberRegisterJewelryAuctionPg />} />
+                  <Route path="/ManagerViewAuc" element={<ManagerHomePg />} />
                 </>
               )}
               {user.role === 3 && (
@@ -54,9 +54,10 @@ const App: React.FC = () => {
                   {/* Add your staff routes here */}
                 </>
               )}
-              {user.role === 4 && (
+              {user.role === 5 && (
                 <>
                   {/* Add your manager routes here */}
+                  <Route index element={<ManagerHomePg />} />
                 </>
               )}
             </>
