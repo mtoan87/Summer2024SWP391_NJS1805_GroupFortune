@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import './App.scss';
-import GuestHomePg from './WebApplication/GuestPage/components/pages/guest-home-pg/guest-home-pg/guest-home-pg';
+import GuestHomePg from './WebApplication/GuestPage/guest-home-page/guest-home-pg';
 import RegisterPg from './WebApplication/AccountRegister/components/pages/Register-pg';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import Loginpg from './WebApplication/AccountRegister/components/pages/Loginpg';

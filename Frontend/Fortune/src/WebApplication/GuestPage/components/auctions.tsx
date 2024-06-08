@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import api from '../../../../../config/axios';
-import './auctions.scss';
+import api from '../../../config/axios';
+import '../styles/auctions.scss';
 
 function Auctions() {
     const [auctions, setAuctions] = useState([]);

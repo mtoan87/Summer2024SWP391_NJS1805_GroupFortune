@@ -1,5 +1,5 @@
 import React from 'react';
-import './guest-footer.scss';
+import '../styles/guest-footer.scss';
 
 const GuestFooter: React.FC = () => {
   return (

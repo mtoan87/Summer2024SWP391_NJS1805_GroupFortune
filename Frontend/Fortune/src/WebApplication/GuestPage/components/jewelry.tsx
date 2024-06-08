@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import './jewelry.scss';
-import api from '../../../../../config/axios';
+import '../styles/jewelry.scss';
+import api from '../../../config/axios';
 
 function Jewelry() {
   const [jewelry, setJewelry] = useState([]);

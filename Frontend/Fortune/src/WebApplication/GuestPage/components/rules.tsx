@@ -1,4 +1,4 @@
-import './rules.scss'
+import '../styles/rules.scss';
 
 function Rules() {
   return (

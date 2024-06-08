@@ -1,9 +1,8 @@
 import React from 'react';
 import { Link as Forward } from 'react-router-dom';
-import './guest-header.scss';
-import logo from '../../../../../../src/assets/img/logo2.png';
-import account from '../../../../../../src/assets/img/account.png';
-import { Link as ScrollLink } from 'react-scroll';
+import '../styles/guest-header.scss';
+import logo from '../img/logo2.png';
+import account from '../img/account.png';
 
 const GuestHeader: React.FC = () => {
   return (
@@ -11,40 +10,35 @@ const GuestHeader: React.FC = () => {
       <nav>
         <ul>
           <div className="guest-header-items">
-            <img src={logo} alt="logo" className='logo' />
+            <div onClick={() => window.location.reload()}> {/* Đường link để nhảy về trang chủ */}
+              <img src={logo} alt="logo" className='logo' />
+            </div>
           </div>
           <div className="guest-header-items">
             <li className="inline-block">
-              <ScrollLink to='guest-introduction' spy={true} offset={-100} duration={500}>
-                HOME
-              </ScrollLink>
+              <Forward to='/'>HOME</Forward>
             </li>
           </div>
           <div className="guest-header-items">
             <li className="inline-block">
-              <ScrollLink to='auctions-content' spy={true} offset={-100} duration={500}>
-                AUCTIONS
-              </ScrollLink>
+              <Forward to='/auctions'>AUCTIONS</Forward>
             </li>
           </div>
           <div className="guest-header-items">
             <li className="inline-block">
-              <ScrollLink to='jewel-content' spy={true} offset={-100} duration={500}>
-                JEWELRY
-              </ScrollLink>
+              <Forward to='/jewelry'>JEWELRY</Forward>
             </li>
           </div>
           <div className="guest-header-items">
             <li className="inline-block">
-              <ScrollLink to='auctions-rule' spy={true} offset={-100} duration={500}>
-                RULE
-              </ScrollLink>
+              <Forward to='/rule'>RULE</Forward>
             </li>
           </div>
           <div className="guest-header-items">
             <li className="inline-block">
               <Forward to='/login'>
                 <img src={account} alt="account" className='account' />
+                <span>Login</span>
               </Forward>
             </li>
           </div>
