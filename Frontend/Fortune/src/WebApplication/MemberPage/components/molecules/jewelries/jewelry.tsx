@@ -30,7 +30,7 @@ function MemberJewelry() {
       <div className="jewelry-container">
         {jewelry.map((jewelry) => (
             <div key={jewelry.$id} className="jewelry-item">
-              <img src="../../../../../../src/assets/img/jewelry_introduction.jpg" alt="" />
+              <img src={jewelry.jewelryImg}  alt="../../../../../../src/assets/img/jewelry_introduction.jpg" />
               <h3>{jewelry.name}</h3>
               <p>Description: {jewelry.description}</p>
               <p>Collection: {jewelry.collection}</p>
