@@ -1,4 +1,4 @@
-import MemberViewJewelry from '../../molecules/jewelries/memberViewJewelry'
+import MemberViewJewelry from '../../molecules/jewelry-details/memberViewJewelry'
 function MemberJewelryBody() {
   return (
     <div> 

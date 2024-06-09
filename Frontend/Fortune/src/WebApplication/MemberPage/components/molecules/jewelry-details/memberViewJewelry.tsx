@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import './jewelry.scss';
+import { useEffect, useState } from 'react';
+import './view-jewelry.scss';
 import api from '../../../../../config/axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';

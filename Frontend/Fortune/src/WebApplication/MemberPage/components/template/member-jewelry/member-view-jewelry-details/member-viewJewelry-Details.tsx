@@ -1,4 +1,4 @@
-import ViewJewelryDetail from '../../../molecules/jewelries/viewJewelryDetails'
+import ViewJewelryDetail from '../../../molecules/jewelry-update/viewJewelryDetails'
 function MemberViewJewelryBody() {
   return (
     <div> 
