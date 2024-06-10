@@ -22,7 +22,7 @@ form {
   h3 {
     text-align: center;
   }
-  
+
   div {
     margin-bottom: 15px;
   }
@@ -35,7 +35,8 @@ form {
   }
 
   input,
-  textarea {
+  textarea,
+  select {
     width: 100%;
     padding: 10px;
     border: 1px solid $form-border-color;
@@ -61,5 +62,11 @@ form {
     &:hover {
       background-color: $form-button-hover-color;
     }
+  }
+
+  .error {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
   }
 }
