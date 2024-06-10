@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../../../../../config/axios';
-import './auctions.scss';
+import './member-auction.scss';
 
 interface Auction {
     auctionId: number;

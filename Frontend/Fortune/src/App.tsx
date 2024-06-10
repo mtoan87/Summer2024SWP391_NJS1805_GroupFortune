@@ -11,6 +11,7 @@ import JewelryUploadPg from './WebApplication/MemberPage/components/pages/member
 import MemberJewelryPg from './WebApplication/MemberPage/components/pages/member-Jewelry-pg/member-jewelry-pg';
 import MemberViewJewelryPg from './WebApplication/MemberPage/components/pages/member-Jewelry-pg/member-View-Jewelry-Details-Pg';
 import ManagerHomePg from './WebApplication/ManagerPage/component/pages/ManagerHomePg';
+import MemberAucDetailsPg from './WebApplication/MemberPage/components/pages/member-auction-details-pg/member-auction-details-pg';
 const App: React.FC = () => {
   const { user, setUser } = useUser();
   useEffect(() => {
@@ -41,6 +42,7 @@ const App: React.FC = () => {
               {user.role === 2 && (
                 <>
                   <Route index element={<MemberHomePg />} />
+                  <Route path="/auction/:id" element ={<MemberAucDetailsPg />} />
                   <Route path='/userAuc' element={<MemberAuctionPg />} />
                   <Route path='/userJewel/upload' element={<JewelryUploadPg />} />
                   <Route path='/userJewel' element={<MemberJewelryPg />} />

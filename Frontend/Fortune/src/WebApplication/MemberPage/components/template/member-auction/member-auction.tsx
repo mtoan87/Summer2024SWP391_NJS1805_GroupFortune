@@ -1,5 +1,4 @@
-import MemberViewAuctions from "../../molecules/auctions/memberAuction"
-import MemberIntroduction from '../../molecules/introduction/introduction'
+import MemberViewAuctions from "../../molecules/member-auctions/memberAuction"
 function memberAuctionBody() {
   return (
     <div> 

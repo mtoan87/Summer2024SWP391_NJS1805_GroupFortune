@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../../../../../config/axios';
 import './auctions.scss';
 
 function MemberAuctions() {
     const [auctions, setAuctions] = useState([]);
-    const [imageUrl,setimageUrl] = useState("");
+    const navigate = useNavigate();
+
     useEffect(() => {
         const fetchAuctions = async () => {
             try {
@@ -20,7 +22,6 @@ function MemberAuctions() {
                 );
 
                 setAuctions(auctionsWithImages);
-                console.log(auctions);
             } catch (err) {
                 console.error('Error fetching auctions:', err);
             }
@@ -32,12 +33,15 @@ function MemberAuctions() {
     const fetchJewelryImage = async (jewelryId) => {
         try {
             const response = await api.get(`api/Jewelries/GetById/${jewelryId}`);
-            
             return response.data.jewelryImg; // Assuming imageUrl is the property containing the image URL
         } catch (err) {
             console.error('Error fetching jewelry image:', err);
             return null;
         }
+    };
+
+    const handleAuctionClick = (auctionId) => {
+        navigate(`/auction/${auctionId}`);
     };
 
     return (
@@ -47,7 +51,7 @@ function MemberAuctions() {
             </div>
             <div className="auctions-container">
                 {auctions.map((auction) => (
-                    <div key={auction.auctionId} className="auction-item">
+                    <div key={auction.auctionId} className="auction-item" onClick={() => handleAuctionClick(auction.auctionId)}>
                         <img src={auction.imageUrl} alt="" />
                         <p>Start Time: {auction.starttime}</p>
                         <p>End Time: {auction.endtime}</p>
