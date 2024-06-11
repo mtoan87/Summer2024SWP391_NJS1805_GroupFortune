@@ -46,6 +46,7 @@ const App: React.FC = () => {
                   <Route path='/userAuc' element={<MemberAuctionPg />} />
                   <Route path='/userJewel/upload' element={<JewelryUploadPg />} />
                   <Route path='/userJewel' element={<MemberJewelryPg />} />
+                  <Route path='/ViewJewInfo/:id' element={<MemberJewelryPg />} />
                   {/* <Route path='/userJewel/:id' element={<MemberJewelryPg />} /> */}
                   <Route path="/update-jewelry/:id" element={<MemberViewJewelryPg />} />
                   <Route path="/ManagerViewAuc" element={<ManagerHomePg />} />

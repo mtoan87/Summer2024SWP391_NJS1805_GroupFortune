@@ -78,6 +78,7 @@ const JewelryUploadForm: React.FC = () => {
       return;
     }
     try {
+      console.log(jewelry);
       const response = await api.post('/api/Jewelries/CreateJewelry', jewelry);
       console.log('Jewelry uploaded successfully', response.data);
       toast.success('Jewelry uploaded successfully!');

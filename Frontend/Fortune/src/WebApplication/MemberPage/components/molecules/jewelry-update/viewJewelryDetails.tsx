@@ -98,6 +98,7 @@ function ViewJewelryDetails() {
     console.log('Updated Jewelry Data:', updatedJewelryData);
 
     try {
+      console.log(updatedJewelryData);
       const response = await api.put(`/api/Jewelries/UpdateJewelry?id=${id}`, updatedJewelryData);
       console.log(response.data);
       // Handle success
@@ -117,7 +118,10 @@ function ViewJewelryDetails() {
         <div className="jewelry-details-item">
           <label htmlFor="image">Image</label>
           <div className="upload-label-details" onClick={handleImageClick}>
-            <img src={jewelryDetails.imageUrl || '../../../../../../src/assets/img/jewelry_introduction.jpg'} alt={jewelryDetails.name} />
+          <img 
+        src={jewelryDetails.jewelryImg || "../../../../../../src/assets/img/jewelry_introduction.jpg"} 
+        alt={jewelryDetails.name} 
+      />
             <div className="upload-text-details">Upload Image</div>
             <input ref={fileInputRef} type="file" id="image" name="image" onChange={handleImageUpload} accept="image/*" />
           </div>

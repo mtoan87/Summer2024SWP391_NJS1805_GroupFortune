@@ -86,24 +86,29 @@ function MemberViewJewelry() {
           <button onClick={() => navigate('/userJewel/upload')}>Create Jewelry</button>
         </div>
         {filteredJewelry.length > 0 ? (
-          filteredJewelry.map((jewelry) => (
-            <div key={jewelry.jewelryId} className="jewelry-item">
-              <img src="../../../../../../src/assets/img/jewelry_introduction.jpg" alt={jewelry.name} />
-              <h3>{jewelry.name}</h3>
-              <p>Description: {jewelry.description}</p>
-              <p>Collection: {jewelry.collection}</p>
-              <p>Gold Age: {jewelry.goldage}</p>
-              <p>Materials: {jewelry.materials}</p>
-              <p>Weight: {jewelry.weight}</p>
-              <div className="jewelry-item-buttons">
-                <button onClick={() => handleUpdateJewelry(jewelry.jewelryId)}>Update</button>
-                <button onClick={() => handleRegisterAuction(jewelry.jewelryId)}>Register Auction</button>
-              </div>
-            </div>
-          ))
-        ) : (
-          <p>No jewelry items found.</p>
-        )}
+  filteredJewelry.map((jewelry) => (
+    <div key={jewelry.jewelryId} className="jewelry-item">
+      <img 
+        src={jewelry.jewelryImg || "../../../../../../src/assets/img/jewelry_introduction.jpg"} 
+        alt={jewelry.name} 
+      />
+      <h3>{jewelry.name}</h3>
+      <p>Description: {jewelry.description}</p>
+      <p>Collection: {jewelry.collection}</p>
+      <p>Gold Age: {jewelry.goldage}</p>
+      <p>Materials: {jewelry.materials}</p>
+      <p>Weight: {jewelry.weight} Grams</p>
+      <p>Price: {jewelry.price}$</p>
+      <div className="jewelry-item-buttons">
+        <button onClick={() => handleUpdateJewelry(jewelry.jewelryId)}>Update</button>
+        <button onClick={() => handleRegisterAuction(jewelry.jewelryId)}>Register Auction</button>
+      </div>
+    </div>
+  ))
+) : (
+  <p>No jewelry items found.</p>
+)}
+
       </div>
       <ToastContainer className="toast-position" />
     </>
