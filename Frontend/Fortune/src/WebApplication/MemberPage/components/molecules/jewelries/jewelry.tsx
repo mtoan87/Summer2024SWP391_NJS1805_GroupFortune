@@ -30,13 +30,17 @@ function MemberJewelry() {
       <div className="jewelry-container">
         {jewelry.map((jewelry) => (
             <div key={jewelry.$id} className="jewelry-item">
-              <img src={jewelry.jewelryImg}  alt="../../../../../../src/assets/img/jewelry_introduction.jpg" />
+             <img 
+        src={jewelry.jewelryImg || "../../../../../../src/assets/img/jewelry_introduction.jpg"} 
+        alt={jewelry.name} 
+      />
               <h3>{jewelry.name}</h3>
               <p>Description: {jewelry.description}</p>
               <p>Collection: {jewelry.collection}</p>
-              <p>Gold Age: {jewelry.goldage}</p>
+              <p>Gold Age: {jewelry.goldage}k</p>
               <p>Materials: {jewelry.materials}</p>
-              <p>Weight: {jewelry.weight}</p>
+              <p>Weight: {jewelry.weight} Grams</p>
+              <p>Price: {jewelry.price}$</p>
             </div>
           )
         )}
@@ -45,4 +49,4 @@ function MemberJewelry() {
   );
 }
 
-export default MemberJewelry;
+export default MemberJewelry; 

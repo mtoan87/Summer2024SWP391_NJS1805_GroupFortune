@@ -1,10 +1,10 @@
 import './introduction.scss'
-
+import SimpleSlider from '../SlideShow/SimpleSlider'
 function MemberIntroduction() {
     return (
         <>
             <div className="guest-introduction">
-                <div className="content-wrapper">
+                {/* <div className="content-wrapper">
                     <img src="../../../../../../src/assets/img/jewelry.jpg" alt="Jewelry Introduction" className="background-image" />
                     <div className="overlay"></div>
                     <div className="text-overlay">
@@ -18,8 +18,9 @@ function MemberIntroduction() {
                             Get Started
                         </button>
                     </div>
-                </div>
+                </div> */}
             </div>
+            <SimpleSlider/>
         </>
     )
 }
