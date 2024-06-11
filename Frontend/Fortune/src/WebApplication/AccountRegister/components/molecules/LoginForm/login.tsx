@@ -100,9 +100,13 @@ const LoginForm: React.FC = () => {
         <div className="bt">
           <button type="submit" className="btn btn-primary">Sign in</button>
         </div>
+        <span>OR</span>
         <div className="bt">
           <button type="button" className="btn btn-secondary" onClick={handleRegister}>
             Sign up
+          </button>
+          <button type="button" className="btn btn-secondary" onClick={handleRegister}>
+            Forgot
           </button>
         </div>
       </form>

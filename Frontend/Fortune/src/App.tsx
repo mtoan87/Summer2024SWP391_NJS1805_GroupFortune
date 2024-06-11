@@ -1,9 +1,12 @@
 import React, { useEffect } from 'react';
 import './App.scss';
+/*-------------------------------AUTHENTICAL----------------------------------------------*/
 import GuestHomePg from './WebApplication/GuestPage/guest-home-page/guest-home-pg';
 import RegisterPg from './WebApplication/AccountRegister/components/pages/Register-pg';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import Loginpg from './WebApplication/AccountRegister/components/pages/Loginpg';
+
+/*--------------------------MEMEBER----------------------------------------------*/
 import MemberHomePg from './WebApplication/MemberPage/components/pages/member-home-pg/member-home-pg';
 import { UserProvider, useUser } from './WebApplication/Data/UserContext';
 import MemberAuctionPg from './WebApplication/MemberPage/components/pages/member-auction-pg/memberauctionPg';

@@ -1,8 +1,8 @@
 .login-form {
   max-width: 500px;
   height: auto; 
-  margin: 0 auto;
-  background-color: rgb(255, 255, 255);
+  margin: -150px auto 0 auto;
+  background-color: rgb(255, 255, 255); /* Màu nền của form đăng nhập */ 
   border-radius: 10px;
   text-align: left;
 
@@ -13,9 +13,10 @@
     font-size: 1.5rem;
     font-family: 'Open Sans';
     color: rgb(0, 0, 0);
-    margin-bottom: 0.5rem; 
   }
-
+  span{
+    margin-left: 220px;
+  }
   .form-control {
     width: 100%; 
     font-size: 1rem;
@@ -35,11 +36,16 @@
     margin: 0 auto; 
     color: black;
     text-align: center; 
+    margin-bottom: 10px; /* Space between buttons */
   }
 
   .btn-secondary {
-    margin-top: 1rem; /* Space between the buttons */
+    background-color: bisque; /* Change background color */
+    border-color: #46b8da; /* Change border color */
+    margin-bottom: 10px; /* Space between the buttons */
   }
+
+
 
   .form-text {
     font-size: 1rem;
