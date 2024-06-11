@@ -55,6 +55,9 @@ const LoginForm: React.FC = () => {
   const handleRegister = () => {
     navigate("/register");
   };
+  const handleForgot = () => {
+    navigate("/forgotpass");
+  };
 
   useEffect(() => {
     const userString = sessionStorage.getItem("loginedUser");
@@ -98,11 +101,15 @@ const LoginForm: React.FC = () => {
           />
         </div>
         <div className="bt">
-          <button type="submit" className="btn btn-primary">Sign in</button>
+          <button type="submit" className="btn btn-primary">Đăng Nhập</button>
         </div>
+        <span>OR</span>
         <div className="bt">
           <button type="button" className="btn btn-secondary" onClick={handleRegister}>
-            Sign up
+            Đăng Ký
+          </button>
+          <button type="button" className="btn btn-secondary" onClick={handleForgot}>
+            Quên Mật khẩu ?
           </button>
         </div>
       </form>

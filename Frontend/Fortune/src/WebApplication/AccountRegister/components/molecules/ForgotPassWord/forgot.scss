@@ -1,0 +1,51 @@
+.forgot-password-form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.511); /* Thay đổi màu nền và làm mờ */
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.766);
+  }
+  
+  .forgot-password-form h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center; /* Căn giữa tiêu đề */
+    color: #ffffff; /* Đổi màu chữ thành trắng */
+  }
+  
+  .forgot-password-form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #fff; /* Đổi màu chữ thành trắng */
+  }
+  
+  .forgot-password-form input {
+    width: calc(100% - 20px); /* Giảm độ rộng của input để tránh overflow */
+    padding: 10px;
+    margin: 0 auto 15px auto; /* Căn giữa và thêm khoảng cách dưới cùng */
+    border: 1px solid #fff; /* Đổi màu viền thành trắng */
+    border-radius: 5px;
+    display: block;
+    background-color: rgba(255, 255, 255, 0.1); /* Làm trong suốt nền input */
+    color: #fff; /* Đổi màu chữ thành trắng */
+  }
+  
+  .forgot-password-form button {
+    width: calc(100% - 20px); /* Giảm độ rộng của button để tránh overflow */
+    padding: 10px;
+    background-color: rgba(255, 237, 196, 0.258);
+    border: none;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: block;
+    margin: 0 auto; /* Căn giữa button */
+  }
+  
+  .forgot-password-form button:hover {
+    background-color: #b35f0058;
+  }
+  
