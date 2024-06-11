@@ -2,8 +2,9 @@
   max-width: 500px;
   height: auto; 
   margin: -150px auto 0 auto;
-  background-color: rgb(255, 255, 255); /* Màu nền của form đăng nhập */ 
+  background-color: rgba(0, 0, 0, 0.511); /* Thay đổi màu nền và làm mờ */
   border-radius: 10px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.766);
   text-align: left;
 
   .form-label,
@@ -21,8 +22,8 @@
     width: 100%; 
     font-size: 1rem;
     height: 2.5rem;
-    border: 0.5px solid #ccc;
     border-radius: 4px; 
+    
   }
 
   .btn {

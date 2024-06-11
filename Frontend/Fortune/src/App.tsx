@@ -5,6 +5,7 @@ import GuestHomePg from './WebApplication/GuestPage/guest-home-page/guest-home-p
 import RegisterPg from './WebApplication/AccountRegister/components/pages/Register-pg';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import Loginpg from './WebApplication/AccountRegister/components/pages/Loginpg';
+import ForgotPass from './WebApplication/AccountRegister/components/pages/forgotPage';
 
 /*--------------------------MEMEBER----------------------------------------------*/
 import MemberHomePg from './WebApplication/MemberPage/components/pages/member-home-pg/member-home-pg';
@@ -32,6 +33,7 @@ const App: React.FC = () => {
             <>
               <Route index element={<GuestHomePg />} />
               <Route path='register' element={<RegisterPg />} />
+              <Route path='forgotpass' element={<ForgotPass />} />
               <Route path='login' element={<Loginpg />} />
             </>
           ) : (
