@@ -29,7 +29,7 @@ function MemberJewelry() {
       </div>
       <div className="jewelry-container">
         {jewelry.map((jewelry) => (
-            <div key={jewelry.$id} className="jewelry-item">
+            <div key={jewelry.jewelryId} className="jewelry-item">
              <img 
         src={jewelry.jewelryImg || "../../../../../../src/assets/img/jewelry_introduction.jpg"} 
         alt={jewelry.name} 
