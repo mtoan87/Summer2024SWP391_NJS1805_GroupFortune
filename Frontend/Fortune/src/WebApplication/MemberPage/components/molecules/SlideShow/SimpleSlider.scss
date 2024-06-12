@@ -1,158 +1,53 @@
-.ss-outer-container {
+.carousel-container {
     position: relative;
-    background-color: white;
-    padding-top: 3rem;
-}
-
-.ss-container {
-    width: 100%;
-    overflow: hidden;
-    position: relative;
-}
-
-.ss-wrapper {
-    display: flex;
-    transition: transform 0.3s ease-in-out;
-}
-
-.ss-slide {
-    min-width: 100%;
-    box-sizing: border-box;
-    display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.active {
-    transition-delay: opacity 0.9s ease;
-}
-
-.ss-slide img {
-    width: 100%;
-    display: block;
-    transition: transform 0.9s ease;
-    object-fit: cover;
-}
-
-.ss-slide:hover img {
-    transform: scale(1.03);
-    transition: transform 0.9s ease;
-}
-
-.ss-prev,
-.ss-next {
-    position: absolute;
-    color: rgb(0, 0, 0);
-    border: none;
-    padding-left: 2rem;
-    padding-right: 2rem;
-    padding-top: 1rem;
-    cursor: pointer;
-    background-color: transparent;
-}
-
-.ss-prev::before{
-    content: '\003C';
-    font-size: 25px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(100%, -50%);
-    transition: transform 0.3s ease;
-}
-.ss-next::before{
-    content: '\003C';
-    font-size: 25px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-200%, -50%);
-    transition: transform 0.3s ease;
-}
-.ss-prev::after{
-    content: '\003C';
-    font-size: 25px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(100%, -50%);
-    transition: transform 0.3s ease;
-}
-.ss-next::after {
-    content: '\003C';
-    font-size: 25px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-200%, -50%);
-    transition: transform 0.3s ease;
-}
-
-.ss-next::before,
-.ss-next::after {
-    content: '\003E';
-}
-
-.ss-prev:hover::before {
-    transform: translate(100%, -50%) rotate(360deg);
-}
-
-.ss-next:hover::after {
-    transform: translate(-10%, -50%) rotate(360deg);
-}
-
-.ss-prev:hover::after {
-    transform: translate(-100%, -50%) rotate(-360deg);
-}
-
-.ss-next:hover::before {
-    transform: translate(-200%, -50%) rotate(-360deg);
-}
-
-.ss-prev {
-    right: calc(50% + 50px);
-}
-
-.ss-next {
-    left: calc(50% + 50px);
-}
-
-.ss-indicators {
-    position: absolute;
-    bottom: -25px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    align-items: center;
-    color: #ba3077;
-    font-family: Gugi;
-    letter-spacing: .15em;
-    font-size: 2rem;
-    zoom: 1;
-    -webkit-font-smoothing: antialiased;
-}
-
-.ss-indicators div {
-    background-color: white;
-    padding: 5px 10px;
-    border-radius: 20px;
-    margin: 0 10px;
-    color: #ba3077;
-    font-family: Gugi;
-    letter-spacing: .15em;
-    font-size: 2rem;
-    zoom: 1;
-    -webkit-font-smoothing: antialiased;
-}
-
-.ss-controls {
-    position: absolute;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-.pc_b {
-    margin-bottom: 50px;
-    height: 35rem;
-    object-fit: cover; /* Ensures the image covers the entire space */
+    padding-top: 6rem; /* Adjust if you need more space at the top to account for the fixed header */
   }
+  
+  .slick-slider {
+    position: relative;
+    z-index: 1; /* Ensures the slider is above other elements */
+  }
+  
+  .slick-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .carousel-item {
+    img {
+      width: 100%;
+      height: 50rem; 
+      object-fit: cover; /* Ensures the image covers the entire space without stretching */
+    }
+  }
+
+  .slick-prev,
+  .slick-next {
+    display: none;
+  }
+  
+  .slick-dots {
+    bottom: -2.5rem; 
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .slick-dots li {
+    margin: 0 5px;
+  }
+  
+  .slick-dots li button:before {
+    font-size: 12px;
+    color: #ddd;
+  }
+  
+  .slick-dots li.slick-active button:before {
+    color: #333;
+  }
+
+  .carousel-container {
+    padding-top: 6rem; 
+  }
+  
