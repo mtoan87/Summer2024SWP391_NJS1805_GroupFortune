@@ -35,7 +35,7 @@
   .forgot-password-form button {
     width: calc(100% - 20px); /* Giảm độ rộng của button để tránh overflow */
     padding: 10px;
-    background-color: rgba(255, 237, 196, 0.258);
+    background-color: #a1a435aa;
     border: none;
     color: #fff;
     border-radius: 5px;
@@ -46,6 +46,6 @@
   }
   
   .forgot-password-form button:hover {
-    background-color: #b35f0058;
+    background-color: #6e7203;
   }
   

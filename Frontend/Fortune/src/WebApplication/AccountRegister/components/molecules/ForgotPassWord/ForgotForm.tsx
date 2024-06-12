@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import api from "../../../../../../src/config/axios";
 import "react-toastify/dist/ReactToastify.css";
-import './forgot.scss'
+import './forgot.scss';
 import '../../authGeneral.scss';
 
 const ForgotForm = () => {
@@ -19,10 +19,8 @@ const ForgotForm = () => {
     try {
       const response = await api.post("api/ForgotPassword", { email });
       const data = response.data;
-      // Xử lý khi mã đã được gửi thành công
       toast.success(data.message);
-      // Chuyển hướng người dùng đến trang thông báo gửi mã thành công
-      navigate("/forgot-password-success");
+      navigate("/verify-code", { state: { email } });
     } catch (error) {
       console.error(error);
       toast.error("Gửi mã không thành công. Vui lòng thử lại sau.");
@@ -31,15 +29,15 @@ const ForgotForm = () => {
 
   return (
     <div className="forgot-password-form">
-      <h2>Lấy lại mật khẩu!</h2>
-      <label htmlFor="email">Email</label>
+      <h2>Reset Password</h2>
+      <label htmlFor="email">Fill in email !</label>
       <input
         type="email"
         id="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-      <button onClick={handleForgotPassword}>Gửi mã</button>
+      <button onClick={handleForgotPassword}>Send</button>
     </div>
   );
 };

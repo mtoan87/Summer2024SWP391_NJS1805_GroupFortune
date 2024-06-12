@@ -1,5 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
-import './SimpleSlider.scss';
+import Slider from 'react-slick';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import "./SimpleSlider.scss";
 
 const sliderData = [
   {
@@ -30,61 +32,50 @@ const sliderData = [
 ];
 
 const SimpleSlider = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const slideInterval = useRef(null);
-
-  useEffect(() => {
-    startAutoSlide();
-    return () => {
-      pauseAutoSlide();
-    };
-  }, [currentIndex]);
-
-  const startAutoSlide = () => {
-    slideInterval.current = setInterval(() => {
-      showNextSlide();
-    }, 6000); // Change slide every 6 seconds
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 1000,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 2000,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 1,
+          infinite: true,
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 1,
+          dots: true,
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          dots: false,
+        },
+      },
+    ],
   };
-
-  const pauseAutoSlide = () => {
-    clearInterval(slideInterval.current);
-  };
-
-  const showPrevSlide = () => {
-    const newIndex = currentIndex > 0 ? currentIndex - 1 : sliderData.length - 1;
-    setCurrentIndex(newIndex);
-  };
-
-  const showNextSlide = () => {
-    const newIndex = currentIndex < sliderData.length - 1 ? currentIndex + 1 : 0;
-    setCurrentIndex(newIndex);
-  };
-
-  
 
   return (
-    <div className="ss-outer-container">
-      <div className="ss-container" onMouseEnter={pauseAutoSlide} onMouseLeave={startAutoSlide}>
-        <div className="ss-wrapper" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
-          {sliderData.map((item, index) => (
-            <div key={index} className="ss-slide">
-              <a href={item.href} target="_blank" rel="noopener noreferrer">
-                <h1>
-                  <img className={`pc_b ${index === currentIndex ? 'active' : ''}`} src={item.imgSrc} alt={item.imgAlt} />
-                </h1>
-              </a>
-            </div>
-          ))}
-        </div>
-       
-      </div>
-      <div className="ss-controls">
-        <button className="ss-prev" onClick={showPrevSlide}></button>
-        <div className="ss-indicators">
-          {`${currentIndex + 1}/${sliderData.length}`}
-        </div>
-        <button className="ss-next" onClick={showNextSlide}></button>
-      </div>
+    <div className="carousel-container">
+      <Slider {...settings} aria-label="Image Carousel">
+        {sliderData.map((item, index) => (
+          <div className="carousel-item" key={index}>
+            <a href={item.href} target="_blank" rel="noopener noreferrer">
+              <img src={item.imgSrc} alt={item.imgAlt} />
+            </a>
+          </div>
+        ))}
+      </Slider>
     </div>
   );
 };

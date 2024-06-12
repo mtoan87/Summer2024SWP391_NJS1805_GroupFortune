@@ -54,7 +54,6 @@ const App: React.FC = () => {
                   <Route path='/ViewJewInfo/:id' element={<MemberJewelryPg />} />
                   {/* <Route path='/userJewel/:id' element={<MemberJewelryPg />} /> */}
                   <Route path="/update-jewelry/:id" element={<MemberViewJewelryPg />} />
-                  <Route path="/ManagerViewAuc" element={<ManagerHomePg />} />
                 </>
               )}
               {user.role === 3 && (
