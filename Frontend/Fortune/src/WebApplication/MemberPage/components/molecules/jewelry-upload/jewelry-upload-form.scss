@@ -70,3 +70,34 @@ form {
     margin-top: 5px;
   }
 }
+.upload-label-details {
+  position: relative;
+}
+.upload-label-details:hover .upload-text-details {
+  opacity: 1;
+}
+.upload-text-details {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18px;
+  color: #ffffff;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.upload-label-details:hover .upload-text-details {
+  opacity: 1;
+}
+img {
+  position: relative;
+  max-width: 100%;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  transition: filter 0.3s ease; /* Add transition for smooth effect */
+}
+img:hover {
+  filter: brightness(70%); /* Darken the image on hover */
+}

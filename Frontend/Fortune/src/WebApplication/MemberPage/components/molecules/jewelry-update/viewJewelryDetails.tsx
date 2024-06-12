@@ -5,6 +5,7 @@ import './viewjewDetails.scss';
 
 function ViewJewelryDetails() {
   const [jewelryDetails, setJewelryDetails] = useState({
+    accountId: '',
     imageUrl: '',
     imageFile: null,
     name: '',
@@ -27,15 +28,14 @@ function ViewJewelryDetails() {
     const fetchJewelryDetails = async () => {
       try {
         const response = await api.get(`/api/Jewelries/GetById/${id}`);
-        console.log(response.data);
-        setJewelryDetails(response.data);
+        setJewelryDetails({ ...response.data, accountId: accountId });
       } catch (error) {
         console.error('Error fetching jewelry details:', error);
       }
     };
 
     fetchJewelryDetails();
-  }, [id]);
+  }, [id, accountId]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -83,29 +83,25 @@ function ViewJewelryDetails() {
   const handleUpdateJewelry = async () => {
     if (!validateInputs()) return;
 
-    const updatedJewelryData = {
-      accountId: accountId,
-      name: jewelryDetails.name,
-      materials: jewelryDetails.materials,
-      description: jewelryDetails.description,
-      weight: jewelryDetails.weight,
-      goldage: jewelryDetails.goldage,
-      collection: jewelryDetails.collection,
-      price: jewelryDetails.price,
-      jewelryImg: jewelryDetails.jewelryImg
-    };
-
-    console.log('Updated Jewelry Data:', updatedJewelryData);
+    const formData = new FormData();
+    formData.append('accountId', jewelryDetails.accountId);
+    formData.append('name', jewelryDetails.name);
+    formData.append('materials', jewelryDetails.materials);
+    formData.append('description', jewelryDetails.description);
+    formData.append('weight', jewelryDetails.weight);
+    formData.append('goldage', jewelryDetails.goldage);
+    formData.append('collection', jewelryDetails.collection);
+    formData.append('price', jewelryDetails.price);
+    if (jewelryDetails.imageFile) {
+      formData.append('jewelryImg', jewelryDetails.imageFile); // Ensure the key matches the API requirement
+    }
 
     try {
-      console.log(updatedJewelryData);
-      const response = await api.put(`/api/Jewelries/UpdateJewelry?id=${id}`, updatedJewelryData);
+      const response = await api.put(`/api/Jewelries/UpdateJewelry?id=${id}`, formData);
       console.log(response.data);
-      // Handle success
       navigate('/userJewel', { state: { successMessage: 'Jewelry updated successfully!' } });
     } catch (error) {
       console.error('Error:', error);
-      // Handle error
     }
   };
 
@@ -118,12 +114,20 @@ function ViewJewelryDetails() {
         <div className="jewelry-details-item">
           <label htmlFor="image">Image</label>
           <div className="upload-label-details" onClick={handleImageClick}>
-          <img 
-        src={jewelryDetails.jewelryImg || "../../../../../../src/assets/img/jewelry_introduction.jpg"} 
-        alt={jewelryDetails.name} 
-      />
+            <img
+              src={jewelryDetails.imageUrl || "../../../../../../src/assets/img/jewelry_introduction.jpg"}
+              alt={jewelryDetails.name}
+            />
             <div className="upload-text-details">Upload Image</div>
-            <input ref={fileInputRef} type="file" id="image" name="image" onChange={handleImageUpload} accept="image/*" />
+            <input
+              ref={fileInputRef}
+              type="file"
+              id="image"
+              name="image"
+              onChange={handleImageUpload}
+              accept="image/*"
+              style={{ display: 'none' }}
+            />
           </div>
           <label htmlFor="name">Name</label>
           <input type="text" name="name" value={jewelryDetails.name} onChange={handleInputChange} />

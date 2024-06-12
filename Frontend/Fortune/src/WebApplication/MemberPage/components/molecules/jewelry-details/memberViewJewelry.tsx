@@ -89,9 +89,10 @@ function MemberViewJewelry() {
   filteredJewelry.map((jewelry) => (
     <div key={jewelry.jewelryId} className="jewelry-item">
       <img 
-        src={jewelry.jewelryImg || "../../../../../../src/assets/img/jewelry_introduction.jpg"} 
-        alt={jewelry.name} 
-      />
+              src={`https://localhost:44361/${jewelry.jewelryImg}`} 
+              alt={jewelry.name} 
+              onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
+            />
       <h3>{jewelry.name}</h3>
       <p>Description: {jewelry.description}</p>
       <p>Collection: {jewelry.collection}</p>

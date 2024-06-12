@@ -78,7 +78,10 @@ function MemberViewAuctions() {
     console.log("Auction ID:", auction.auctionId);
     return (
         <div key={auction.auctionId} className="auction-item">
-             <img src={auction.imageUrl || "../../../../../../src/assets/img/jewelry_introduction.jpg"} alt={auction.imageUrl } />
+              <img 
+              src={`https://localhost:44361/${auction.imageUrl}`} 
+              onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
+            />
             <p>Start Time: {auction.starttime}</p>
             <p>End Time: {auction.endtime}</p>
         </div>
