@@ -21,9 +21,16 @@ function MemberViewAuctions() {
             try {
                 const response = await api.get(`/api/Auctions/GetAuctionAndJewelryByAccountId/${accountId}`);
                 console.log('API response:', response.data);
-        
+                
                 if (response.data && Array.isArray(response.data.$values)) {
-                    setAuctions(response.data.$values);
+                    const auctionsData = response.data.$values;
+                    const auctionsWithImages = await Promise.all(
+                        auctionsData.map(async (auction) => {
+                            const imageUrl = await fetchJewelryImage(auction.jewelryId);
+                            return { ...auction, imageUrl };
+                        })
+                    );
+                    setAuctions(auctionsWithImages);
                 } else {
                     console.error('Invalid response data format:', response.data);
                 }
@@ -34,7 +41,15 @@ function MemberViewAuctions() {
         
         fetchAuctions();
     }, []);
-
+    const fetchJewelryImage = async (jewelryId) => {
+        try {
+            const response = await api.get(`api/Jewelries/GetById/${jewelryId}`);
+            return response.data.jewelryImg; // Assuming imageUrl is the property containing the image URL
+        } catch (err) {
+            console.error('Error fetching jewelry image:', err);
+            return null;
+        }
+    };
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchQuery(event.target.value);
     };
@@ -63,7 +78,10 @@ function MemberViewAuctions() {
     console.log("Auction ID:", auction.auctionId);
     return (
         <div key={auction.auctionId} className="auction-item">
-            <img src="../../../../../../src/assets/img/jewelry_introduction.jpg" alt="" />
+              <img 
+              src={`https://localhost:44361/${auction.imageUrl}`} 
+              onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
+            />
             <p>Start Time: {auction.starttime}</p>
             <p>End Time: {auction.endtime}</p>
         </div>

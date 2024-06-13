@@ -55,9 +55,10 @@ function MemberJewelry() {
             key={`${item.jewelryId}-${index}`} // Ensure unique keys using both jewelryId and index
             className="jewelry-item"
           >
-            <img
-              src={item.jewelryImg || "../../../../../../src/assets/img/jewelry_introduction.jpg"}
-              alt={item.name}
+            <img 
+              src={`https://localhost:44361/${item.jewelryImg}`} 
+              alt={jewelry.name} 
+              onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
             />
             <h3>{item.name}</h3>
             <p>Description: {item.description}</p>
@@ -66,7 +67,6 @@ function MemberJewelry() {
             <p>Materials: {item.materials}</p>
             <p>Weight: {item.weight} Grams</p>
             <p className="price">{item.price}₫</p>
-            <p className="installment">0% Trả góp</p>
           </div>
         ))}
       </div>
@@ -77,5 +77,4 @@ function MemberJewelry() {
     </>
   );
 }
-
 export default MemberJewelry;

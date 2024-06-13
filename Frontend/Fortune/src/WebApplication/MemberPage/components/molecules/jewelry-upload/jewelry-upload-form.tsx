@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
-import api from '../../../../../config/axios';
+import React, { useRef, useState } from 'react';
+import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './jewelry-upload-form.scss';
+import api from '../../../../../config/axios';
 
 interface Jewelry {
   accountId: number;
+  imageUrl: string;
+  imageFile: File | null;
   name: string;
   materials: string;
   description: string;
@@ -21,6 +24,8 @@ const accountId = loginedUser?.accountId;
 const JewelryUploadForm: React.FC = () => {
   const [jewelry, setJewelry] = useState<Jewelry>({
     accountId: accountId,
+    imageUrl: '',
+    imageFile: null,
     name: '',
     materials: '',
     description: '',
@@ -30,6 +35,7 @@ const JewelryUploadForm: React.FC = () => {
     price: ''
   });
 
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const validate = () => {
@@ -70,6 +76,27 @@ const JewelryUploadForm: React.FC = () => {
     });
   };
 
+  const handleImageClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files ? e.target.files[0] : null;
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setJewelry(prevState => ({
+          ...prevState,
+          imageUrl: reader.result as string,
+          imageFile: file
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const validationErrors = validate();
@@ -77,14 +104,32 @@ const JewelryUploadForm: React.FC = () => {
       setErrors(validationErrors);
       return;
     }
+
+    const formData = new FormData();
+    formData.append('accountId', jewelry.accountId.toString());
+    formData.append('name', jewelry.name);
+    formData.append('materials', jewelry.materials);
+    formData.append('description', jewelry.description);
+    formData.append('weight', jewelry.weight);
+    formData.append('goldage', jewelry.goldage);
+    formData.append('collection', jewelry.collection);
+    formData.append('price', jewelry.price);
+    if (jewelry.imageFile) {
+      formData.append('jewelryImg', jewelry.imageFile); // Ensure the key matches the API requirement
+    }
+
     try {
-      console.log(jewelry);
-      const response = await api.post('/api/Jewelries/CreateJewelry', jewelry);
+      const response = await api.post('/api/Jewelries/CreateJewelry', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
       console.log('Jewelry uploaded successfully', response.data);
       toast.success('Jewelry uploaded successfully!');
-      // Clear form fields and errors upon successful submission
       setJewelry({
         accountId: accountId,
+        imageUrl: '',
+        imageFile: null,
         name: '',
         materials: '',
         description: '',
@@ -96,6 +141,7 @@ const JewelryUploadForm: React.FC = () => {
       setErrors({});
     } catch (error) {
       console.error('Error uploading jewelry', error);
+      toast.error('Error uploading jewelry. Please try again.');
     }
   };
 
@@ -103,6 +149,18 @@ const JewelryUploadForm: React.FC = () => {
     <div>
       <form onSubmit={handleSubmit}>
         <h3>Jewelry</h3>
+        <div>
+          <label htmlFor="image">Image</label>
+          <div className="upload-label-details" onClick={handleImageClick}>
+            <img
+              src={jewelry.imageUrl || "../../../../../../src/assets/img/jewelry_introduction.jpg"}
+              alt="jewelry"
+              className="upload-preview"
+            />
+            <div className="upload-text-details">Upload Image</div>
+            <input ref={fileInputRef} type="file" id="image" name="image" onChange={handleImageUpload} accept="image/*" style={{ display: 'none' }} />
+          </div>
+        </div>
         <div>
           <label htmlFor="name">Name:</label>
           <input

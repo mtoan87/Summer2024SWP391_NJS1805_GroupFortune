@@ -52,7 +52,10 @@ function MemberAuctions() {
             <div className="auctions-container">
                 {auctions.map((auction) => (
                     <div key={auction.auctionId} className="auction-item" onClick={() => handleAuctionClick(auction.auctionId)}>
-                        <img src={auction.imageUrl} alt="" />
+                         <img 
+              src={`https://localhost:44361/${auction.imageUrl}`} 
+              onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
+            />
                         <p>Start Time: {auction.starttime}</p>
                         <p>End Time: {auction.endtime}</p>
                     </div>
