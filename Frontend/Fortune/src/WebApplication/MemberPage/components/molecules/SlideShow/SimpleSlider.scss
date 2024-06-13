@@ -1,11 +1,11 @@
 .carousel-container {
     position: relative;
-    padding-top: 6rem; /* Adjust if you need more space at the top to account for the fixed header */
+    padding-top: 6rem;
   }
   
   .slick-slider {
     position: relative;
-    z-index: 1; /* Ensures the slider is above other elements */
+    z-index: 1; 
   }
   
   .slick-slide {
@@ -18,7 +18,7 @@
     img {
       width: 100%;
       height: 50rem; 
-      object-fit: cover; /* Ensures the image covers the entire space without stretching */
+      object-fit: cover; 
     }
   }
 
