@@ -88,7 +88,7 @@ function MemberViewJewelry() {
         {filteredJewelry.length > 0 ? (
   filteredJewelry.map((jewelry) => (
     <div key={jewelry.jewelryId} className="jewelry-item">
-      <img 
+      <img  className='item-img'
               src={`https://localhost:44361/${jewelry.jewelryImg}`} 
               alt={jewelry.name} 
               onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}

@@ -29,6 +29,7 @@ function ViewJewelryDetails() {
       try {
         const response = await api.get(`/api/Jewelries/GetById/${id}`);
         setJewelryDetails({ ...response.data, accountId: accountId });
+        console.log(jewelryDetails);
       } catch (error) {
         console.error('Error fetching jewelry details:', error);
       }
@@ -114,9 +115,10 @@ function ViewJewelryDetails() {
         <div className="jewelry-details-item">
           <label htmlFor="image">Image</label>
           <div className="upload-label-details" onClick={handleImageClick}>
-            <img
-              src={jewelryDetails.imageUrl || "../../../../../../src/assets/img/jewelry_introduction.jpg"}
-              alt={jewelryDetails.name}
+            <img  className='item-img'
+              src={`https://localhost:44361/${jewelryDetails.jewelryImg}`} 
+              alt={jewelryDetails.name} 
+              onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
             />
             <div className="upload-text-details">Upload Image</div>
             <input
