@@ -90,14 +90,15 @@ form {
 .upload-label-details:hover .upload-text-details {
   opacity: 1;
 }
-img {
+.upload-preview {
   position: relative;
   max-width: 100%;
+  height: auto;
   border-radius: 8px;
   margin-bottom: 20px;
   cursor: pointer;
   transition: filter 0.3s ease; /* Add transition for smooth effect */
 }
-img:hover {
+.upload-preview:hover {
   filter: brightness(70%); /* Darken the image on hover */
 }

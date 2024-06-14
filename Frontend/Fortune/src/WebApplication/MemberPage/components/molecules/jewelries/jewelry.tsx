@@ -55,7 +55,7 @@ function MemberJewelry() {
             key={`${item.jewelryId}-${index}`} // Ensure unique keys using both jewelryId and index
             className="jewelry-item"
           >
-            <img 
+            <img className='item-img'
               src={`https://localhost:44361/${item.jewelryImg}`} 
               alt={jewelry.name} 
               onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}

@@ -10,7 +10,6 @@ function RegisterJewelryForAuction() {
   const { jewelryId } = location.state || {};
   const loginedUser = JSON.parse(sessionStorage.getItem('loginedUser'));
   const accountId = loginedUser?.accountId;
-
   const [formData, setFormData] = useState({
     accountId: accountId,
     jewelryId: jewelryId || '',
@@ -24,10 +23,14 @@ function RegisterJewelryForAuction() {
       try {
         const response = await api.get(`/api/Jewelries/GetById/${jewelryId}`);
         console.log(response.data);
-        setFormData(prevState => ({
-          ...prevState,
-          jewelryDetails: response.data
-        }));
+        setFormData(prevState => {
+          const updatedFormData = {
+            ...prevState,
+            jewelryDetails: response.data
+          };
+          console.log(updatedFormData); // Log formData after updating the state
+          return updatedFormData;
+        });
       } catch (error) {
         console.error('Error fetching jewelry details:', error);
       }
@@ -51,17 +54,12 @@ function RegisterJewelryForAuction() {
     try {
       const requestData = {
         accountId: formData.accountId,
-        name: formData.jewelryDetails.name,
-        materials: formData.jewelryDetails.materials,
-        description: formData.jewelryDetails.description,
-        weight: formData.jewelryDetails.weight,
-        goldage: formData.jewelryDetails.goldage,
-        collection: formData.jewelryDetails.collection,
+        jewelryId: formData.jewelryId,
         starttime: formData.starttime,
         endtime: formData.endtime
       };
 
-      const response = await api.post('/api/RequestAuction/RequestAuction', requestData);
+      const response = await api.post('/api/Auctions/CreateAuction', requestData);
       console.log('Auction created successfully:', response.data);
       toast.success('Auction registered successfully!', { position: "top-right" });
     } catch (error) {
@@ -77,6 +75,8 @@ function RegisterJewelryForAuction() {
         <>
           <div className="jewelry-details">
             <h3>Jewelry Details:</h3>
+            <p>Image: <img src={`https://localhost:44361/${formData.jewelryDetails.jewelryImg}`} alt={formData.jewelryDetails.name} 
+            onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}/></p>
             <p>Name: {formData.jewelryDetails.name}</p>
             <p>Description: {formData.jewelryDetails.description}</p>
             <p>Collection: {formData.jewelryDetails.collection}</p>

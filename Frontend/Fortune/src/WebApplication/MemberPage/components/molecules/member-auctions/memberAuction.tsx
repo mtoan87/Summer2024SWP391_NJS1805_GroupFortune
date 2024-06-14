@@ -19,7 +19,7 @@ function MemberViewAuctions() {
     useEffect(() => {
         const fetchAuctions = async () => {
             try {
-                const response = await api.get(`/api/Auctions/GetAuctionAndJewelryByAccountId/${accountId}`);
+                const response = await api.get(`/api/Auctions/GetAuctionAndJewelrySilverByAccountId/${accountId}`);
                 console.log('API response:', response.data);
                 
                 if (response.data && Array.isArray(response.data.$values)) {
@@ -68,12 +68,6 @@ function MemberViewAuctions() {
             </div>
             <div className="auctions-container">
                 {/* Create Auction Item */}
-                <div className="auction-item create-auction">
-                    <img src='../../../../../../src/assets/img/Auction.png' alt="" />
-                    <button onClick={() => console.log('Create Auction clicked')}>
-                        Create Auction
-                    </button>
-                </div>
                 {auctions.map((auction) => {
     console.log("Auction ID:", auction.auctionId);
     return (
