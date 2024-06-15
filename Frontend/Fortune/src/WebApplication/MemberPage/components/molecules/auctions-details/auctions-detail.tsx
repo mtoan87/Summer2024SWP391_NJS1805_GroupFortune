@@ -80,7 +80,11 @@ function AuctionDetails() {
             <h1>Auction Details</h1>
             <div className="auction-details-content">
                 <div className="jewelry-details">
-                    <img src={jewelry.jewelryImg} alt="Auction Item" />
+                <img  className='item-img'
+              src={`https://localhost:44361/${jewelry.jewelryImg}`} 
+              alt={jewelry.name} 
+              onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
+            />
                     <p><strong>Name:</strong> {jewelry.name}</p>
                     <p><strong>Materials:</strong> {jewelry.materials}</p>
                     <p><strong>Description:</strong> {jewelry.description}</p>

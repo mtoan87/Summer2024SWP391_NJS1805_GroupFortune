@@ -2,15 +2,17 @@ import React, { useEffect, useState } from 'react';
 import './jewelry.scss';
 import api from '../../../../../config/axios';
 
+import { useNavigate } from 'react-router-dom';
 function MemberJewelry() {
   const [jewelry, setJewelry] = useState([]);
   const [startIndex, setStartIndex] = useState(0);
   const [sliding, setSliding] = useState(false);
 
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchJewelry = async () => {
       try {
-        const response = await api.get('api/Jewelries');
+        const response = await api.get('api/JewelryGold');
         if (response.data && response.data.$values) {
           setJewelry(response.data.$values);
         } else {
@@ -43,7 +45,9 @@ function MemberJewelry() {
   const displayedItems = jewelry.slice(startIndex, startIndex + 4).concat(
     jewelry.slice(0, Math.max(0, startIndex + 4 - jewelry.length))
   );
-
+    const handleJewelryClick = (jewelryId) => {
+        navigate(`/jewelry/${jewelryId}`);
+    };
   return (
     <>
       <div className="jewel-content">
@@ -52,10 +56,11 @@ function MemberJewelry() {
       <div className={`jewelry-container ${sliding ? 'slide' : ''}`}>
         {displayedItems.map((item, index) => (
           <div
-            key={`${item.jewelryId}-${index}`} // Ensure unique keys using both jewelryId and index
+            key={`${item.jewelryGoldId}-${index}`} // Ensure unique keys using both jewelryId and index
             className="jewelry-item"
+            onClick={() => handleJewelryClick(item.jewelryGoldId)}
           >
-            <img 
+            <img className='item-img'
               src={`https://localhost:44361/${item.jewelryImg}`} 
               alt={jewelry.name} 
               onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
@@ -63,7 +68,7 @@ function MemberJewelry() {
             <h3>{item.name}</h3>
             <p>Description: {item.description}</p>
             <p>Collection: {item.collection}</p>
-            <p>Gold Age: {item.goldage}k</p>
+            <p>Gold Age: {item.goldAge}k</p>
             <p>Materials: {item.materials}</p>
             <p>Weight: {item.weight} Grams</p>
             <p className="price">{item.price}₫</p>

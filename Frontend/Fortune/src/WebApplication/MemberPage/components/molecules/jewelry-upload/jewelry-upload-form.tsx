@@ -1,5 +1,4 @@
 import React, { useRef, useState } from 'react';
-import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './jewelry-upload-form.scss';
@@ -13,7 +12,9 @@ interface Jewelry {
   materials: string;
   description: string;
   weight: string;
-  goldage: string;
+  weightUnit: string;  // Added weight unit
+  goldage?: string;  // Optional for Silver
+  purity?: string;   // Optional for Gold
   collection: string;
   price: string;
 }
@@ -30,7 +31,7 @@ const JewelryUploadForm: React.FC = () => {
     materials: '',
     description: '',
     weight: '',
-    goldage: '',
+    weightUnit: 'grams',  // Default weight unit
     collection: '',
     price: ''
   });
@@ -40,31 +41,39 @@ const JewelryUploadForm: React.FC = () => {
 
   const validate = () => {
     const newErrors: { [key: string]: string } = {};
-    
+
     if (!jewelry.name) newErrors.name = 'Name is required';
     if (!jewelry.materials) newErrors.materials = 'Materials is required';
     if (!jewelry.description) newErrors.description = 'Description is required';
-    
+
     if (!jewelry.weight) {
       newErrors.weight = 'Weight is required';
     } else if (isNaN(parseFloat(jewelry.weight))) {
       newErrors.weight = 'Weight must be a number';
     }
-    
-    if (!jewelry.goldage) {
-      newErrors.goldage = 'Gold Age is required';
-    } else if (!Number.isInteger(Number(jewelry.goldage))) {
-      newErrors.goldage = 'Gold Age must be an integer';
+
+    if (jewelry.materials === 'Gold') {
+      if (!jewelry.goldage) {
+        newErrors.goldage = 'Gold Age is required';
+      } else if (!Number.isInteger(Number(jewelry.goldage))) {
+        newErrors.goldage = 'Gold Age must be an integer';
+      }
+    } else if (jewelry.materials === 'Silver') {
+      if (!jewelry.purity) {
+        newErrors.purity = 'Purity is required';
+      } else if (isNaN(parseFloat(jewelry.purity))) {
+        newErrors.purity = 'Purity must be a number';
+      }
     }
-    
+
     if (!jewelry.collection) newErrors.collection = 'Collection is required';
-    
+
     if (!jewelry.price) {
       newErrors.price = 'Price is required';
     } else if (isNaN(parseFloat(jewelry.price))) {
       newErrors.price = 'Price must be a number';
     }
-    
+
     return newErrors;
   };
 
@@ -97,6 +106,13 @@ const JewelryUploadForm: React.FC = () => {
     }
   };
 
+  const logFormData = (formData: FormData) => {
+    console.log('Form Data:');
+    formData.forEach((value, key) => {
+      console.log(`${key}: ${value}`);
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const validationErrors = validate();
@@ -107,25 +123,42 @@ const JewelryUploadForm: React.FC = () => {
 
     const formData = new FormData();
     formData.append('accountId', jewelry.accountId.toString());
-    formData.append('name', jewelry.name);
+    formData.append('Name', jewelry.name);
     formData.append('materials', jewelry.materials);
     formData.append('description', jewelry.description);
-    formData.append('weight', jewelry.weight);
-    formData.append('goldage', jewelry.goldage);
-    formData.append('collection', jewelry.collection);
-    formData.append('price', jewelry.price);
+    formData.append('weight', `${jewelry.weight}${jewelry.weightUnit}`);
+    formData.append('Category', jewelry.collection);
+    formData.append('price', `${jewelry.price}`);
     if (jewelry.imageFile) {
       formData.append('jewelryImg', jewelry.imageFile); // Ensure the key matches the API requirement
     }
 
+    if (jewelry.materials === 'Gold') {
+      formData.append('goldage', `${jewelry.goldage!}k`);
+    } else if (jewelry.materials === 'Silver') {
+      formData.append('purity', `${jewelry.purity!}%`);
+    }
+
+    // Log the form data
+    logFormData(formData);
+
     try {
-      const response = await api.post('/api/Jewelries/CreateJewelry', formData, {
+      let apiEndpoint = '';
+      if (jewelry.materials === 'Gold') {
+        apiEndpoint = '/api/JewelryGold/CreateJewelryGold';
+      } else if (jewelry.materials === 'Silver') {
+        apiEndpoint = '/api/JewelrySilver/CreateSilverJewelry';
+      }
+
+      const response = await api.post(apiEndpoint, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
+
       console.log('Jewelry uploaded successfully', response.data);
       toast.success('Jewelry uploaded successfully!');
+      // Reset form state after successful upload
       setJewelry({
         accountId: accountId,
         imageUrl: '',
@@ -134,7 +167,7 @@ const JewelryUploadForm: React.FC = () => {
         materials: '',
         description: '',
         weight: '',
-        goldage: '',
+        weightUnit: 'grams',
         collection: '',
         price: ''
       });
@@ -173,6 +206,7 @@ const JewelryUploadForm: React.FC = () => {
           />
           {errors.name && <span className="error">{errors.name}</span>}
         </div>
+
         <div>
           <label htmlFor="materials">Materials:</label>
           <select
@@ -188,6 +222,8 @@ const JewelryUploadForm: React.FC = () => {
             <option value="Platinum">Platinum</option>
             <option value="Diamond">Diamond</option>
           </select>
+
+          
           {errors.materials && <span className="error">{errors.materials}</span>}
         </div>
         <div>
@@ -201,7 +237,7 @@ const JewelryUploadForm: React.FC = () => {
           />
           {errors.description && <span className="error">{errors.description}</span>}
         </div>
-        <div>
+        <div className="input-container">
           <label htmlFor="weight">Weight:</label>
           <input
             type="text"
@@ -211,20 +247,49 @@ const JewelryUploadForm: React.FC = () => {
             onChange={handleChange}
             required
           />
+          <select
+            className="weight-unit-select"
+            name="weightUnit"
+            value={jewelry.weightUnit}
+            onChange={handleChange}
+          >
+            <option value="grams">g</option>
+            <option value="kilograms">kg</option>
+            <option value="ounces">oz</option>
+            <option value="pounds">lb</option>
+          </select>
           {errors.weight && <span className="error">{errors.weight}</span>}
         </div>
-        <div>
-          <label htmlFor="goldage">Gold Age:</label>
-          <input
-            type="text"
-            id="goldage"
-            name="goldage"
-            value={jewelry.goldage}
-            onChange={handleChange}
-            required
-          />
-          {errors.goldage && <span className="error">{errors.goldage}</span>}
-        </div>
+        {jewelry.materials === 'Gold' && (
+          <div className="input-container">
+            <label htmlFor="goldage">Gold Age:</label>
+            <input
+              type="text"
+              id="goldage"
+              name="goldage"
+              value={jewelry.goldage}
+              onChange={handleChange}
+              required
+            />
+            <span className="suffix">k</span>
+            {errors.goldage && <span className="error">{errors.goldage}</span>}
+          </div>
+        )}
+        {jewelry.materials === 'Silver' && (
+          <div className="input-container">
+            <label htmlFor="purity">Purity:</label>
+            <input
+              type="text"
+              id="purity"
+              name="purity"
+              value={jewelry.purity}
+              onChange={handleChange}
+              required
+            />
+            <span className="suffix">%</span>
+            {errors.purity && <span className="error">{errors.purity}</span>}
+          </div>
+        )}
         <div>
           <label htmlFor="collection">Collection:</label>
           <input
@@ -238,6 +303,7 @@ const JewelryUploadForm: React.FC = () => {
           {errors.collection && <span className="error">{errors.collection}</span>}
         </div>
         <div>
+        <div className="input-container">
           <label htmlFor="price">Price:</label>
           <input
             type="text"
@@ -247,7 +313,9 @@ const JewelryUploadForm: React.FC = () => {
             onChange={handleChange}
             required
           />
+          <span className="suffix">$</span>
           {errors.price && <span className="error">{errors.price}</span>}
+          </div>
         </div>
         <button type="submit">Upload Jewelry</button>
       </form>

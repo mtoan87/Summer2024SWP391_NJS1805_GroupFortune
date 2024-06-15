@@ -12,16 +12,18 @@ function MemberAuctions() {
             try {
                 const response = await api.get('api/Auctions/GetAllActiveAuctions');
                 const auctionsData = response.data.$values;
-
                 // Fetch images for each auction
                 const auctionsWithImages = await Promise.all(
                     auctionsData.map(async (auction) => {
                         const imageUrl = await fetchJewelryImage(auction.jewelryId);
+                        
+                        console.log(imageUrl);
                         return { ...auction, imageUrl };
                     })
                 );
 
                 setAuctions(auctionsWithImages);
+                console.log(auctions);
             } catch (err) {
                 console.error('Error fetching auctions:', err);
             }
@@ -33,6 +35,7 @@ function MemberAuctions() {
     const fetchJewelryImage = async (jewelryId) => {
         try {
             const response = await api.get(`api/Jewelries/GetById/${jewelryId}`);
+            console.log(response);
             return response.data.jewelryImg; // Assuming imageUrl is the property containing the image URL
         } catch (err) {
             console.error('Error fetching jewelry image:', err);

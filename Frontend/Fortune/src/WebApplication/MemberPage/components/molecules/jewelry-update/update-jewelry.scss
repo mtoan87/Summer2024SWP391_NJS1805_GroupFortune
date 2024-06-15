@@ -1,5 +1,6 @@
 /* viewjewDetails.scss */
 
+$form-border-color: #ccc;
 .jewel-content {
     text-align: center;
     margin-bottom: 30px;
@@ -80,6 +81,7 @@
     }
   
     input[type="text"],
+    select,
     textarea {
       width: 100%;
       padding: 10px;
@@ -111,4 +113,35 @@
       background-color: #405ba2; /* Example hover color */
     }
   }
+  .input-container {
+    position: relative;
+    align-items: center;
   
+    input {
+      padding-right: 3em; /* Adjust this value based on the width of the suffix */
+    }
+  
+    .suffix {
+      position: absolute;
+      right: 11px; /* Adjust this value based on your design */
+      pointer-events: none;
+      transform: translateY(40%);
+      opacity: 50%;
+    }
+    .weight-unit-select {
+      opacity: 50%;
+      width: 3rem;
+      position: absolute;
+      transform: translateX(-3rem);
+      border: none; /* Remove default border */
+      background: none;
+      outline: none; /* Remove the default outline */
+      appearance: none; 
+      text-align: center;
+      -webkit-appearance: none;
+    }
+    .weight-unit-select option {
+      background: #fff; /* Adjust this value based on your design */
+    }
+    
+  }

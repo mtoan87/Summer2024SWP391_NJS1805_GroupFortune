@@ -6,7 +6,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function MemberViewJewelry() {
-  const [jewelry, setJewelry] = useState([]);
+  const [goldJewelry, setGoldJewelry] = useState([]);
+  const [silverJewelry, setSilverJewelry] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const loginedUser = JSON.parse(sessionStorage.getItem('loginedUser'));
   const accountId = loginedUser?.accountId;
@@ -16,19 +17,31 @@ function MemberViewJewelry() {
   const successMessage = state && state.successMessage;
 
   useEffect(() => {
-    const fetchJewelry = async () => {
+    const fetchGoldJewelry = async () => {
       try {
-        const response = await api.get(`api/Jewelries/GetAuctionAndJewelryByAccountId/${accountId}`);
+        const response = await api.get(`api/JewelryGold/GetAuctionAndJewelryGoldByAccountId/${accountId}`);
         console.log(response.data);
-        setJewelry(response.data?.$values || []);
+        setGoldJewelry(response.data?.$values || []); 
       } catch (err) {
-        console.error('Error fetching jewelry', err);
-        setJewelry([]);
+        console.error('Error fetching gold jewelry', err);
+        setGoldJewelry([]);
+      }
+    };
+
+    const fetchSilverJewelry = async () => {
+      try {
+        const response = await api.get(`api/JewelrySilver/GetAuctionAndJewelrySilverByAccountId/${accountId}`);
+        console.log(response.data);
+        setSilverJewelry(response.data?.$values || []); 
+      } catch (err) {
+        console.error('Error fetching silver jewelry', err);
+        setSilverJewelry([]);
       }
     };
 
     if (accountId) {
-      fetchJewelry();
+      fetchGoldJewelry();
+      fetchSilverJewelry();
     } else {
       console.error('No accountId found in loginedUser');
     }
@@ -42,26 +55,30 @@ function MemberViewJewelry() {
     }
   }, [successMessage]);
 
-  const handleUpdateJewelry = (jewelryId) => {
-    navigate(`/update-jewelry/${jewelryId}`);
+  const handleUpdateJewelry = (jewelryId,material) => {
+    navigate(`/update-jewelry/${jewelryId}/${material}`);
   };
 
-  const handleRegisterAuction = (jewelryId) => {
-    navigate(`/register-jewelry-auction/${jewelryId}`, { state: { jewelryId } });
+  const handleRegisterAuction = (jewelryId,material) => {
+    navigate(`/register-jewelry-auction/${jewelryId}/${material}`, { state: { jewelryId } });
   };
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };
 
-  const filteredJewelry = jewelry.filter(item =>
-    item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.collection.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.goldage.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.materials.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.weight.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filterJewelry = (jewelry) => {
+    const lowerCaseQuery = searchQuery.toLowerCase();
+    return (
+      (jewelry.name && jewelry.name.toLowerCase().includes(lowerCaseQuery)) ||
+      (jewelry.description && jewelry.description.toLowerCase().includes(lowerCaseQuery)) ||
+      (jewelry.collection && jewelry.collection.toLowerCase().includes(lowerCaseQuery)) ||
+      (jewelry.goldAge && jewelry.goldAge.toLowerCase().includes(lowerCaseQuery)) ||
+      (jewelry.materials && jewelry.materials.toLowerCase().includes(lowerCaseQuery)) ||
+      (jewelry.weight && jewelry.weight.toLowerCase().includes(lowerCaseQuery))
+    );
+  };
+  
 
   return (
     <>
@@ -77,7 +94,7 @@ function MemberViewJewelry() {
             value={searchQuery}
             onChange={handleSearchChange} 
           />
-          <label htmlFor="name" className="form-label">Search for Auctions</label>
+          <label htmlFor="name" className="form-label">Search for Jewelry</label>
         </div>
       </div>
       <div className="jewelry-container">
@@ -85,31 +102,65 @@ function MemberViewJewelry() {
           <img src='../../../../../../src/assets/img/Jewelry.png' alt="Create Jewelry" />
           <button onClick={() => navigate('/userJewel/upload')}>Create Jewelry</button>
         </div>
-        {filteredJewelry.length > 0 ? (
-  filteredJewelry.map((jewelry) => (
-    <div key={jewelry.jewelryId} className="jewelry-item">
-      <img  className='item-img'
-              src={`https://localhost:44361/${jewelry.jewelryImg}`} 
-              alt={jewelry.name} 
-              onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
-            />
-      <h3>{jewelry.name}</h3>
-      <p>Description: {jewelry.description}</p>
-      <p>Collection: {jewelry.collection}</p>
-      <p>Gold Age: {jewelry.goldage}</p>
-      <p>Materials: {jewelry.materials}</p>
-      <p>Weight: {jewelry.weight} Grams</p>
-      <p>Price: {jewelry.price}$</p>
-      <div className="jewelry-item-buttons">
-        <button onClick={() => handleUpdateJewelry(jewelry.jewelryId)}>Update</button>
-        <button onClick={() => handleRegisterAuction(jewelry.jewelryId)}>Register Auction</button>
-      </div>
-    </div>
-  ))
-) : (
-  <p>No jewelry items found.</p>
-)}
 
+        {/* Display Gold Jewelry */}
+        {goldJewelry.length > 0 && (
+          <>
+            {goldJewelry.filter(filterJewelry).map((jewelry) => (
+              <div key={jewelry.jewelryGoldId} className="jewelry-item">
+                <img
+                  className='item-img'
+                  src={`https://localhost:44361/${jewelry.jewelryImg}`}
+                  alt={jewelry.name}
+                  onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
+                />
+                <h3>{jewelry.name}</h3>
+                <p>Description: {jewelry.description}</p>
+                <p>Category: {jewelry.category}</p>
+                <p>Gold Age: {jewelry.goldAge}</p>
+                <p>Materials: {jewelry.materials}</p>
+                <p>Weight: {jewelry.weight}</p>
+                <p>Price: {jewelry.price}$</p>
+                <div className="jewelry-item-buttons">
+                  <button onClick={() => handleUpdateJewelry(jewelry.jewelryGoldId,"gold")}>Update</button>
+                  <button onClick={() => handleRegisterAuction(jewelry.jewelryGoldId,"gold"  )}>Register Auction</button>
+                </div>
+              </div>
+            ))}
+          </>
+        )}
+
+        {/* Display Silver Jewelry */}
+        {silverJewelry.length > 0 && (
+          <>
+            {silverJewelry.filter(filterJewelry).map((jewelry) => (
+              <div key={jewelry.jewelrySilverId} className="jewelry-item">
+                <img
+                  className='item-img'
+                  src={`https://localhost:44361/${jewelry.jewelryImg}`}
+                  alt={jewelry.name}
+                  onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
+                />
+                <h3>{jewelry.name}</h3>
+                <p>Description: {jewelry.description}</p>
+                <p>Category: {jewelry.category}</p>
+                <p>Purity: {jewelry.purity}</p>
+                <p>Materials: {jewelry.materials}</p>
+                <p>Weight: {jewelry.weight}</p>
+                <p>Price: {jewelry.price}$</p>
+                <div className="jewelry-item-buttons">
+                  <button onClick={() => handleUpdateJewelry(jewelry.jewelrySilverId,"silver")}>Update</button>
+                  <button onClick={() => handleRegisterAuction(jewelry.jewelrySilverId,"silver")}>Register Auction</button>
+                </div>
+              </div>
+            ))}
+          </>
+        )}
+
+        {/* No jewelry found message */}
+        {goldJewelry.length === 0 && silverJewelry.length === 0 && (
+          <p>No jewelry items found.</p>
+        )}
       </div>
       <ToastContainer className="toast-position" />
     </>

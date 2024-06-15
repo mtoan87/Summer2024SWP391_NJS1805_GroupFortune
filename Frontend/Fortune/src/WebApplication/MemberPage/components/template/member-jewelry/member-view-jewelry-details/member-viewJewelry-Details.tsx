@@ -1,8 +1,8 @@
-import ViewJewelryDetail from '../../../molecules/jewelry-update/viewJewelryDetails'
+import ViewJewelryDetails from "../../../molecules/jewelry-update/update-jewelry"
 function MemberViewJewelryBody() {
   return (
     <div> 
-    <ViewJewelryDetail/>
+    <ViewJewelryDetails/>
     </div>
   )
 }
