@@ -10,14 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-<<<<<<< HEAD
     "@ant-design/icons": "^5.3.7",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/react-fontawesome": "^0.2.1",
     "@react-oauth/google": "^0.12.1",
     "antd": "^5.18.1",
-=======
->>>>>>> 3a6279aeecc52b4737f175f2ceadd47420e0b25e
     "axios": "^1.7.2",
     "bootstrap": "^5.3.3",
     "cors": "^2.8.5",
