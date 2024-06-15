@@ -20,6 +20,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
+  "include": ["src", "src/WebApplication/MemberPage/components/molecules/DashBoard/components/maincontent.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

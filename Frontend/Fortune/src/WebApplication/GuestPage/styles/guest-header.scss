@@ -1,40 +1,50 @@
 .guest-header-home {
     .logo {
-        height: 100px;
+        height: 120px;
     }
 
     .account {
         height: 50px;
+        margin-top: 15px; /* Adjust to your desired height */
+    }
+
+    nav {
+        margin-bottom: -10px; /* Negative margin to move header up */
     }
 
     ul {
         display: flex;
         height: 100px;
         justify-content: center;
+        align-items: center; /* Ensure items are centered vertically */
 
         .guest-header-items {
-            display: inline-block;
-            margin: auto;
+            display: flex;
+            align-items: center;
+            padding: 10px 20px; /* Adjust padding as needed */
+            margin: 0 40px; /* Adjust margin as needed */
+            border-radius: 10px; /* Rounded corners */
+            transition: background-color 0.25s ease-out;
+            margin-top: 100px;
 
             &:hover {
-                background-color: #e6e6ff; /* Màu tím nhạt khi hover */
-                transition: ease-out 0.25s;
-                border-radius: 20px; /* Đường cong tròn */
-                padding: 5px; /* Độ rộng của hover */
+                background-color: #e6e6ff; /* Light purple background on hover */
             }
 
             li {
                 list-style: none;
                 white-space: nowrap;
                 color: #824D4D;
-                font-size: 20px;
+                font-size: 30px;
 
                 a {
                     text-decoration: none;
                     color: inherit;
+                    display: flex;
+                    align-items: center;
 
                     &:hover {
-                        color: #000; /* Màu chữ khi hover */
+                        color: #000; /* Text color on hover */
                     }
                 }
             }
@@ -42,11 +52,15 @@
     }
 }
 
+.content {
+    margin-top: -10px; /* Adjust top margin to move content up */
+}
+
 .login-container {
     display: flex;
     align-items: center;
-}
 
-.login-container img {
-    margin-right: 2px; /* Điều chỉnh khoảng cách giữa hình ảnh và chữ login */
+    img {
+        margin-right: 5px; /* Adjust space between image and text */
+    }
 }

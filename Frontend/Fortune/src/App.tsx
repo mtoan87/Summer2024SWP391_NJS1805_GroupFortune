@@ -8,6 +8,7 @@ import Loginpg from './WebApplication/AccountRegister/components/pages/Loginpg';
 import ForgotPass from './WebApplication/AccountRegister/components/pages/forgotPage';
 
 /*--------------------------MEMEBER----------------------------------------------*/
+import MemeberDashBoardPG from './WebApplication/MemberPage/components/pages/member-dashboard-pg/memberdashboard';
 import MemberHomePg from './WebApplication/MemberPage/components/pages/member-home-pg/member-home-pg';
 import { UserProvider, useUser } from './WebApplication/Data/UserContext';
 import MemberAuctionPg from './WebApplication/MemberPage/components/pages/member-auction-pg/memberauctionPg';
@@ -47,6 +48,7 @@ const App: React.FC = () => {
               {user.role === 2 && (
                 <>
                   <Route index element={<MemberHomePg />} />
+                  <Route path="/mydashboard" element ={<MemeberDashBoardPG />} />
                   <Route path="/auction/:id" element ={<MemberAucDetailsPg />} />
                   <Route path='/userAuc' element={<MemberAuctionPg />} />
                   <Route path='/userJewel/upload' element={<JewelryUploadPg />} />
