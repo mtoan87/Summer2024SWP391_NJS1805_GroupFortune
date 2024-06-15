@@ -12,6 +12,7 @@ interface Jewelry {
   materials: string;
   description: string;
   weight: string;
+  weightUnit: string;  // Added weight unit
   goldage?: string;  // Optional for Silver
   purity?: string;   // Optional for Gold
   collection: string;
@@ -30,6 +31,7 @@ const JewelryUploadForm: React.FC = () => {
     materials: '',
     description: '',
     weight: '',
+    weightUnit: 'grams',  // Default weight unit
     collection: '',
     price: ''
   });
@@ -124,20 +126,17 @@ const JewelryUploadForm: React.FC = () => {
     formData.append('Name', jewelry.name);
     formData.append('materials', jewelry.materials);
     formData.append('description', jewelry.description);
-    formData.append('weight', jewelry.weight);
+    formData.append('weight', `${jewelry.weight} ${jewelry.weightUnit}`);
     formData.append('Category', jewelry.collection);
     formData.append('price', jewelry.price);
     if (jewelry.imageFile) {
       formData.append('jewelryImg', jewelry.imageFile); // Ensure the key matches the API requirement
     }
 
-    let apiEndpoint = '';
     if (jewelry.materials === 'Gold') {
       formData.append('goldage', jewelry.goldage!);
-      apiEndpoint = 'api/JewelryGold/CreateJewelryGold';
     } else if (jewelry.materials === 'Silver') {
       formData.append('purity', jewelry.purity!);
-      apiEndpoint = '/api/JewelrySilver/CreateSilverJewelry';
     }
 
     // Log the form data
@@ -148,7 +147,6 @@ const JewelryUploadForm: React.FC = () => {
       if (jewelry.materials === 'Gold') {
         apiEndpoint = '/api/JewelryGold/CreateJewelryGold';
       } else if (jewelry.materials === 'Silver') {
-        // Adjust for Silver if needed
         apiEndpoint = '/api/JewelrySilver/CreateSilverJewelry';
       }
 
@@ -163,11 +161,14 @@ const JewelryUploadForm: React.FC = () => {
       // Reset form state after successful upload
       setJewelry({
         accountId: accountId,
-        jewelryImg: null,
+        imageUrl: '',
+        imageFile: null,
         name: '',
         materials: '',
         description: '',
         weight: '',
+        weightUnit: 'grams',
+        collection: '',
         price: ''
       });
       setErrors({});
@@ -233,7 +234,7 @@ const JewelryUploadForm: React.FC = () => {
           />
           {errors.description && <span className="error">{errors.description}</span>}
         </div>
-        <div>
+        <div className="input-container">
           <label htmlFor="weight">Weight:</label>
           <input
             type="text"
@@ -243,10 +244,21 @@ const JewelryUploadForm: React.FC = () => {
             onChange={handleChange}
             required
           />
+          <select
+            className="weight-unit-select"
+            name="weightUnit"
+            value={jewelry.weightUnit}
+            onChange={handleChange}
+          >
+            <option value="grams">g</option>
+            <option value="kilograms">kg</option>
+            <option value="ounces">oz</option>
+            <option value="pounds">lb</option>
+          </select>
           {errors.weight && <span className="error">{errors.weight}</span>}
         </div>
         {jewelry.materials === 'Gold' && (
-          <div>
+          <div className="input-container">
             <label htmlFor="goldage">Gold Age:</label>
             <input
               type="text"
@@ -256,11 +268,12 @@ const JewelryUploadForm: React.FC = () => {
               onChange={handleChange}
               required
             />
+            <span className="suffix">k</span>
             {errors.goldage && <span className="error">{errors.goldage}</span>}
           </div>
         )}
         {jewelry.materials === 'Silver' && (
-          <div>
+          <div className="input-container">
             <label htmlFor="purity">Purity:</label>
             <input
               type="text"
@@ -270,6 +283,7 @@ const JewelryUploadForm: React.FC = () => {
               onChange={handleChange}
               required
             />
+            <span className="suffix">%</span>
             {errors.purity && <span className="error">{errors.purity}</span>}
           </div>
         )}
@@ -286,6 +300,7 @@ const JewelryUploadForm: React.FC = () => {
           {errors.collection && <span className="error">{errors.collection}</span>}
         </div>
         <div>
+        <div className="input-container">
           <label htmlFor="price">Price:</label>
           <input
             type="text"
@@ -295,7 +310,9 @@ const JewelryUploadForm: React.FC = () => {
             onChange={handleChange}
             required
           />
+          <span className="suffix">$</span>
           {errors.price && <span className="error">{errors.price}</span>}
+          </div>
         </div>
         <button type="submit">Upload Jewelry</button>
       </form>
