@@ -55,12 +55,12 @@ function MemberViewJewelry() {
     }
   }, [successMessage]);
 
-  const handleUpdateJewelry = (jewelryId) => {
-    navigate(`/update-jewelry/${jewelryId}`);
+  const handleUpdateJewelry = (jewelryId,material) => {
+    navigate(`/update-jewelry/${jewelryId}/${material}`);
   };
 
-  const handleRegisterAuction = (jewelryId) => {
-    navigate(`/register-jewelry-auction/${jewelryId}`, { state: { jewelryId } });
+  const handleRegisterAuction = (jewelryId,material) => {
+    navigate(`/register-jewelry-auction/${jewelryId}/${material}`, { state: { jewelryId } });
   };
 
   const handleSearchChange = (event) => {
@@ -119,11 +119,11 @@ function MemberViewJewelry() {
                 <p>Category: {jewelry.category}</p>
                 <p>Gold Age: {jewelry.goldAge}</p>
                 <p>Materials: {jewelry.materials}</p>
-                <p>Weight: {jewelry.weight} Grams</p>
+                <p>Weight: {jewelry.weight}</p>
                 <p>Price: {jewelry.price}$</p>
                 <div className="jewelry-item-buttons">
-                  <button onClick={() => handleUpdateJewelry(jewelry.jewelryId)}>Update</button>
-                  <button onClick={() => handleRegisterAuction(jewelry.jewelryId)}>Register Auction</button>
+                  <button onClick={() => handleUpdateJewelry(jewelry.jewelryGoldId,"gold")}>Update</button>
+                  <button onClick={() => handleRegisterAuction(jewelry.jewelryGoldId,"gold"  )}>Register Auction</button>
                 </div>
               </div>
             ))}
@@ -146,11 +146,11 @@ function MemberViewJewelry() {
                 <p>Category: {jewelry.category}</p>
                 <p>Purity: {jewelry.purity}</p>
                 <p>Materials: {jewelry.materials}</p>
-                <p>Weight: {jewelry.weight} Grams</p>
+                <p>Weight: {jewelry.weight}</p>
                 <p>Price: {jewelry.price}$</p>
                 <div className="jewelry-item-buttons">
-                  <button onClick={() => handleUpdateJewelry(jewelry.jewelryId)}>Update</button>
-                  <button onClick={() => handleRegisterAuction(jewelry.jewelryId)}>Register Auction</button>
+                  <button onClick={() => handleUpdateJewelry(jewelry.jewelrySilverId,"silver")}>Update</button>
+                  <button onClick={() => handleRegisterAuction(jewelry.jewelrySilverId,"silver")}>Register Auction</button>
                 </div>
               </div>
             ))}

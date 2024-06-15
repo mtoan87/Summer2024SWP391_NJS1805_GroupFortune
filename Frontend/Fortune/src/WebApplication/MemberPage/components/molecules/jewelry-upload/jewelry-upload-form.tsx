@@ -126,17 +126,17 @@ const JewelryUploadForm: React.FC = () => {
     formData.append('Name', jewelry.name);
     formData.append('materials', jewelry.materials);
     formData.append('description', jewelry.description);
-    formData.append('weight', `${jewelry.weight} ${jewelry.weightUnit}`);
+    formData.append('weight', `${jewelry.weight}${jewelry.weightUnit}`);
     formData.append('Category', jewelry.collection);
-    formData.append('price', jewelry.price);
+    formData.append('price', `${jewelry.price}`);
     if (jewelry.imageFile) {
       formData.append('jewelryImg', jewelry.imageFile); // Ensure the key matches the API requirement
     }
 
     if (jewelry.materials === 'Gold') {
-      formData.append('goldage', jewelry.goldage!);
+      formData.append('goldage', `${jewelry.goldage!}k`);
     } else if (jewelry.materials === 'Silver') {
-      formData.append('purity', jewelry.purity!);
+      formData.append('purity', `${jewelry.purity!}%`);
     }
 
     // Log the form data
@@ -206,6 +206,7 @@ const JewelryUploadForm: React.FC = () => {
           />
           {errors.name && <span className="error">{errors.name}</span>}
         </div>
+
         <div>
           <label htmlFor="materials">Materials:</label>
           <select
@@ -221,6 +222,8 @@ const JewelryUploadForm: React.FC = () => {
             <option value="Platinum">Platinum</option>
             <option value="Diamond">Diamond</option>
           </select>
+
+          
           {errors.materials && <span className="error">{errors.materials}</span>}
         </div>
         <div>
