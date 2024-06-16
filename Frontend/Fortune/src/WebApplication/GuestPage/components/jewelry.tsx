@@ -4,8 +4,8 @@ import api from '../../../config/axios';
 
 function GuestJewelry() {
   const [jewelry, setJewelry] = useState([]);
-  const [startIndex, setStartIndex] = useState(0);
-  const [sliding, setSliding] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 3;
 
   useEffect(() => {
     const fetchJewelry = async () => {
@@ -17,8 +17,16 @@ function GuestJewelry() {
 
         const goldJewelry = goldResponse.data && goldResponse.data.$values ? goldResponse.data.$values : [];
         const silverJewelry = silverResponse.data && silverResponse.data.$values ? silverResponse.data.$values : [];
+        const combinedJewelry = [...goldJewelry, ...silverJewelry];
 
-        setJewelry([...goldJewelry, ...silverJewelry]);
+        const jewelryWithImages = await Promise.all(
+          combinedJewelry.map(async (item) => {
+            const imageUrl = await fetchJewelryImage(item);
+            return { ...item, imageUrl };
+          })
+        );
+
+        setJewelry(jewelryWithImages);
       } catch (err) {
         console.error('Error fetching jewelry', err);
       }
@@ -27,41 +35,64 @@ function GuestJewelry() {
     fetchJewelry();
   }, []);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setSliding(true);
-      setTimeout(() => setSliding(false), 1000); // Adjust time as per your sliding animation duration
-      nextItems();
-    }, 5000); // Change item every 5 seconds
-    return () => clearInterval(interval);
-  }, [jewelry.length]);
+  const fetchJewelryImage = async (item) => {
+    try {
+      let jewelryId;
+      if (item.jewelryGoldId) {
+        jewelryId = item.jewelryGoldId;
+      } else if (item.jewelrySilverId) {
+        jewelryId = item.jewelrySilverId;
+      } else {
+        throw new Error("No valid jewelryId found");
+      }
 
-  const nextItems = () => {
-    setStartIndex((prevIndex) => (prevIndex + 4) % jewelry.length);
+      const apiUrl = item.jewelryGoldId
+        ? `/api/JewelryGold/GetById/${item.jewelryGoldId}`
+        : `/api/JewelrySilver/GetById/${item.jewelrySilverId}`;
+
+      const response = await api.get(apiUrl);
+      const imageUrl = response.data.jewelryImg || 'src/assets/img/jewelry_introduction.jpg';
+      return imageUrl;
+    } catch (err) {
+      console.error('Error fetching jewelry image:', err);
+      return 'src/assets/img/jewelry_introduction.jpg';
+    }
   };
 
-  const prevItems = () => {
-    setStartIndex((prevIndex) => (prevIndex - 4 + jewelry.length) % jewelry.length);
+  const nextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
   };
 
-  const displayedItems = jewelry.slice(startIndex, startIndex + 4).concat(
-    jewelry.slice(0, Math.max(0, startIndex + 4 - jewelry.length))
-  );
+  const prevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const goToPage = (page) => {
+    setCurrentPage(page);
+  };
+
+  const totalPages = Math.ceil(jewelry.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const displayedItems = jewelry.slice(startIndex, startIndex + itemsPerPage);
 
   return (
     <>
       <div className="jewel-content">
-        <h1>Jewelry</h1>
+        <h1>JEWELRY</h1>
       </div>
-      <div className={`jewelry-container ${sliding ? 'slide' : ''}`}>
+      <div className="jewelry-container">
         {displayedItems.map((item, index) => (
           <div
-            key={`${item.jewelryId}-${index}`} // Ensure unique keys using both jewelryId and index
+            key={`${item.jewelryId}-${index}`}
             className="jewelry-item"
           >
-             <img 
-              src={`https://localhost:44361/${item.jewelry_img}`} 
-              alt={item.name} 
+            <img
+              src={item.imageUrl}
+              alt={item.name}
               onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
             />
             <h3>{item.name}</h3>
@@ -76,8 +107,17 @@ function GuestJewelry() {
         ))}
       </div>
       <div className="navigation-buttons">
-        <button onClick={prevItems}>Previous</button>
-        <button onClick={nextItems}>Next</button>
+        <button onClick={prevPage} disabled={currentPage === 1}>Previous</button>
+        {[...Array(totalPages)].map((_, index) => (
+          <button
+            key={index + 1}
+            onClick={() => goToPage(index + 1)}
+            className={currentPage === index + 1 ? 'active' : ''}
+          >
+            {index + 1}
+          </button>
+        ))}
+        <button onClick={nextPage} disabled={currentPage === totalPages}>Next</button>
       </div>
     </>
   );

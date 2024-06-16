@@ -1,40 +1,97 @@
-.jewel-content {
-    display: flex;
-    justify-content: center;
+/* jewelry.scss */
 
-     h1 {
-        font-size: 5rem;
-        font-family: 'Times New Roman', Times, serif;
-        text-decoration-style: none;
-     }
-}
-.jewelry-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5rem;
-    padding: 16px;
-    justify-content: center;
+.jewel-content {
+  display: flex;
+  justify-content: center;
+
+  h1 {
+    font-size: 5rem;
   }
-  
+}
+
+.jewelry-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem; 
+  padding: 16px;
+  justify-content: center;
+  transition: transform 0.5s ease-in-out; /* Example transition for sliding effect */
+
+  &.slide {
+    transform: translateX(-100%);
+  }
+
   .jewelry-item {
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 16px;
-    width: 300px; /* adjust as needed */
+    width: calc(25% - 2rem); /* Adjust width based on your layout */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: translateY(-5px); /* Example hover effect */
+    }
 
     img {
-        width: 100%;
+      width: 100%; /* Ensures image takes full width of its container */
+      height: 100%; /* Ensures image takes full height of its container */
+      max-width: 100%; /* Ensures image does not exceed its container's width */
+      max-height: 100%; /* Ensures image does not exceed its container's height */
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    h3 {
+      margin: 8px 0;
+      font-size: 18px;
+    }
+
+    p {
+      margin: 4px 0;
+      font-size: 14px;
+    }
+
+    .price {
+      font-weight: bold;
+      color: #ff6347; /* Example color for price */
+    }
+
+    .installment {
+      color: #007bff; /* Example color for installment */
     }
   }
-  
-  .jewelry-item h3 {
-    margin: 0 0 8px 0;
-    font-size: 18px;
+}
+
+.navigation-buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+
+  button {
+    padding: 8px 16px;
+    margin: 0 4px;
+    background-color: #824d4d;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #9b4d4d;
+    }
+
+    &.active {
+      background-color: #9b4d4d;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
   }
-  
-  .jewelry-item p {
-    margin: 4px 0;
-  }
-  
+}

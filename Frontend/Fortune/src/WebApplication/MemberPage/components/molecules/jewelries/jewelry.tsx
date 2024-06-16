@@ -45,9 +45,9 @@ function MemberJewelry() {
   const displayedItems = jewelry.slice(startIndex, startIndex + 4).concat(
     jewelry.slice(0, Math.max(0, startIndex + 4 - jewelry.length))
   );
-    const handleJewelryClick = (jewelryId) => {
-        navigate(`/jewelry/${jewelryId}`);
-    };
+  const handleJewelryClick = (jewelryId) => {
+    navigate(`/jewelry/${jewelryId}`);
+  };
   return (
     <>
       <div className="jewel-content">
@@ -60,11 +60,11 @@ function MemberJewelry() {
             className="jewelry-item"
             onClick={() => handleJewelryClick(item.jewelryGoldId)}
           >
-            <img className='item-img'
-              src={`https://localhost:44361/${item.jewelryImg}`} 
-              alt={jewelry.name} 
+            {/* <img className='item-img'
+              src={`https://localhost:44361/${item.jewelryImg}`}
+              alt={jewelry.name}
               onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
-            />
+            /> */}
             <h3>{item.name}</h3>
             <p>Description: {item.description}</p>
             <p>Collection: {item.collection}</p>

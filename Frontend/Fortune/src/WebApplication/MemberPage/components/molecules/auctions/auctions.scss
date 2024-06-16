@@ -1,13 +1,12 @@
-.auctions-content {
+.member-auctions-content {
     display: flex;
     justify-content: center;
     margin-top: 10rem;
     h1 {
         font-size: 5rem;
-        font-family: 'Times New Roman', Times, serif;
     }
 }
-.auctions-container {
+.member-auctions-container {
     display: flex;
     flex-wrap: wrap;
     gap: 5rem; 
@@ -16,7 +15,7 @@
     margin-bottom: 5rem;
 }
 
-.auction-item {
+.member-auction-item {
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -28,12 +27,12 @@
     justify-content: space-between;
 }
 
-.auction-item h3 {
+.member-auction-item h3 {
     margin: 0 0 8px 0;
     font-size: 18px;
 }
 
-.auction-item p {
+.member-auction-item p {
     margin: 4px 0;
 }
 .searchBar {
