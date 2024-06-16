@@ -1,5 +1,5 @@
-import MemberAuctions from '../../molecules/auctions/auctions'
-import MemberJewelry from '../../molecules/jewelries/jewelry'
+import MemberAuctions from '../../molecules/auctions/member-auctions'
+import MemberJewelry from '../../molecules/jewelries/member-jewelry'
 import MemberIntroduction from '../../molecules/introduction/introduction'
 import MemberRules from '../../molecules/rules/rules'
 
