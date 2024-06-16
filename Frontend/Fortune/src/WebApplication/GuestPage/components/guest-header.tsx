@@ -3,6 +3,7 @@ import { Link as Forward } from 'react-router-dom';
 import '../styles/guest-header.scss';
 import logo from '../img/logo2.png';
 import account from '../img/account.png';
+import { Link } from 'react-scroll';
 
 const GuestHeader: React.FC = () => {
     return (
@@ -21,7 +22,7 @@ const GuestHeader: React.FC = () => {
                     </div>
                     <div className="guest-header-items">
                         <li className="inline-block">
-                            <Forward to='/auctions'>AUCTIONS</Forward>
+                            <Link to='auctions-content'>AUCTIONS</Link>
                         </li>
                     </div>
                     <div className="guest-header-items">

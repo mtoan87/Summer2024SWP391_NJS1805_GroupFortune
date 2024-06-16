@@ -3,11 +3,11 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import api from "../../../../../../src/config/axios";
-import '../../authGeneral.scss';
 import './login.scss';
 import { useUser } from '../../../../../WebApplication/Data/UserContext';
 import Alert from 'react-bootstrap/Alert';
-import "bootstrap/dist/css/bootstrap.min.css"
+import "bootstrap/dist/css/bootstrap.min.css";
+import { FaFacebookF, FaWhatsapp, FaTelegram } from 'react-icons/fa';
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -22,7 +22,6 @@ const LoginForm: React.FC = () => {
     const message = params.get('successMessage');
     if (message) {
       setSuccessMessage(message);
-      // Clear the message after 5 seconds
       const timer = setTimeout(() => {
         setSuccessMessage(null);
       }, 5000);
@@ -43,7 +42,7 @@ const LoginForm: React.FC = () => {
         accountPassword: password
       });
       const data = response.data;
-      setUser(data);  // Update user context
+      setUser(data);
       sessionStorage.setItem("loginedUser", JSON.stringify(data));
       navigate('/');
     } catch (error) {
@@ -55,6 +54,7 @@ const LoginForm: React.FC = () => {
   const handleRegister = () => {
     navigate("/register");
   };
+
   const handleForgot = () => {
     navigate("/forgotpass");
   };
@@ -76,7 +76,7 @@ const LoginForm: React.FC = () => {
           </Alert>
         )}
       </div>
-      <form onSubmit={handleLogin}>
+      <form className="login-form" onSubmit={handleLogin}>
         <div className="mb-3">
           <label htmlFor="email" className="form-label">Email</label>
           <input
@@ -98,19 +98,16 @@ const LoginForm: React.FC = () => {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            autoComplete="on"
           />
         </div>
-        <div className="bt">
-          <button type="submit" className="btn btn-primary">Sign in</button>
-        </div>
-        <span>OR</span>
-        <div className="bt">
-          <button type="button" className="btn btn-secondary" onClick={handleRegister}>
-            Sign up
-          </button>
-          <button type="button" className="btn btn-secondary" onClick={handleForgot}>
-            Forgot password ?
-          </button>
+        <button type="submit">Login</button>
+        <span className="register-link"><a onClick={handleRegister}>Don't have an account? Register</a></span>
+        <span className="forgot-link"><a onClick={handleForgot}> Forgot your password? Reset Password</a></span>
+        <div className="social-icons">
+          <a href="#"><FaFacebookF /></a>
+          <a href="#"><FaWhatsapp /></a>
+          <a href="#"><FaTelegram /></a>
         </div>
       </form>
     </div>

@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import './form.scss'; 
+import './form.scss';
 import api from '../../../../../config/axios';
 import { useNavigate } from "react-router-dom";
 import Alert from 'react-bootstrap/Alert';
 import 'bootstrap/dist/css/bootstrap.min.css'
+import { FaFacebookF, FaTelegram, FaWhatsapp } from 'react-icons/fa';
+import '../../../style/registerPg.scss'
 function BasicExample() {
   // Define state for each input
   const [accountName, setAccountName] = useState('');
@@ -27,16 +29,16 @@ function BasicExample() {
       accountPhone,
     };
     console.log('Request Data:', requestData);
-    
+
     try {
       const response = await api.post('api/Login/register', requestData, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
-      
+
       console.log('Response:', response);
-      
+
       if (response.status !== 200) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -47,7 +49,7 @@ function BasicExample() {
       setPassword('');
       setPhone('');
       setAgree(false);
-      
+
       // Set success message and navigate to login page with the message in URL parameters
       setMessage('Account created successfully!');
       navigate("/login?successMessage=Account+created+successfully!");
@@ -62,10 +64,14 @@ function BasicExample() {
     setMessage('');
   };
 
+  const handleLogin = () => {
+    navigate("/login");
+  };
+
   return (
     <div className="form-container">
-              <div className='Alert'>
-              {message && <Alert key={'danger'} variant={'danger'}>
+      <div className='Alert'>
+        {message && <Alert key={'danger'} variant={'danger'}>
           {message}
         </Alert>}</div>
       <Form onSubmit={handleSubmit}>
@@ -77,7 +83,7 @@ function BasicExample() {
             value={accountName}
             onChange={(e) => {
               setAccountName(e.target.value);
-              handleInputChange(); 
+              handleInputChange();
             }}
           />
         </Form.Group>
@@ -90,7 +96,7 @@ function BasicExample() {
             value={accountEmail}
             onChange={(e) => {
               setEmail(e.target.value);
-              handleInputChange(); 
+              handleInputChange();
             }}
           />
           <Form.Text className="text-muted" />
@@ -104,7 +110,7 @@ function BasicExample() {
             value={accountPassword}
             onChange={(e) => {
               setPassword(e.target.value);
-              handleInputChange(); 
+              handleInputChange();
             }}
           />
         </Form.Group>
@@ -117,17 +123,22 @@ function BasicExample() {
             value={accountPhone}
             onChange={(e) => {
               setPhone(e.target.value);
-              handleInputChange(); 
+              handleInputChange();
             }}
           />
         </Form.Group>
-        
+
         <Button className="Summitbt" variant="primary" type="submit">
           Register
         </Button>
-
+        <span className="re-login-link"><a onClick={handleLogin}> Yes, I have an account! Login</a></span>
+        <div className="re-social-icons">
+          <a href="#"><FaFacebookF /></a>
+          <a href="#"><FaWhatsapp /></a>
+          <a href="#"><FaTelegram /></a>
+        </div>
       </Form>
-     
+
     </div>
   );
 }

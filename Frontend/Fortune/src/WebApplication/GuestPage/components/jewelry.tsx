@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../styles/jewelry.scss';
 import api from '../../../config/axios';
 
-function MemberJewelry() {
+function GuestJewelry() {
   const [jewelry, setJewelry] = useState([]);
   const [startIndex, setStartIndex] = useState(0);
   const [sliding, setSliding] = useState(false);
@@ -10,16 +10,20 @@ function MemberJewelry() {
   useEffect(() => {
     const fetchJewelry = async () => {
       try {
-        const response = await api.get('api/Jewelries');
-        if (response.data && response.data.$values) {
-          setJewelry(response.data.$values);
-        } else {
-          console.error('Unexpected API response structure:', response.data);
-        }
+        const [goldResponse, silverResponse] = await Promise.all([
+          api.get('/api/JewelryGold'),
+          api.get('/api/JewelrySilver')
+        ]);
+
+        const goldJewelry = goldResponse.data && goldResponse.data.$values ? goldResponse.data.$values : [];
+        const silverJewelry = silverResponse.data && silverResponse.data.$values ? silverResponse.data.$values : [];
+
+        setJewelry([...goldJewelry, ...silverJewelry]);
       } catch (err) {
         console.error('Error fetching jewelry', err);
       }
     };
+
     fetchJewelry();
   }, []);
 
@@ -56,7 +60,7 @@ function MemberJewelry() {
             className="jewelry-item"
           >
              <img 
-              src={`https://localhost:44361/${item.jewelryImg}`} 
+              src={`https://localhost:44361/${item.jewelry_img}`} 
               alt={item.name} 
               onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
             />
@@ -78,4 +82,5 @@ function MemberJewelry() {
     </>
   );
 }
-export default MemberJewelry;
+
+export default GuestJewelry;

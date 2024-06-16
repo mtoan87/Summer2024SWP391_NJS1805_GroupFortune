@@ -6,22 +6,22 @@ import "./SimpleSlider.scss";
 const sliderData = [
   {
     href: "",
-    imgSrc: "https://cdn.pnj.io/images/promo/210/Tabsale_T6_chung-1972x640-cta.jpg",
+    imgSrc: "https://www.truefacet.com/guide/wp-content/uploads/2018/03/JEWELRY-AUCTIONS_HERO-IMAGE.jpg",
     imgAlt: "Heaven Burns Red 第五章後編 開幕 2024.02.23",
   },
   {
     href: "",
-    imgSrc: "https://cdn.pnj.io/images/promo/210/main-THANG_06_-_CT_CHILDRENS_DAY-1972x640__CTA_.jpg",
+    imgSrc: "https://www.livemint.com/lm-img/img/2023/05/14/1600x900/SWITZERLAND-LUXURY-JEWELLERY-AUCTION-HISTORY-7_1684034106982_1684034121485.jpg",
     imgAlt: "Heaven Burns Red 第四章後編 開幕 2023.04.28",
   },
   {
     href: "",
-    imgSrc: "https://cdn.pnj.io/images/promo/196/egift-t12-23-1972x640CTA.jpg",
+    imgSrc: "https://m.economictimes.com/thumb/msid-94272470,width-1200,height-900,resizemode-4,imgsize-82374/jewelry-auction.jpg",
     imgAlt: "Heaven Burns Red 第四章前編 開幕 2022.07.29",
   },
   {
     href: "",
-    imgSrc: "https://cdn.pnj.io/images/promo/199/pnjfast-t1-24-1972x640CTA.jpg",
+    imgSrc: "https://media.cnn.com/api/v1/images/stellar/prod/181015135326-marie-antoinette-1.jpg?q=w_2000,c_fill",
     imgAlt: "Heaven Burns Red 第三章リリース開始 2022.02.28",
   },
   {

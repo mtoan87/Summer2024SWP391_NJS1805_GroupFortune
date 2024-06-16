@@ -1,11 +1,8 @@
 .guest-header-home {
+    position: relative; /* Make sure it stays within the document flow */
+
     .logo {
-<<<<<<< HEAD
-        height: 120px;
-=======
         height: 100px;
-        
->>>>>>> 3a6279aeecc52b4737f175f2ceadd47420e0b25e
     }
 
     .account {
@@ -14,7 +11,7 @@
     }
 
     nav {
-        margin-bottom: -10px; /* Negative margin to move header up */
+        margin-bottom: 0; /* Adjust margin as needed */
     }
 
     ul {
@@ -30,7 +27,7 @@
             margin: 0 40px; /* Adjust margin as needed */
             border-radius: 10px; /* Rounded corners */
             transition: background-color 0.25s ease-out;
-            margin-top: 100px;
+            margin-top: 0; /* Adjusted margin-top to avoid overlap */
 
             &:hover {
                 background-color: #e6e6ff; /* Light purple background on hover */
@@ -58,7 +55,7 @@
 }
 
 .content {
-    margin-top: -10px; /* Adjust top margin to move content up */
+    margin-top: 100px; /* Adjust top margin to ensure it clears the header */
 }
 
 .login-container {

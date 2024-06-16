@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import api from "../../../../../../src/config/axios";
 import "react-toastify/dist/ReactToastify.css";
 import './forgot.scss';
-import '../../authGeneral.scss';
+import '../../../style/forgotPassPg.scss';
 
 const ForgotForm = () => {
   const [email, setEmail] = useState("");
@@ -29,11 +29,10 @@ const ForgotForm = () => {
 
   return (
     <div className="forgot-password-form">
-      <h2>Reset Password</h2>
-      <label htmlFor="email">Fill in email !</label>
       <input
         type="email"
         id="email"
+        placeholder="Fill in email!"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />

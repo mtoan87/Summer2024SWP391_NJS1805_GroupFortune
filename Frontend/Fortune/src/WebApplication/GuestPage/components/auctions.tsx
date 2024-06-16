@@ -9,7 +9,7 @@ function Auctions() {
     useEffect(() => {
         const fetchAuctions = async () => {
             try {
-                const response = await api.get('api/Auctions/GetAllAuctions');
+                const response = await api.get('api/Auctions/GetAllActiveAuctions');
                 const auctionsData = response.data.$values;
                 console.log('API response:', response.data.$values);
                 console.log(auctionsData);

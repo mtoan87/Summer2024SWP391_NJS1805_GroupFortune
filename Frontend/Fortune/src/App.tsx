@@ -3,7 +3,7 @@ import './App.scss';
 /*-------------------------------AUTHENTICAL----------------------------------------------*/
 import GuestHomePg from './WebApplication/GuestPage/guest-home-page/guest-home-pg';
 import RegisterPg from './WebApplication/AccountRegister/components/pages/Register-pg';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import Loginpg from './WebApplication/AccountRegister/components/pages/Loginpg';
 import ForgotPass from './WebApplication/AccountRegister/components/pages/forgotPage';
 
