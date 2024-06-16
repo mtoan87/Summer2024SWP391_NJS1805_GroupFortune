@@ -13,7 +13,7 @@ function ViewJewelryDetails() {
     description: '',
     category: '',
     weight: '',
-    weightUnit: '',
+    weightUnit: 'grams',
     goldAge: '',
     purity: '',
     price: '',
@@ -48,7 +48,6 @@ function ViewJewelryDetails() {
       [name]: value
     }));
   };
-  
 
   const handleImageClick = () => {
     if (fileInputRef.current) {
@@ -64,8 +63,7 @@ function ViewJewelryDetails() {
         setJewelryDetails(prevState => ({
           ...prevState,
           imageUrl: reader.result,
-          imageFile: file,
-          jewelryImg: reader.result.split(',')[1]
+          imageFile: file
         }));
       };
       reader.readAsDataURL(file);
@@ -79,22 +77,22 @@ function ViewJewelryDetails() {
     if (jewelryDetails.materials === 'gold' && !jewelryDetails.goldAge) tempErrors.goldAge = "Gold age is required";
     if (jewelryDetails.materials === 'silver' && !jewelryDetails.purity) tempErrors.purity = "Purity is required";
     if (!jewelryDetails.materials) tempErrors.materials = "Materials are required";
-    if (!jewelryDetails.weight || isNaN(jewelryDetails.weight)) tempErrors.weight = "Valid weight is required";
     if (!jewelryDetails.price || isNaN(jewelryDetails.price)) tempErrors.price = "Valid price is required";
+    if (!jewelryDetails.category) tempErrors.category = "Category is required";
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
   };
 
   const handleUpdateJewelry = async () => {
     if (!validateInputs()) return;
-  
+
     const formData = new FormData();
     formData.append('AccountId', jewelryDetails.accountId);
     formData.append('Name', jewelryDetails.name);
     formData.append('Materials', jewelryDetails.materials);
     formData.append('Description', jewelryDetails.description);
     formData.append('Category', jewelryDetails.category);
-    formData.append('Weight', `${jewelryDetails.weight} ${jewelryDetails.weightUnit || 'grams'}`);
+    formData.append('Weight', `${jewelryDetails.weight} ${jewelryDetails.weightUnit}`);
     formData.append('Price', jewelryDetails.price);
     formData.append('Collection', jewelryDetails.collection || ''); // Assuming collection is a string
     if (jewelryDetails.materials === 'gold') {
@@ -105,10 +103,7 @@ function ViewJewelryDetails() {
     if (jewelryDetails.imageFile) {
       formData.append('JewelryImg', jewelryDetails.imageFile);
     }
-  
-    // Log FormData object before API call
-    console.log("FormData:", formData);
-  
+
     try {
       const endpoint = jewelryDetails.materials === 'gold' 
         ? `/api/JewelryGold/UpdateJewelryGold?id=${id}` 
@@ -119,8 +114,7 @@ function ViewJewelryDetails() {
       console.error('Error:', error);
     }
   };
-  
-  
+
   return (
     <div>
       <div className="jewel-content">
@@ -131,7 +125,7 @@ function ViewJewelryDetails() {
           <label htmlFor="image">Image</label>
           <div className="upload-label-details" onClick={handleImageClick}>
             <img className='item-img'
-              src={`https://localhost:44361/${jewelryDetails.jewelryImg}`}
+              src={jewelryDetails.imageUrl || `https://localhost:44361/${jewelryDetails.jewelryImg}`}
               alt={jewelryDetails.name}
               onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
             />
@@ -177,6 +171,15 @@ function ViewJewelryDetails() {
               <span className="suffix">%</span>
             </div>
           )}
+          <label htmlFor="category">Category</label>
+          <select name="category" value={jewelryDetails.category} onChange={handleInputChange}>
+            <option value="">Select Category</option>
+            <option value="necklace">Necklace</option>
+            <option value="ring">Ring</option>
+            <option value="bracelet">Bracelet</option>
+            <option value="earrings">Earrings</option>
+          </select>
+          {errors.category && <span className="error">{errors.category}</span>}
           <div className="input-container">
             <label htmlFor="weight">Weight</label>
             <input type="text" name="weight" value={jewelryDetails.weight} onChange={handleInputChange} />

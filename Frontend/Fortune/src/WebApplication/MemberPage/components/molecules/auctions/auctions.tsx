@@ -6,37 +6,39 @@ import './auctions.scss';
 function MemberAuctions() {
     const [auctions, setAuctions] = useState([]);
     const navigate = useNavigate();
+    const loginedUser = JSON.parse(sessionStorage.getItem('loginedUser') || '{}');
+    const accountId = loginedUser?.accountId;
 
     useEffect(() => {
         const fetchAuctions = async () => {
             try {
                 const response = await api.get('api/Auctions/GetAllActiveAuctions');
                 const auctionsData = response.data.$values;
+
+                // Filter out auctions that have the same accountId as the logged-in user
+                const filteredAuctions = auctionsData.filter(auction => auction.accountId !== accountId);
+
                 // Fetch images for each auction
                 const auctionsWithImages = await Promise.all(
-                    auctionsData.map(async (auction) => {
+                    filteredAuctions.map(async (auction) => {
                         const imageUrl = await fetchJewelryImage(auction.jewelryId);
-                        
-                        console.log(imageUrl);
                         return { ...auction, imageUrl };
                     })
                 );
 
                 setAuctions(auctionsWithImages);
-                console.log(auctions);
             } catch (err) {
                 console.error('Error fetching auctions:', err);
             }
         };
 
         fetchAuctions();
-    }, []);
+    }, [accountId]);
 
     const fetchJewelryImage = async (jewelryId) => {
         try {
             const response = await api.get(`api/Jewelries/GetById/${jewelryId}`);
-            console.log(response);
-            return response.data.jewelryImg; // Assuming imageUrl is the property containing the image URL
+            return response.data.jewelryImg; // Assuming jewelryImg is the property containing the image URL
         } catch (err) {
             console.error('Error fetching jewelry image:', err);
             return null;
@@ -55,10 +57,11 @@ function MemberAuctions() {
             <div className="auctions-container">
                 {auctions.map((auction) => (
                     <div key={auction.auctionId} className="auction-item" onClick={() => handleAuctionClick(auction.auctionId)}>
-                         <img 
-              src={`https://localhost:44361/${auction.imageUrl}`} 
-              onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
-            />
+                        <img 
+                            src={`https://localhost:44361/${auction.imageUrl}`} 
+                            onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
+                            alt="Jewelry"
+                        />
                         <p>Start Time: {auction.starttime}</p>
                         <p>End Time: {auction.endtime}</p>
                     </div>
