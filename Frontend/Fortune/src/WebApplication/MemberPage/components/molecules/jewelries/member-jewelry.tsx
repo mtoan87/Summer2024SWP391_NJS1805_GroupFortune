@@ -1,11 +1,14 @@
-import { useEffect, useState } from 'react';
-import '../styles/jewelry.scss';
-import api from '../../../config/axios';
+import React, { useEffect, useState } from 'react';
+import './member-jewelry.scss';
+import api from '../../../../../config/axios';
+import { useNavigate } from 'react-router-dom';
 
-function GuestJewelry() {
+function MemberJewelry() {
   const [jewelry, setJewelry] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 3;
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchJewelry = async () => {
@@ -79,16 +82,21 @@ function GuestJewelry() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const displayedItems = jewelry.slice(startIndex, startIndex + itemsPerPage);
 
+  const handleJewelryClick = (jewelryId) => {
+    navigate(`/jewelry/${jewelryId}`);
+  };
+
   return (
     <>
-      <div className="jewel-content">
-        <h1>JEWELRY</h1>
+      <div className="member-jewel-content">
+        <h1>Jewelry</h1>
       </div>
-      <div className="jewelry-container">
+      <div className="member-jewelry-container">
         {displayedItems.map((item, index) => (
           <div
             key={`${item.jewelryId}-${index}`}
-            className="jewelry-item"
+            className="member-jewelry-item"
+            onClick={() => handleJewelryClick(item.jewelryGoldId || item.jewelrySilverId)}
           >
             <img
               src={item.imageUrl}
@@ -98,16 +106,17 @@ function GuestJewelry() {
             <h3>{item.name}</h3>
             <p>Description: {item.description}</p>
             <p>Collection: {item.collection}</p>
-            <p>Gold Age: {item.goldage}k</p>
+            <p>Gold Age: {item.goldAge}k</p>
             <p>Materials: {item.materials}</p>
             <p>Weight: {item.weight} Grams</p>
             <p className="price">{item.price}₫</p>
-            <p className="installment">0% Trả góp</p>
           </div>
         ))}
       </div>
       <div className="navigation-buttons">
-        <button onClick={prevPage} disabled={currentPage === 1}>Previous</button>
+        <button onClick={prevPage} disabled={currentPage === 1}>
+          Previous
+        </button>
         {[...Array(totalPages)].map((_, index) => (
           <button
             key={index + 1}
@@ -117,10 +126,12 @@ function GuestJewelry() {
             {index + 1}
           </button>
         ))}
-        <button onClick={nextPage} disabled={currentPage === totalPages}>Next</button>
+        <button onClick={nextPage} disabled={currentPage === totalPages}>
+          Next
+        </button>
       </div>
     </>
   );
 }
 
-export default GuestJewelry;
+export default MemberJewelry;

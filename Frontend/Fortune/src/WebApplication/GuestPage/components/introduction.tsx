@@ -5,7 +5,6 @@ function Introduction() {
         <>
             <div className="guest-introduction">
             <SimpleSlider/>
-    
             </div>
         </>
     )

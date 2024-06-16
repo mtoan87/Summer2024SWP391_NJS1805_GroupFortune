@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import api from '../../../config/axios';
-import '../styles/auctions.scss';
+import api from '../../../../../config/axios';
+import './member-auction.scss';
 
-function Auctions() {
+function MemberAuctions() {
     const [auctions, setAuctions] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 3;
@@ -74,12 +74,12 @@ function Auctions() {
 
     return (
         <>
-            <div className="auctions-content">
+            <div className="member-auctions-content">
                 <h1>AUCTIONS</h1>
             </div>
-            <div className="auctions-container">
+            <div className="member-auctions-container">
                 {displayedAuctions.map((auction) => (
-                    <div key={auction.auctionId} className="auction-item">
+                    <div key={auction.auctionId} className="member-auction-item">
                         <img
                             src={auction.imageUrl}
                             onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
@@ -108,4 +108,4 @@ function Auctions() {
     );
 }
 
-export default Auctions;
+export default MemberAuctions;

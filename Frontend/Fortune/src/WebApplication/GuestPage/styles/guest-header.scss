@@ -1,8 +1,9 @@
 .guest-header-home {
-    position: relative; /* Make sure it stays within the document flow */
+    position: relative;
+    margin-bottom: 0;
 
     .logo {
-        height: 120px;
+        height: 8rem;
     }
 
     .account {
@@ -10,58 +11,58 @@
     }
 
     nav {
-        margin-bottom: 0; /* Adjust margin as needed */
-    }
-
-    ul {
-        display: flex;
-        height: 100px;
-        justify-content: center;
-        align-items: center; /* Ensure items are centered vertically */
-
-        .guest-header-items {
+        ul {
             display: flex;
+            height: 9rem;
+            justify-content: center;
             align-items: center;
-            padding: 10px 30px; /* Adjust padding as needed */
-            margin: 10px 40px; /* Adjust margin as needed */
-            border-radius: 10px; /* Rounded corners */
-            transition: background-color 0.25s ease-out;
-            margin-top: 10px;
+            margin-bottom: -1rem;
+            margin-top: -1rem;
 
-            &:hover {
-                background-color: #e6e6ff; /* Light purple background on hover */
-            }
+            .guest-header-items {
+                display: flex;
+                align-items: center;
+                padding: 10px 30px;
+                margin: 10px 40px 0 40px; 
+                border-radius: 10px;
+                transition: background-color 0.25s ease-out;
 
-            li {
-                list-style: none;
-                white-space: nowrap;
-                color: #824D4D;
-                font-size: 24px;
+                &:hover {
+                    background-color: beige;
+                    cursor: pointer;
+                }
 
-                a {
-                    text-decoration: none;
-                    color: inherit;
+                li {
+                    list-style: none;
+                    white-space: nowrap;
+                    color: #824D4D;
+                    font-size: 24px;
+
+                    a {
+                        text-decoration: none;
+                        color: inherit;
+                        display: flex;
+                        align-items: center;
+
+                        &:hover {
+                            color: #000;
+                        }
+                    }
+                }
+
+                .login-container {
                     display: flex;
                     align-items: center;
 
-                    &:hover {
-                        color: #000; /* Text color on hover */
+                    img {
+                        margin-right: 0.5rem;
                     }
                 }
             }
         }
     }
-}
 
-.content {
-    margin-top: 100px; /* Adjust top margin to ensure it clears the header */
-}
-
-.login-container {
-    display: flex;
-    align-items: center;
-
-    img {
-        margin-right: 5px; /* Adjust space between image and text */
+    .content {
+        margin-top: 100px;
     }
 }
