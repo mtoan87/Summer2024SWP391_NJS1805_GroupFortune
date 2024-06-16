@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import MemberHeader from './navbar';
 import MemberFooter from '../../../atoms/member-footer/member-footer';
 import '../styles/mydashboard.scss';
-
+/*-------------------------------------------*/
 import Account from './account'
+import Wallet from './payment'
 import {
   ProductOutlined,
   PieChartOutlined,
@@ -68,8 +69,8 @@ const MyDashboard: React.FC = () => {
         <Header style={{ padding: 0, background: colorBgContainer }}>
           <MemberHeader />
         </Header>
-        <Content style={{ margin: '10px 10px' }}>
-          <Breadcrumb style={{ margin: '50px 5px' }}>
+        <Content style={{ margin: '-10px 0px' }}>
+          <Breadcrumb style={{ margin: '50px 0px' }}>
             <Breadcrumb.Item>DashBoard</Breadcrumb.Item>
             {currentPage === '2' && <Breadcrumb.Item>Account</Breadcrumb.Item>}
             {currentPage === '3' && <Breadcrumb.Item>Payment / Wallet</Breadcrumb.Item>}
@@ -91,6 +92,7 @@ const MyDashboard: React.FC = () => {
           >
             {currentPage === '1' && <div><Account/></div>}
             {currentPage === '2' && <div><Account/></div>}
+
             {/* Add similar conditions for other pages if needed */}
           </div>
         </Content>

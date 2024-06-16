@@ -2,12 +2,11 @@
     position: relative; /* Make sure it stays within the document flow */
 
     .logo {
-        height: 100px;
+        height: 120px;
     }
 
     .account {
         height: 50px;
-        margin-top: 15px; /* Adjust to your desired height */
     }
 
     nav {
@@ -23,11 +22,11 @@
         .guest-header-items {
             display: flex;
             align-items: center;
-            padding: 10px 20px; /* Adjust padding as needed */
-            margin: 0 40px; /* Adjust margin as needed */
+            padding: 10px 30px; /* Adjust padding as needed */
+            margin: 10px 40px; /* Adjust margin as needed */
             border-radius: 10px; /* Rounded corners */
             transition: background-color 0.25s ease-out;
-            margin-top: 0; /* Adjusted margin-top to avoid overlap */
+            margin-top: 10px;
 
             &:hover {
                 background-color: #e6e6ff; /* Light purple background on hover */
@@ -37,7 +36,7 @@
                 list-style: none;
                 white-space: nowrap;
                 color: #824D4D;
-                font-size: 30px;
+                font-size: 24px;
 
                 a {
                     text-decoration: none;
