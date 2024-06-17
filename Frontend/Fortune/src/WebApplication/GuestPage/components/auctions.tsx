@@ -72,6 +72,11 @@ function Auctions() {
         return date.toLocaleDateString(); // Returns a string in the current locale's default format (e.g., "6/15/2024" for en-US)
     };
 
+    const formatTime = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Returns a string with the time (e.g., "09:00 AM" for en-US)
+    };
+
     return (
         <>
             <div className="auctions-content">
@@ -85,9 +90,9 @@ function Auctions() {
                             onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
                             alt="Jewelry"
                         />
-                        <p>Date: {formatDate(auction.dateofAuction)}</p>
-                        <p>Start Time: {auction.starttime}</p>
-                        <p>End Time: {auction.endtime}</p>
+                        <p>Date: {formatDate(auction.starttime)}</p>
+                        <p>Start Time: {formatTime(auction.starttime)}</p>
+                        <p>End Time: {formatTime(auction.endtime)}</p>
                     </div>
                 ))}
             </div>
