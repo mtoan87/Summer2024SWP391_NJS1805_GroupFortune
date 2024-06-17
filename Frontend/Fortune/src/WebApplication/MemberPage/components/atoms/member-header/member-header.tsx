@@ -38,14 +38,14 @@ const MemberHeader: React.FC = () => {
                     </div>
                     <div className="member-header-items">
                         <li className="inline-block">
-                            <ScrollLink to='auctions-container' spy={true} offset={-100} duration={500}>
+                            <ScrollLink to='member-auctions-content' spy={true} offset={-100} duration={500}>
                                 AUCTION
                             </ScrollLink>
                         </li>
                     </div>
                     <div className="member-header-items">
                         <li className="inline-block">
-                            <ScrollLink to='jewel-content' spy={true} offset={-100} duration={500}>
+                            <ScrollLink to='member-jewel-content' spy={true} offset={-100} duration={500}>
                                 JEWELRY
                             </ScrollLink>
                         </li>
