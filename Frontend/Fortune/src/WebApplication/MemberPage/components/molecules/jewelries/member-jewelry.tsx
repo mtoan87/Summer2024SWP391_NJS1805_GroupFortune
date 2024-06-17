@@ -40,15 +40,6 @@ function MemberJewelry() {
 
   const fetchJewelryImage = async (item) => {
     try {
-      let jewelryId;
-      if (item.jewelryGoldId) {
-        jewelryId = item.jewelryGoldId;
-      } else if (item.jewelrySilverId) {
-        jewelryId = item.jewelrySilverId;
-      } else {
-        throw new Error("No valid jewelryId found");
-      }
-
       const apiUrl = item.jewelryGoldId
         ? `/api/JewelryGold/GetById/${item.jewelryGoldId}`
         : `/api/JewelrySilver/GetById/${item.jewelrySilverId}`;
@@ -105,11 +96,14 @@ function MemberJewelry() {
             />
             <h3>{item.name}</h3>
             <p>Description: {item.description}</p>
-            <p>Collection: {item.collection}</p>
-            <p>Gold Age: {item.goldAge}k</p>
+            {item.jewelryGoldId ? (
+              <p>Gold Age: {item.goldAge}</p>
+            ) : (
+              <p>Purity: {item.purity}</p>
+            )}
             <p>Materials: {item.materials}</p>
-            <p>Weight: {item.weight} Grams</p>
-            <p className="price">{item.price}₫</p>
+            <p>Weight: {item.weight}</p>
+            <p className="price">{item.price}</p>
           </div>
         ))}
       </div>
