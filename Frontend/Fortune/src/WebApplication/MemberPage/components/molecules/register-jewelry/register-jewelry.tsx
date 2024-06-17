@@ -11,12 +11,14 @@ function RegisterJewelryForAuction() {
   const { material } = useParams();
   const loginedUser = JSON.parse(sessionStorage.getItem('loginedUser'));
   const accountId = loginedUser?.accountId;
+
   const [formData, setFormData] = useState({
     accountId: accountId,
     jewelryGoldId: material === 'gold' ? jewelryId : null,
     jewelrySilverId: material === 'silver' ? jewelryId : null,
-    starttime: '',
-    endtime: '',
+    date: '',
+    startTime: '',
+    endTime: '',
     jewelryDetails: {} // Object to store jewelry details
   });
 
@@ -34,17 +36,13 @@ function RegisterJewelryForAuction() {
         }
 
         console.log(response.data);
-        setFormData(prevState => {
-          const updatedFormData = {
-            ...prevState,
-            jewelryDetails: {
-              ...response.data,
-              materials: material // Update material type dynamically
-            }
-          };
-          console.log(updatedFormData); // Log formData after updating the state
-          return updatedFormData;
-        });
+        setFormData(prevState => ({
+          ...prevState,
+          jewelryDetails: {
+            ...response.data,
+            materials: material // Update material type dynamically
+          }
+        }));
       } catch (error) {
         console.error('Error fetching jewelry details:', error);
       }
@@ -57,40 +55,81 @@ function RegisterJewelryForAuction() {
 
   const handleChange = e => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData(prevState => ({
+      ...prevState,
       [name]: value
-    });
+    }));
   };
 
   const handleSubmit = async e => {
     e.preventDefault();
+
+    // Validate the date is at least 3 days from today
+    const chosenDate = new Date(formData.date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const minDate = new Date(today);
+    minDate.setDate(today.getDate() + 3);
+
+    if (chosenDate < minDate) {
+      toast.error('The auction date must be at least 3 days from today.', { position: 'top-right' });
+      return;
+    }
+
+    // Validate end time is at least 30 minutes after start time
+    const [startHours, startMinutes] = formData.startTime.split(':').map(Number);
+    const [endHours, endMinutes] = formData.endTime.split(':').map(Number);
+    const startDateTime = new Date(chosenDate);
+    const endDateTime = new Date(chosenDate);
+
+    startDateTime.setHours(startHours, startMinutes, 0, 0);
+    endDateTime.setHours(endHours, endMinutes, 0, 0);
+
+    const timeDifference = (endDateTime - startDateTime) / (1000 * 60); // Difference in minutes
+
+    if (timeDifference < 30) {
+      toast.error('End time must be at least 30 minutes after the start time.', { position: 'top-right' });
+      return;
+    }
+
+    // Combine date with start and end times
+    const dateofAuction = chosenDate.toISOString();
+    const starttime = {
+      ticks: startDateTime.getTime() * 10000
+    };
+    const endtime = {
+      ticks: endDateTime.getTime() * 10000
+    };
+
     try {
       const requestData = {
-        accountId: formData.accountId,
-        jewelryGoldId: formData.jewelryGoldId,
-        jewelrySilverId: formData.jewelrySilverId,
-        starttime: new Date(formData.starttime).toISOString(),
-        endtime: new Date(formData.endtime).toISOString()
+        createAuction: {
+          accountId: formData.accountId,
+          dateofAuction: dateofAuction,
+          starttime: starttime,
+          endtime: endtime
+        }
       };
 
-      let apiUrl;
       if (material === 'gold') {
-        apiUrl = '/api/Auctions/CreateGoldJewelryAuction';
-        requestData.jewelrySilverId = null; // Set silver id to null for gold auction
+        requestData.jewelryGoldId = formData.jewelryGoldId;
       } else if (material === 'silver') {
-        apiUrl = '/api/Auctions/CreateSilverJewelryAuction';
-        requestData.jewelryGoldId = null; // Set gold id to null for silver auction
+        requestData.jewelrySilverId = formData.jewelrySilverId;
       } else {
         console.error('Unsupported jewelry material type');
         return;
       }
+
+      const apiUrl = material === 'gold' ? '/api/Auctions/CreateGoldJewelryAuction' : '/api/Auctions/CreateSilverJewelryAuction';
 
       const response = await api.post(apiUrl, requestData);
       console.log('Auction created successfully:', response.data);
       toast.success('Auction registered successfully!', { position: 'top-right' });
     } catch (error) {
       console.error('Error creating auction:', error);
+      if (error.response && error.response.data) {
+        console.error('Response Data:', error.response.data);
+      }
       toast.error('Error creating auction. Please try again!', { position: 'top-right' });
     }
   };
@@ -127,23 +166,34 @@ function RegisterJewelryForAuction() {
           </div>
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="starttime">Start Time</label>
+              <label htmlFor="date">Date</label>
               <input
-                type="datetime-local"
-                id="starttime"
-                name="starttime"
-                value={formData.starttime}
+                type="date"
+                id="date"
+                name="date"
+                value={formData.date}
                 onChange={handleChange}
                 required
               />
             </div>
             <div className="form-group">
-              <label htmlFor="endtime">End Time</label>
+              <label htmlFor="startTime">Start Time</label>
               <input
-                type="datetime-local"
-                id="endtime"
-                name="endtime"
-                value={formData.endtime}
+                type="time"
+                id="startTime"
+                name="startTime"
+                value={formData.startTime}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="endTime">End Time</label>
+              <input
+                type="time"
+                id="endTime"
+                name="endTime"
+                value={formData.endTime}
                 onChange={handleChange}
                 required
               />
