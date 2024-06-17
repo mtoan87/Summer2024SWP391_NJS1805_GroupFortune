@@ -146,6 +146,7 @@ function ViewJewelryDetails() {
           <label htmlFor="description">Description</label>
           <textarea name="description" value={jewelryDetails.description} onChange={handleInputChange} />
           {errors.description && <span className="error">{errors.description}</span>}
+
           <label htmlFor="materials">Materials</label>
           <select name="materials" value={jewelryDetails.materials} onChange={handleInputChange}>
             <option value="">Select Material</option>
@@ -155,6 +156,7 @@ function ViewJewelryDetails() {
             <option value="diamond">Diamond</option>
           </select>
           {errors.materials && <span className="error">{errors.materials}</span>}
+          
           {jewelryDetails.materials === 'gold' && (
             <div className="input-container">
               <label htmlFor="goldAge">Gold Age</label>
@@ -163,6 +165,7 @@ function ViewJewelryDetails() {
               <span className="suffix">k</span>
             </div>
           )}
+
           {jewelryDetails.materials === 'silver' && (
             <div className="input-container">
               <label htmlFor="purity">Purity</label>
@@ -171,6 +174,7 @@ function ViewJewelryDetails() {
               <span className="suffix">%</span>
             </div>
           )}
+
           <label htmlFor="category">Category</label>
           <select name="category" value={jewelryDetails.category} onChange={handleInputChange}>
             <option value="">Select Category</option>

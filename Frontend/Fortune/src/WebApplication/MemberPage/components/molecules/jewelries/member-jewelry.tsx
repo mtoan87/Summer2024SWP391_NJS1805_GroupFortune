@@ -99,7 +99,7 @@ function MemberJewelry() {
             onClick={() => handleJewelryClick(item.jewelryGoldId || item.jewelrySilverId)}
           >
             <img
-              src={item.imageUrl}
+              src={`https://localhost:44361/${item.imageUrl}`}
               alt={item.name}
               onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
             />

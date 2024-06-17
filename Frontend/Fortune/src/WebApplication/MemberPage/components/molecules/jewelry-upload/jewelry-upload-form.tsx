@@ -269,7 +269,7 @@ const JewelryUploadForm: React.FC = () => {
             required
           />
           <select
-            className="weight-unit-select"
+            className="weight-unit-select-upload"
             name="weightUnit"
             value={jewelry.weightUnit}
             onChange={handleChange}
