@@ -88,7 +88,7 @@ function RegisterJewelryForAuction() {
     const timeDifference = (endDateTime - startDateTime) / (1000 * 60); // Difference in minutes
 
     if (timeDifference < 30) {
-      toast.error('End time must be at least 30 minutes after the start time.', { position: 'top-right' });
+      toast.error('The acution must take part at least 30 minutes.', { position: 'top-right' });
       return;
     }
 
