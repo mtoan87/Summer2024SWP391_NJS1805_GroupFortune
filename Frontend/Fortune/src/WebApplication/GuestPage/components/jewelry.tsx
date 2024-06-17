@@ -97,12 +97,15 @@ function GuestJewelry() {
             />
             <h3>{item.name}</h3>
             <p>Description: {item.description}</p>
-            <p>Collection: {item.collection}</p>
-            <p>Gold Age: {item.goldage}k</p>
+            <p>Category: {item.category}</p>
+            {item.jewelryGoldId ? (
+              <p>Gold Age: {item.goldAge}</p>
+            ) : (
+              <p>Purity: {item.purity}</p>
+            )}
             <p>Materials: {item.materials}</p>
-            <p>Weight: {item.weight} Grams</p>
-            <p className="price">{item.price}₫</p>
-            <p className="installment">0% Trả góp</p>
+            <p>Weight: {item.weight}</p>
+            <p className="price">{item.price}$</p>
           </div>
         ))}
       </div>
