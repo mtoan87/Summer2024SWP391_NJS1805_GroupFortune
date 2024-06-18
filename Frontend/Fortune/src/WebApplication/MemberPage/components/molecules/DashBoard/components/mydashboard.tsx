@@ -4,15 +4,16 @@ import MemberFooter from '../../../atoms/member-footer/member-footer';
 import '../styles/mydashboard.scss';
 /*-------------------------------------------*/
 import Account from './account'
-import Wallet from './payment'
 import {
   ProductOutlined,
   PieChartOutlined,
   UserOutlined,
   WalletFilled,
+  PayCircleOutlined
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import PaymentForm from './payment';
 
 const { Header, Content, Sider } = Layout;
 
@@ -36,10 +37,9 @@ const items: MenuItem[] = [
   getItem('DashBoard', '1', <PieChartOutlined />),
   getItem('Account', '2', <UserOutlined />),
   getItem('Payment', 'sub1', <WalletFilled />, [
-    getItem('Wallet', '3'),
-    getItem('Point', '4'),
+    getItem('500', '4', <PayCircleOutlined/>),
   ]),
-  getItem('My Auction', '5', <ProductOutlined />),
+  getItem('My Auction', '5', <ProductOutlined/>),
 ];
 
 const MyDashboard: React.FC = () => {
@@ -92,12 +92,14 @@ const MyDashboard: React.FC = () => {
           >
             {currentPage === '1' && <div><Account/></div>}
             {currentPage === '2' && <div><Account/></div>}
+            {currentPage === '4' && <div><PaymentForm/></div>}
+
 
             {/* Add similar conditions for other pages if needed */}
           </div>
         </Content>
         <footer>
-          <MemberFooter />
+          <MemberFooter/>
         </footer>
       </Layout>
     </Layout>
