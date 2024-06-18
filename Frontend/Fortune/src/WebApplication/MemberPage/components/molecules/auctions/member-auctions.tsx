@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react';
 import api from '../../../../../config/axios';
 import './member-auction.scss';
 
+import { useNavigate } from 'react-router-dom';
 function MemberAuctions() {
     const [auctions, setAuctions] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 3;
 
+    const navigate = useNavigate();
     useEffect(() => {
         const fetchAuctions = async () => {
             try {
@@ -60,7 +62,9 @@ function MemberAuctions() {
     const goToPage = (page) => {
         setCurrentPage(page);
     };
-
+    const handleAuctionClick = (auctionId) => {
+        navigate(`/auction/${auctionId}`);
+    };
     const totalPages = Math.ceil(auctions.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const displayedAuctions = auctions.slice(startIndex, startIndex + itemsPerPage);
@@ -82,7 +86,7 @@ function MemberAuctions() {
             </div>
             <div className="member-auctions-container">
                 {displayedAuctions.map((auction) => (
-                    <div key={auction.auctionId} className="member-auction-item">
+                    <div key={auction.auctionId} className="member-auction-item" onClick={() => handleAuctionClick(auction.auctionId)}>
                         <img
                             src={auction.imageUrl}
                             onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}

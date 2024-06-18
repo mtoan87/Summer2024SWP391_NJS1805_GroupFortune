@@ -20,9 +20,9 @@ function AuctionDetails() {
                 const auctionData = response.data;
                 console.log('Auction Details:', auctionData);
                 setAuction(auctionData);
-
+                
                 // Fetch the jewelry details
-                const jewelryResponse = await api.get(`api/Jewelries/GetById/${auctionData.jewelryId}`);
+                const jewelryResponse = await api.get(`api/JewelryGold/GetById/${auctionData.jewelryGoldId}`);
                 console.log('Jewelry Details:', jewelryResponse.data);
                 setJewelry(jewelryResponse.data);
             } catch (err) {
@@ -83,15 +83,15 @@ function AuctionDetails() {
                 <img  className='item-img'
               src={`https://localhost:44361/${jewelry.jewelryImg}`} 
               alt={jewelry.name} 
-              onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
+            //   onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
             />
                     <p><strong>Name:</strong> {jewelry.name}</p>
                     <p><strong>Materials:</strong> {jewelry.materials}</p>
                     <p><strong>Description:</strong> {jewelry.description}</p>
                     <p><strong>Price:</strong> ${jewelry.price}</p>
                     <p><strong>Weight:</strong> {jewelry.weight}</p>
-                    <p><strong>Gold Age:</strong> {jewelry.goldage}</p>
-                    <p><strong>Collection:</strong> {jewelry.collection}</p>
+                    <p><strong>Gold Age:</strong> {jewelry.goldAge}</p>
+                    <p><strong>Category:</strong> {jewelry.category}</p>
                     <p><strong>Start Time:</strong> {auction.starttime}</p>
                     <p><strong>End Time:</strong> {auction.endtime}</p>
                     <p><strong>Auction Description:</strong> {auction.description}</p>

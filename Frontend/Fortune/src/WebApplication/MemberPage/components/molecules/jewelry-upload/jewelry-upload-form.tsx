@@ -185,147 +185,151 @@ const JewelryUploadForm: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="jewelry-upload-container">
       <form onSubmit={handleSubmit}>
-        <h3>Jewelry</h3>
-        <div>
-          <label htmlFor="image">Image</label>
-          <div className="upload-label-details" onClick={handleImageClick}>
-            <img
-              src={jewelry.imageUrl || "../../../../../../src/assets/img/jewelry_introduction.jpg"}
-              alt="jewelry"
-              className="upload-preview"
-            />
-            <div className="upload-text-details">Upload Image</div>
-            <input ref={fileInputRef} type="file" id="image" name="image" onChange={handleImageUpload} accept="image/*" style={{ display: 'none' }} />
+        <h3>Create a Jewelry</h3>
+        <div className="form-content">
+          <div className="image-upload-section">
+            <label htmlFor="image">Image</label>
+            <div className="upload-label-details" onClick={handleImageClick}>
+              <img
+                src={jewelry.imageUrl || "../../../../../../src/assets/img/jewelry_introduction.jpg"}
+                alt="jewelry"
+                className="upload-preview"
+              />
+              <div className="upload-text-details">Upload Image</div>
+              <input ref={fileInputRef} type="file" id="image" name="image" onChange={handleImageUpload} accept="image/*" style={{ display: 'none' }} />
+            </div>
+            {errors.imageFile && <span className="error">{errors.imageFile}</span>}
           </div>
-          {errors.imageFile && <span className="error">{errors.imageFile}</span>}
-        </div>
-        <div>
-          <label htmlFor="name">Name:</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={jewelry.name}
-            onChange={handleChange}
-            required
-          />
-          {errors.name && <span className="error">{errors.name}</span>}
-        </div>
-        <div>
-          <label htmlFor="category">Category:</label>
-          <select
-            id="category"
-            name="category"
-            value={jewelry.category}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select Category</option>
-            <option value="Necklace">Necklace</option>
-            <option value="Ring">Ring</option>
-            <option value="Bracelet">Bracelet</option>
-            <option value="Earrings">Earrings</option>
-            <option value="Brooch">Brooch</option>
-          </select>
-          {errors.category && <span className="error">{errors.category}</span>}
-        </div>
-        <div>
-          <label htmlFor="materials">Materials:</label>
-          <select
-            id="materials"
-            name="materials"
-            value={jewelry.materials}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select Material</option>
-            <option value="Gold">Gold</option>
-            <option value="Silver">Silver</option>
-            <option value="Platinum">Platinum</option>
-            <option value="Diamond">Diamond</option>
-          </select>
-          {errors.materials && <span className="error">{errors.materials}</span>}
-        </div>
-        <div>
-          <label htmlFor="description">Description:</label>
-          <textarea
-            id="description"
-            name="description"
-            value={jewelry.description}
-            onChange={handleChange}
-          />
-          {errors.description && <span className="error">{errors.description}</span>}
-        </div>
-        <div className="input-container">
-          <label htmlFor="weight">Weight:</label>
-          <input
-            type="text"
-            id="weight"
-            name="weight"
-            value={jewelry.weight}
-            onChange={handleChange}
-            required
-          />
-          <select
-            className="weight-unit-select-upload"
-            name="weightUnit"
-            value={jewelry.weightUnit}
-            onChange={handleChange}
-          >
-            <option value="grams">Grams (g)</option>
-            {/* <option value="carats">Carats (ct)</option> */}
-            <option value="milligrams">Milligrams (mg)</option>
-            <option value="ounces">Ounces (oz)</option>
-            <option value="pennyweights">Pennyweights (dwt)</option>
-          </select>
-          {errors.weight && <span className="error">{errors.weight}</span>}
-        </div>
-        {jewelry.materials === 'Gold' && (
-          <div className="input-container">
-            <label htmlFor="goldage">Gold Age:</label>
-            <input
-              type="text"
-              id="goldage"
-              name="goldage"
-              value={jewelry.goldage}
-              onChange={handleChange}
-              required
-            />
-            <span className="suffix">k</span>
-            {errors.goldage && <span className="error">{errors.goldage}</span>}
+          <div className="form-fields-section">
+            <div>
+              <label htmlFor="name">Name:</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={jewelry.name}
+                onChange={handleChange}
+                required
+              />
+              {errors.name && <span className="error">{errors.name}</span>}
+            </div>
+            <div>
+              <label htmlFor="category">Category:</label>
+              <select
+                id="category"
+                name="category"
+                value={jewelry.category}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select Category</option>
+                <option value="Necklace">Necklace</option>
+                <option value="Ring">Ring</option>
+                <option value="Bracelet">Bracelet</option>
+                <option value="Earrings">Earrings</option>
+                <option value="Brooch">Brooch</option>
+              </select>
+              {errors.category && <span className="error">{errors.category}</span>}
+            </div>
+            <div>
+              <label htmlFor="materials">Materials:</label>
+              <select
+                id="materials"
+                name="materials"
+                value={jewelry.materials}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select Material</option>
+                <option value="Gold">Gold</option>
+                <option value="Silver">Silver</option>
+                <option value="Platinum">Platinum</option>
+                <option value="Diamond">Diamond</option>
+              </select>
+              {errors.materials && <span className="error">{errors.materials}</span>}
+            </div>
+            <div>
+              <label htmlFor="description">Description:</label>
+              <textarea
+                id="description"
+                name="description"
+                value={jewelry.description}
+                onChange={handleChange}
+              />
+              {errors.description && <span className="error">{errors.description}</span>}
+            </div>
+            <div className="input-container">
+              <label htmlFor="weight">Weight:</label>
+              <input
+                type="text"
+                id="weight"
+                name="weight"
+                value={jewelry.weight}
+                onChange={handleChange}
+                required
+              />
+              <select
+                className="weight-unit-select-upload"
+                name="weightUnit"
+                value={jewelry.weightUnit}
+                onChange={handleChange}
+              >
+                <option value="grams">Grams (g)</option>
+                {/* <option value="carats">Carats (ct)</option> */}
+                <option value="milligrams">Milligrams (mg)</option>
+                <option value="ounces">Ounces (oz)</option>
+                <option value="pennyweights">Pennyweights (dwt)</option>
+              </select>
+              {errors.weight && <span className="error">{errors.weight}</span>}
+            </div>
+            {jewelry.materials === 'Gold' && (
+              <div className="input-container">
+                <label htmlFor="goldage">Gold Age:</label>
+                <input
+                  type="text"
+                  id="goldage"
+                  name="goldage"
+                  value={jewelry.goldage}
+                  onChange={handleChange}
+                  required
+                />
+                <span className="suffix">k</span>
+                {errors.goldage && <span className="error">{errors.goldage}</span>}
+              </div>
+            )}
+            {jewelry.materials === 'Silver' && (
+              <div className="input-container">
+                <label htmlFor="purity">Purity:</label>
+                <input
+                  type="text"
+                  id="purity"
+                  name="purity"
+                  value={jewelry.purity}
+                  onChange={handleChange}
+                  required
+                />
+                <span className="suffix">%</span>
+                {errors.purity && <span className="error">{errors.purity}</span>}
+              </div>
+            )}
+            <div className="input-container">
+              <label htmlFor="price">Price:</label>
+              <input
+                type="text"
+                id="price"
+                name="price"
+                value={jewelry.price}
+                onChange={handleChange}
+                required
+              />
+              <span className="suffix">$</span>
+              {errors.price && <span className="error">{errors.price}</span>}
+            </div>
+            <button type="submit">Upload Jewelry</button>
           </div>
-        )}
-        {jewelry.materials === 'Silver' && (
-          <div className="input-container">
-            <label htmlFor="purity">Purity:</label>
-            <input
-              type="text"
-              id="purity"
-              name="purity"
-              value={jewelry.purity}
-              onChange={handleChange}
-              required
-            />
-            <span className="suffix">%</span>
-            {errors.purity && <span className="error">{errors.purity}</span>}
-          </div>
-        )}
-        <div className="input-container">
-          <label htmlFor="price">Price:</label>
-          <input
-            type="text"
-            id="price"
-            name="price"
-            value={jewelry.price}
-            onChange={handleChange}
-            required
-          />
-          <span className="suffix">$</span>
-          {errors.price && <span className="error">{errors.price}</span>}
         </div>
-        <button type="submit">Upload Jewelry</button>
       </form>
       <ToastContainer />
     </div>

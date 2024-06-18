@@ -103,7 +103,7 @@ function MemberJewelry() {
             )}
             <p>Materials: {item.materials}</p>
             <p>Weight: {item.weight}</p>
-            <p className="price">{item.price}</p>
+            <p className="price">{item.price}$</p>
           </div>
         ))}
       </div>
