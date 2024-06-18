@@ -1,7 +1,7 @@
 import React from 'react';
 import './member-footer.scss';
 
-const MemberFooter: React.FC = () => {
+const StaffFooter: React.FC = () => {
   return (
     <footer className="member-footer">
       <div className="container">
@@ -22,4 +22,4 @@ const MemberFooter: React.FC = () => {
   );
 }
 
-export default MemberFooter;
+export default StaffFooter;

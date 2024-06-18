@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-function MemberViewJewelry() {
+function StaffViewJewelry() {
   const [goldJewelry, setGoldJewelry] = useState([]);
   const [silverJewelry, setSilverJewelry] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -56,7 +56,7 @@ function MemberViewJewelry() {
   }, [successMessage]);
 
   const handleUpdateJewelry = (jewelryId,material) => {
-    navigate(`/update-jewelry/${jewelryId}/${material}`);
+    navigate(`/staff/update-jewelry/${jewelryId}/${material}`);
   };
 
   const handleRegisterAuction = (jewelryId,material) => {
@@ -164,4 +164,4 @@ function MemberViewJewelry() {
   );
 }
 
-export default MemberViewJewelry;
+export default StaffViewJewelry;

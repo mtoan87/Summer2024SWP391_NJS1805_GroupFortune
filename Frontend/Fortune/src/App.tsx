@@ -20,6 +20,8 @@ import MemberAucDetailsPg from './WebApplication/MemberPage/components/pages/mem
 import MemberRegisterJewelryAuctionPg from './WebApplication/MemberPage/components/pages/member-register-jewelry-auction/member-register-jewelry-auction-pg';
 import MemberJewDetailsPg from './WebApplication/MemberPage/components/pages/member-jewelry-details-pg/member-jewelry-details-pg';
 import StaffJewelryPg from './WebApplication/StaffPage/components/pages/staff-view-jewelry/staff-view-jewelry';
+import StaffViewJewelry from './WebApplication/StaffPage/components/molucules/jewelry-details/staffViewJewelry';
+import StaffViewJewelryPg from './WebApplication/StaffPage/components/pages/stafff-Jewelry-pg/staff-View-Jewelry-Details-Pg';
 const App: React.FC = () => {
   const { user, setUser } = useUser();
   useEffect(() => {
@@ -67,6 +69,7 @@ const App: React.FC = () => {
               {user.role === 3 && (
                 <>
                  <Route path='/' element={<StaffJewelryPg />} />
+                 <Route path="/staff/update-jewelry/:id/:material" element={<StaffViewJewelryPg />} />
                   {/* Add your staff routes here */}
                 </>
               )}

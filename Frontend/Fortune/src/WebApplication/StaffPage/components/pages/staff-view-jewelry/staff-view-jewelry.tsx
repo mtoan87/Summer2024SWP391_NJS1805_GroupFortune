@@ -1,6 +1,6 @@
-import MemberHeader from '../../atoms/member-header/member-header'
-import MemberJewelryBody from '../../template/staff-jewelry/member-jewelry'
-import MemberFooter from '../../atoms/member-footer/member-footer'
+import MemberHeader from '../../atoms/staff-header/staff-header'
+import MemberJewelryBody from '../../template/staff-jewelry/staff-jewelry'
+import MemberFooter from '../../atoms/staff-footer/staff-footer'
 
 function StaffJewelryPg() {
   return (
