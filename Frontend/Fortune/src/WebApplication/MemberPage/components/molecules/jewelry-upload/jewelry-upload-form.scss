@@ -1,6 +1,6 @@
-$form-padding: 20px;
-$form-margin-top: 150px;
-$form-margin-bottom: 50px;
+$jewelry-upload-container-padding: 20px;
+$jewelry-upload-container-margin-top: 150px;
+$jewelry-upload-container-margin-bottom: 50px;
 $form-border-color: #ccc;
 $form-background-color: #f9f9f9;
 $form-text-color: #333;
@@ -8,12 +8,12 @@ $form-button-color: #824D4D;
 $form-button-hover-color: darken($form-button-color, 10%);
 $form-label-color: #555;
 
-form {
-  max-width: 600px;
+.jewelry-upload-container {
+  max-width: 1200px;
   margin: 0 auto;
-  padding: $form-padding;
-  margin-top: $form-margin-top;
-  margin-bottom: $form-margin-bottom;
+  padding: $jewelry-upload-container-padding;
+  margin-top: $jewelry-upload-container-margin-top;
+  margin-bottom: $jewelry-upload-container-margin-bottom;
   border: 1px solid $form-border-color;
   border-radius: 5px;
   background-color: $form-background-color;
@@ -23,115 +23,136 @@ form {
     text-align: center;
   }
 
-  div {
-    margin-bottom: 15px;
-  }
+  .form-content {
+    display: flex;
+    align-items: flex-start;
 
-  label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: $form-label-color;
-  }
+    .image-upload-section {
+      flex: 2;
+      margin-right: 20px;
 
-  input,
-  textarea,
-  select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid $form-border-color;
-    border-radius: 5px;
-    font-size: 16px;
-  }
+      .upload-label-details {
+        position: relative;
+        cursor: pointer;
+        max-width: 100%;
 
-  textarea {
-    resize: vertical;
-  }
+        .upload-preview {
+          width: 100%;
+          height: auto;
+          border-radius: 8px;
+          transition: filter 0.3s ease; /* Add transition for smooth effect */
+        }
 
-  button {
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 16px;
-    color: white;
-    background-color: $form-button-color;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+        .upload-preview:hover {
+          filter: brightness(70%); /* Darken the image on hover */
+        }
 
-    &:hover {
-      background-color: $form-button-hover-color;
+        .upload-text-details {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          font-size: 18px;
+          color: #ffffff;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+
+        &:hover .upload-text-details {
+          opacity: 1;
+        }
+      }
+    }
+
+    .divider {
+      border-left: 2px solid $form-border-color;
+      height: 100%;
+      margin: 0 20px;
+    }
+
+    .form-fields-section {
+      flex: 1;
+
+      div {
+        margin-bottom: 15px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: $form-label-color;
+      }
+
+      input,
+      textarea,
+      select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid $form-border-color;
+        border-radius: 5px;
+        font-size: 16px;
+      }
+
+      textarea {
+        resize: vertical;
+      }
+
+      button {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        color: white;
+        background-color: $form-button-color;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        &:hover {
+          background-color: $form-button-hover-color;
+        }
+      }
+
+      .error {
+        color: red;
+        font-size: 14px;
+        margin-top: 5px;
+      }
+
+      .input-container {
+        position: relative;
+        align-items: center;
+
+        input {
+          padding-right: 3em; /* Adjust this value based on the width of the suffix */
+        }
+
+        .suffix {
+          position: absolute;
+          right: 11px; /* Adjust this value based on your design */
+          pointer-events: none;
+          transform: translateY(40%);
+          opacity: 50%;
+        }
+      }
+
+      .weight-unit-select-upload {
+        opacity: 100%;
+        width: 11rem;
+        position: absolute;
+        transform: translateX(-11rem);
+        border: none; /* Remove default border */
+        background: none;
+        outline: none; /* Remove the default outline */
+        appearance: none;
+        text-align: center;
+        -webkit-appearance: none;
+      }
+
+      .weight-unit-select-upload option {
+        background: #fff; /* Adjust this value based on your design */
+      }
     }
   }
-
-  .error {
-    color: red;
-    font-size: 14px;
-    margin-top: 5px;
-  }
 }
-.upload-label-details {
-  position: relative;
-}
-.upload-label-details:hover .upload-text-details {
-  opacity: 1;
-}
-.upload-text-details {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 18px;
-  color: #ffffff;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.upload-label-details:hover .upload-text-details {
-  opacity: 1;
-}
-.upload-preview {
-  position: relative;
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  cursor: pointer;
-  transition: filter 0.3s ease; /* Add transition for smooth effect */
-}
-.upload-preview:hover {
-  filter: brightness(70%); /* Darken the image on hover */
-}
-.input-container {
-  position: relative;
-  align-items: center;
-
-  input {
-    padding-right: 3em; /* Adjust this value based on the width of the suffix */
-  }
-
-  .suffix {
-    position: absolute;
-    right: 11px; /* Adjust this value based on your design */
-    pointer-events: none;
-    transform: translateY(40%);
-    opacity: 50%;
-  }
-  
-  
-  
-}
-.weight-unit-select-upload {
-    opacity: 100%;
-    width: 11rem;
-    position: absolute;
-    transform: translateX(-11rem);
-    border: none; /* Remove default border */
-    background: none;
-    outline: none; /* Remove the default outline */
-    appearance: none; 
-    text-align: center;
-    -webkit-appearance: none;
-  }.weight-unit-select option {
-    background: #fff; /* Adjust this value based on your design */
-  }

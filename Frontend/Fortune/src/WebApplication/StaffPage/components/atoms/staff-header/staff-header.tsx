@@ -6,7 +6,7 @@ import { Link as ScrollLink } from 'react-scroll';
 import { FaRegUser } from "react-icons/fa";
 import Dropdown from 'react-bootstrap/Dropdown';
 
-const MemberHeader: React.FC = () => {
+const StaffHeader: React.FC = () => {
     const [isHovered, setIsHovered] = useState(false);
     const storedUser = sessionStorage.getItem("loginedUser");
     const user = storedUser ? JSON.parse(storedUser) : null;
@@ -86,4 +86,4 @@ const MemberHeader: React.FC = () => {
     );
 };
 
-export default MemberHeader;
+export default StaffHeader;
