@@ -19,15 +19,9 @@ import ManagerHomePg from './WebApplication/ManagerPage/component/pages/ManagerH
 import MemberAucDetailsPg from './WebApplication/MemberPage/components/pages/member-auction-details-pg/member-auction-details-pg';
 import MemberRegisterJewelryAuctionPg from './WebApplication/MemberPage/components/pages/member-register-jewelry-auction/member-register-jewelry-auction-pg';
 import MemberJewDetailsPg from './WebApplication/MemberPage/components/pages/member-jewelry-details-pg/member-jewelry-details-pg';
-<<<<<<< HEAD
-// ------------------------------------------------------STAFF-----------------------------------------------------
-import StaffPage from './WebApplication/StaffPage/StaffPage';
-
-=======
 import StaffJewelryPg from './WebApplication/StaffPage/components/pages/staff-view-jewelry/staff-view-jewelry';
 import StaffViewJewelry from './WebApplication/StaffPage/components/molucules/jewelry-details/staffViewJewelry';
 import StaffViewJewelryPg from './WebApplication/StaffPage/components/pages/stafff-Jewelry-pg/staff-View-Jewelry-Details-Pg';
->>>>>>> ff6fc26872829a16e71c38f6748bbdd306289308
 const App: React.FC = () => {
   const { user, setUser } = useUser();
   useEffect(() => {
@@ -74,12 +68,8 @@ const App: React.FC = () => {
               )}
               {user.role === 3 && (
                 <>
-<<<<<<< HEAD
-                  <Route index element ={<StaffPage/>} />
-=======
                  <Route path='/' element={<StaffJewelryPg />} />
                  <Route path="/staff/update-jewelry/:id/:material" element={<StaffViewJewelryPg />} />
->>>>>>> ff6fc26872829a16e71c38f6748bbdd306289308
                   {/* Add your staff routes here */}
                 </>
               )}

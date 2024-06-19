@@ -117,19 +117,19 @@ function ViewJewelryDetails() {
 
   return (
     <div>
-      <div className="jewel-content">
+      <div className="jewel-content-renamed">
         <h1>My Jewelry</h1>
       </div>
-      <div className="jewelry-details-container">
-        <div className="jewelry-details-item">
+      <div className="jewelry-details-container-renamed">
+        <div className="jewelry-details-item-renamed">
           <label htmlFor="image">Image</label>
-          <div className="upload-label-details" onClick={handleImageClick}>
-            <img className='item-img'
+          <div className="upload-label-details-renamed" onClick={handleImageClick}>
+            <img className='item-img-renamed'
               src={jewelryDetails.imageUrl || `https://localhost:44361/${jewelryDetails.jewelryImg}`}
               alt={jewelryDetails.name}
               onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
             />
-            <div className="upload-text-details">Upload Image</div>
+            <div className="upload-text-details-renamed">Upload Image</div>
             <input
               ref={fileInputRef}
               type="file"
@@ -142,10 +142,10 @@ function ViewJewelryDetails() {
           </div>
           <label htmlFor="name">Name</label>
           <input type="text" name="name" value={jewelryDetails.name} onChange={handleInputChange} />
-          {errors.name && <span className="error">{errors.name}</span>}
+          {errors.name && <span className="error-renamed">{errors.name}</span>}
           <label htmlFor="description">Description</label>
           <textarea name="description" value={jewelryDetails.description} onChange={handleInputChange} />
-          {errors.description && <span className="error">{errors.description}</span>}
+          {errors.description && <span className="error-renamed">{errors.description}</span>}
 
           <label htmlFor="materials">Materials</label>
           <select name="materials" value={jewelryDetails.materials} onChange={handleInputChange}>
@@ -155,23 +155,23 @@ function ViewJewelryDetails() {
             <option value="platinum">Platinum</option>
             <option value="diamond">Diamond</option>
           </select>
-          {errors.materials && <span className="error">{errors.materials}</span>}
+          {errors.materials && <span className="error-renamed">{errors.materials}</span>}
           
           {jewelryDetails.materials === 'gold' && (
-            <div className="input-container">
+            <div className="input-container-renamed">
               <label htmlFor="goldAge">Gold Age</label>
               <input type="text" name="goldAge" value={jewelryDetails.goldAge} onChange={handleInputChange} />
-              {errors.goldAge && <span className="error">{errors.goldAge}</span>}
-              <span className="suffix">k</span>
+              {errors.goldAge && <span className="error-renamed">{errors.goldAge}</span>}
+              <span className="suffix-renamed">k</span>
             </div>
           )}
 
           {jewelryDetails.materials === 'silver' && (
-            <div className="input-container">
+            <div className="input-container-renamed">
               <label htmlFor="purity">Purity</label>
               <input type="text" name="purity" value={jewelryDetails.purity} onChange={handleInputChange} />
-              {errors.purity && <span className="error">{errors.purity}</span>}
-              <span className="suffix">%</span>
+              {errors.purity && <span className="error-renamed">{errors.purity}</span>}
+              <span className="suffix-renamed">%</span>
             </div>
           )}
 
@@ -183,12 +183,12 @@ function ViewJewelryDetails() {
             <option value="bracelet">Bracelet</option>
             <option value="earrings">Earrings</option>
           </select>
-          {errors.category && <span className="error">{errors.category}</span>}
-          <div className="input-container">
+          {errors.category && <span className="error-renamed">{errors.category}</span>}
+          <div className="input-container-renamed">
             <label htmlFor="weight">Weight</label>
             <input type="text" name="weight" value={jewelryDetails.weight} onChange={handleInputChange} />
             <select
-              className="weight-unit-select"
+              className="weight-unit-select-renamed"
               name="weightUnit"
               value={jewelryDetails.weightUnit}
               onChange={handleInputChange}
@@ -198,15 +198,15 @@ function ViewJewelryDetails() {
               <option value="ounces">oz</option>
               <option value="pounds">lb</option>
             </select>
-            {errors.weight && <span className="error">{errors.weight}</span>}
+            {errors.weight && <span className="error-renamed">{errors.weight}</span>}
           </div>
-          <div className="input-container">
+          <div className="input-container-renamed">
             <label htmlFor="price">Price</label>
             <input type="text" name="price" value={jewelryDetails.price} onChange={handleInputChange} />
-            <span className="suffix">$</span>
-            {errors.price && <span className="error">{errors.price}</span>}
+            <span className="suffix-renamed">$</span>
+            {errors.price && <span className="error-renamed">{errors.price}</span>}
           </div>
-          <button onClick={handleUpdateJewelry}>Update</button>
+          <button className="update-button-renamed" onClick={handleUpdateJewelry}>Update</button>
         </div>
       </div>
     </div>
