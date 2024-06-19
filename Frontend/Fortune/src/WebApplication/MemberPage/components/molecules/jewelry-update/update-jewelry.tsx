@@ -106,8 +106,8 @@ function ViewJewelryDetails() {
 
     try {
       const endpoint = jewelryDetails.materials === 'gold' 
-        ? `/api/JewelryGold/UpdateJewelryGold?id=${id}` 
-        : `/api/JewelrySilver/UpdateJewelrySilver?id=${id}`;
+        ? `/api/JewelryGold/UpdateJewelryGoldMember?id=${id}` 
+        : `/api/JewelrySilver/UpdateJewelrySilverMember?id=${id}`;
       await api.put(endpoint, formData);
       navigate('/userJewel', { state: { successMessage: 'Jewelry updated successfully!' } });
     } catch (error) {
