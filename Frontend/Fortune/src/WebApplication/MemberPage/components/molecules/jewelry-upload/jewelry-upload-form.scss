@@ -1,3 +1,5 @@
+// jewelry-upload-form.scss
+
 $jewelry-upload-container-padding: 20px;
 $jewelry-upload-container-margin-top: 150px;
 $jewelry-upload-container-margin-bottom: 50px;
@@ -24,7 +26,7 @@ $form-label-color: #555;
   }
 
   .form-content {
-    display: flex;
+    display: contents; /* Sửa từ "content" thành "flex" để sắp xếp các phần tử bên trong */
     align-items: flex-start;
 
     .image-upload-section {
@@ -64,14 +66,10 @@ $form-label-color: #555;
       }
     }
 
-    .divider {
-      border-left: 2px solid $form-border-color;
-      height: 100%;
-      margin: 0 20px;
-    }
-
     .form-fields-section {
       flex: 1;
+      display: flex;
+      flex-direction: column;
 
       div {
         margin-bottom: 15px;
@@ -92,14 +90,44 @@ $form-label-color: #555;
         border: 1px solid $form-border-color;
         border-radius: 5px;
         font-size: 16px;
+        margin-top: 5px; /* Thêm margin-top cho các input, textarea, select */
       }
 
       textarea {
         resize: vertical;
       }
 
+      .input-container {
+        position: relative;
+        
+        align-items: center;
+        margin-bottom : 10px 
+
+        input {
+          flex: 1; /* Đặt input chiếm toàn bộ không gian còn lại */
+          padding-left: 10px; /* Điều chỉnh padding-left dựa trên thiết kế */
+        }
+
+        .suffix {
+          margin-left: 5px; /* Điều chỉnh margin-left để cách đầu vào một khoảng */
+          font-size: 20px;
+          color: #555; /* Điều chỉnh màu sắc cho đúng thiết kế */
+        }
+      }
+
+      .weight-unit-select-upload {
+        width: 120px; /* Đặt chiều rộng là 100% để lấp đầy không gian */
+        padding: 10px; /* Điều chỉnh padding để tạo khoảng cách với các phần tử khác */
+        border: 1px solid $form-border-color;
+        border-radius: 5px;
+        font-size: 16px;
+        margin-left: 5px;
+        margin-top: 5px; /* Thêm margin-top cho các select box */
+      }
+
       button {
-        display: inline-block;
+        margin-top: 10px; /* Thêm margin-top để tách nút gửi với các trường dữ liệu */
+        align-self: flex-start; /* Đặt alignment của button là flex-start */
         padding: 10px 20px;
         font-size: 16px;
         color: white;
@@ -118,40 +146,6 @@ $form-label-color: #555;
         color: red;
         font-size: 14px;
         margin-top: 5px;
-      }
-
-      .input-container {
-        position: relative;
-        align-items: center;
-
-        input {
-          padding-right: 3em; /* Adjust this value based on the width of the suffix */
-        }
-
-        .suffix {
-          position: absolute;
-          right: 11px; /* Adjust this value based on your design */
-          pointer-events: none;
-          transform: translateY(40%);
-          opacity: 50%;
-        }
-      }
-
-      .weight-unit-select-upload {
-        opacity: 100%;
-        width: 11rem;
-        position: absolute;
-        transform: translateX(-11rem);
-        border: none; /* Remove default border */
-        background: none;
-        outline: none; /* Remove the default outline */
-        appearance: none;
-        text-align: center;
-        -webkit-appearance: none;
-      }
-
-      .weight-unit-select-upload option {
-        background: #fff; /* Adjust this value based on your design */
       }
     }
   }

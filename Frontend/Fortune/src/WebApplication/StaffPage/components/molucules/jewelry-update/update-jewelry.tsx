@@ -143,6 +143,31 @@ function ViewJewelryDetails() {
           <label htmlFor="name">Name</label>
           <input type="text" name="name" value={jewelryDetails.name} onChange={handleInputChange} />
           {errors.name && <span className="error">{errors.name}</span>}
+          
+          <label htmlFor="weight">Weight</label>
+          <div className="input-container">
+            <input type="text" name="weight" value={jewelryDetails.weight} onChange={handleInputChange} />
+            <select
+              className="weight-unit-select"
+              name="weightUnit"
+              value={jewelryDetails.weightUnit}
+              onChange={handleInputChange}
+            >
+              <option value="grams">g</option>
+              <option value="kilograms">kg</option>
+              <option value="ounces">oz</option>
+              <option value="pounds">lb</option>
+            </select>
+          </div>
+          {errors.weight && <span className="error">{errors.weight}</span>}
+          
+          <label htmlFor="price">Price</label>
+          <div className="input-container">
+            <input type="text" name="price" value={jewelryDetails.price} onChange={handleInputChange} />
+            <span className="suffix">$</span>
+          </div>
+          {errors.price && <span className="error">{errors.price}</span>}
+          
           <label htmlFor="description">Description</label>
           <textarea name="description" value={jewelryDetails.description} onChange={handleInputChange} />
           {errors.description && <span className="error">{errors.description}</span>}
@@ -184,28 +209,7 @@ function ViewJewelryDetails() {
             <option value="earrings">Earrings</option>
           </select>
           {errors.category && <span className="error">{errors.category}</span>}
-          <div className="input-container">
-            <label htmlFor="weight">Weight</label>
-            <input type="text" name="weight" value={jewelryDetails.weight} onChange={handleInputChange} />
-            <select
-              className="weight-unit-select"
-              name="weightUnit"
-              value={jewelryDetails.weightUnit}
-              onChange={handleInputChange}
-            >
-              <option value="grams">g</option>
-              <option value="kilograms">kg</option>
-              <option value="ounces">oz</option>
-              <option value="pounds">lb</option>
-            </select>
-            {errors.weight && <span className="error">{errors.weight}</span>}
-          </div>
-          <div className="input-container">
-            <label htmlFor="price">Price</label>
-            <input type="text" name="price" value={jewelryDetails.price} onChange={handleInputChange} />
-            <span className="suffix">$</span>
-            {errors.price && <span className="error">{errors.price}</span>}
-          </div>
+          
           <button onClick={handleUpdateJewelry}>Update</button>
         </div>
       </div>

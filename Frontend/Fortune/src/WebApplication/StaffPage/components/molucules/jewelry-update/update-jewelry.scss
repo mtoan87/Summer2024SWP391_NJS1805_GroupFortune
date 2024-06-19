@@ -1,147 +1,124 @@
-/* viewjewDetails.scss */
+// update-jewelry.scss
 
-$form-border-color: #ccc;
 .jewel-content {
-    text-align: center;
-    margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background-color: #f5f5f5;
+  h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
   }
-  
-  .jewelry-details-container {
-    display: flex;
-    justify-content: center;
-    padding-bottom: 5rem;
+}
+
+.jewelry-details-container {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  background-color: #fff;
+}
+
+.jewelry-details-item {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 600px;
+  background-color: #fafafa;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #555;
   }
-  
-  .jewelry-details-item {
-    text-align: center;
-    border: 2px solid #ccc;
-    border-radius: 8px;
-    padding: 30px;
-    max-width: 800px;
-    width: 100%;
-    box-sizing: border-box;
-    margin: 0 auto;
-  }
-  
-  .jewelry-details-item img {
-    position: relative;
-    max-width: 100%;
-    height: inherit;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    cursor: pointer;
-    transition: filter 0.3s ease; /* Add transition for smooth effect */
-  }
-  
-  .jewelry-details-item img:hover {
-    filter: brightness(70%); /* Darken the image on hover */
-  }
-  
-  .upload-label-details {
-    position: relative;
-  }
-  
-  .upload-text-details {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 18px;
-    color: #ffffff;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-  
-  .upload-label-details:hover .upload-text-details {
-    opacity: 1;
-  }
-  
-  input[type="file"] {
-    display: none;
-  }
-  
-  .jewelry-details-item input[type="text"],
-  .jewelry-details-item textarea {
+
+  input[type="text"],
+  textarea,
+  select {
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;
-    font-size: 18px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    color: #333;
   }
-  
-  .jewelry-details-item textarea {
-    height: 150px;
+
+  textarea {
+    resize: vertical;
   }
-  .jewelry-details-item {
-    label {
-      margin-bottom: 5px;
-      display: block;
-      font-weight: bold;
+
+  .error {
+    color: #ff4d4f;
+    font-size: 0.875rem;
+    margin-top: -10px;
+    margin-bottom: 10px;
+  }
+
+  .upload-label-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 15px;
+
+    .item-img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 10px;
     }
-  
-    input[type="text"],
-    select,
-    textarea {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      font-size: 16px;
-      border: 2px solid #ccc; /* Increase border size to 2px */
-      border-radius: 5px;
-      transition: border-color 0.3s ease;
-    }
-  
-    input[type="text"]:focus,
-    textarea:focus {
-      outline: none;
-      border-color: #6a7ec1; /* Example focus color */
-    }
-  
-    button {
-      background-color: #6a7ec1;
-      color: #fff;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background-color 0.3s ease;
-    }
-  
-    button:hover {
-      background-color: #405ba2; /* Example hover color */
+
+    .upload-text-details {
+      font-size: 0.875rem;
+      color: #888;
     }
   }
+
   .input-container {
     position: relative;
+    display: flex;
     align-items: center;
-  
-    input {
-      padding-right: 3em; /* Adjust this value based on the width of the suffix */
-    }
-  
+
     .suffix {
       position: absolute;
-      right: 11px; /* Adjust this value based on your design */
-      pointer-events: none;
-      transform: translateY(40%);
-      opacity: 50%;
+      right: 10px;
+      font-size: 1rem;
+      color: #888;
     }
-    .weight-unit-select {
-      opacity: 50%;
-      width: 3rem;
-      position: absolute;
-      transform: translateX(-3rem);
-      border: none; /* Remove default border */
-      background: none;
-      outline: none; /* Remove the default outline */
-      appearance: none; 
-      text-align: center;
-      -webkit-appearance: none;
+
+    input[type="text"] {
+      padding-right: 35px;
     }
-    .weight-unit-select option {
-      background: #fff; /* Adjust this value based on your design */
+
+    select.weight-unit-select {
+      width: auto;
+      padding: 5px 10px;
+      margin-left: 10px;
     }
-    
   }
+
+  button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #1890ff;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: #40a9ff;
+    }
+  }
+}

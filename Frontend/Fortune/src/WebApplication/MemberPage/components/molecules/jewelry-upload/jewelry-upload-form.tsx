@@ -327,7 +327,7 @@ const JewelryUploadForm: React.FC = () => {
               <span className="suffix">$</span>
               {errors.price && <span className="error">{errors.price}</span>}
             </div>
-            <button type="submit">Upload Jewelry</button>
+            <button type="submit">Create Jewelry</button>
           </div>
         </div>
       </form>
