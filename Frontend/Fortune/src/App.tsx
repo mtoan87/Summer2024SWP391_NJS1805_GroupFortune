@@ -19,6 +19,9 @@ import ManagerHomePg from './WebApplication/ManagerPage/component/pages/ManagerH
 import MemberAucDetailsPg from './WebApplication/MemberPage/components/pages/member-auction-details-pg/member-auction-details-pg';
 import MemberRegisterJewelryAuctionPg from './WebApplication/MemberPage/components/pages/member-register-jewelry-auction/member-register-jewelry-auction-pg';
 import MemberJewDetailsPg from './WebApplication/MemberPage/components/pages/member-jewelry-details-pg/member-jewelry-details-pg';
+// ------------------------------------------------------STAFF-----------------------------------------------------
+import StaffPage from './WebApplication/StaffPage/StaffPage';
+
 const App: React.FC = () => {
   const { user, setUser } = useUser();
   useEffect(() => {
@@ -65,6 +68,7 @@ const App: React.FC = () => {
               )}
               {user.role === 3 && (
                 <>
+                  <Route index element ={<StaffPage/>} />
                   {/* Add your staff routes here */}
                 </>
               )}
