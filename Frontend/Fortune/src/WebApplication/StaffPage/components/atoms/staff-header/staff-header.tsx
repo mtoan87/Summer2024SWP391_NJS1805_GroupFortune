@@ -71,9 +71,8 @@ const StaffHeader: React.FC = () => {
                                         <h3 className="user-name" style={{ margin: '0 0 0 5px' }}>{user.name}</h3>
                                     </Dropdown.Toggle>
                                     <Dropdown.Menu>
-                                        <Dropdown.Item href="/userAuc">My auctions</Dropdown.Item>
-                                        <Dropdown.Item href="/userJewel">My jewelries</Dropdown.Item>
-                                        <Dropdown.Item href="/mydashboard">My DashBoard</Dropdown.Item>
+
+                                        <Dropdown.Item href="/staffprofile">My Profile</Dropdown.Item>
                                         <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
                                     </Dropdown.Menu>
                                 </Dropdown>

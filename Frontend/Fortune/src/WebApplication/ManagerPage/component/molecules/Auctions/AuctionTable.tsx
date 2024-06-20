@@ -45,16 +45,28 @@ function AuctionTable() {
 
   const handleStatusChange = async (auction: Auction) => {
     const newStatus = auction.status === 'Active' ? 'UnActive' : 'Active';
+    const updateData = {
+      accountId: auction.accountId,
+      starttime: auction.starttime,
+      endtime: auction.endtime,
+      status: newStatus,
+    };
+
+    let apiUrl = '';
+
+    if (auction.jewelryGoldId !== null) {
+      apiUrl = `/api/Auctions/UpdateGoldAuction?id=${auction.auctionId}`;
+      updateData['jewelryGoldId'] = auction.jewelryGoldId;
+    } else if (auction.jewelryGolddiaId !== null) {
+      apiUrl = `/api/Auctions/UpdateGoldDiamondAuction?id=${auction.auctionId}`;
+      updateData['jewelryGolddiaId'] = auction.jewelryGolddiaId;
+    } else if (auction.jewelrySilverId !== null) {
+      apiUrl = `/api/Auctions/UpdateSilverAuction?id=${auction.auctionId}`;
+      updateData['jewelrySilverId'] = auction.jewelrySilverId;
+    }
+
     try {
-      const response = await api.put(`/api/Auctions/UpdateAuction?id=${auction.auctionId}`, {
-        accountId: auction.accountId,
-        jewelryGoldId: auction.jewelryGoldId,
-        jewelryGolddiaId: auction.jewelryGolddiaId,
-        jewelrySilverId: auction.jewelrySilverId,
-        starttime: auction.starttime,
-        endtime: auction.endtime,
-        status: newStatus
-      });
+      const response = await api.put(apiUrl, updateData);
       console.log('Status update response:', response.data);
 
       // Update the local state after successful status change
@@ -67,6 +79,16 @@ function AuctionTable() {
       console.error('Error updating auction status:', err);
       setError('Error updating auction status');
     }
+  };
+
+  const formatDate = (datetime: string) => {
+    const date = new Date(datetime);
+    return date.toLocaleDateString();
+  };
+
+  const formatTime = (datetime: string) => {
+    const date = new Date(datetime);
+    return date.toLocaleTimeString();
   };
 
   return (
@@ -83,6 +105,8 @@ function AuctionTable() {
               <th>Auction ID</th>
               <th>Account ID</th>
               <th>Jewelry ID</th>
+              <th>Start Date</th>
+              <th>End Date</th>
               <th>Start Time</th>
               <th>End Time</th>
               <th>Status</th>
@@ -94,8 +118,10 @@ function AuctionTable() {
                 <td>{auction.auctionId}</td>
                 <td>{auction.accountId}</td>
                 <td>{auction.jewelryGoldId ?? auction.jewelryGolddiaId ?? auction.jewelrySilverId ?? 'N/A'}</td>
-                <td>{new Date(auction.starttime).toLocaleString()}</td>
-                <td>{new Date(auction.endtime).toLocaleString()}</td>
+                <td>{formatDate(auction.starttime)}</td>
+                <td>{formatDate(auction.endtime)}</td>
+                <td>{formatTime(auction.starttime)}</td>
+                <td>{formatTime(auction.endtime)}</td>
                 <td>
                   <button
                     onClick={() => handleStatusChange(auction)}
