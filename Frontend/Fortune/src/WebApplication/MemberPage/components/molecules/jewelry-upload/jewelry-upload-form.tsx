@@ -375,19 +375,7 @@ const JewelryUploadForm: React.FC = () => {
                 </div>
               </>
             )}
-            <label htmlFor="price">Price:</label>
-            <div className="input-container">
-              <input
-                type="text"
-                id="price"
-                name="price"
-                value={jewelry.price}
-                onChange={handleChange}
-                required
-              />
-              <span className="suffix">$</span>
-              {errors.price && <span className="error">{errors.price}</span>}
-            </div>
+            
             <div className="calculated-price">
               Calculated Price: {jewelry.calculatedPrice} $
             </div>

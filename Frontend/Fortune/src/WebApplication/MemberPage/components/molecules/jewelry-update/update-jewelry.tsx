@@ -16,7 +16,6 @@ function ViewJewelryDetails() {
     weightUnit: 'grams',
     goldAge: '',
     purity: '',
-    price: '',
     collection: '',
     jewelryImg: ''
   });
@@ -77,7 +76,6 @@ function ViewJewelryDetails() {
     if (jewelryDetails.materials === 'gold' && !jewelryDetails.goldAge) tempErrors.goldAge = "Gold age is required";
     if (jewelryDetails.materials === 'silver' && !jewelryDetails.purity) tempErrors.purity = "Purity is required";
     if (!jewelryDetails.materials) tempErrors.materials = "Materials are required";
-    if (!jewelryDetails.price || isNaN(jewelryDetails.price)) tempErrors.price = "Valid price is required";
     if (!jewelryDetails.category) tempErrors.category = "Category is required";
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
@@ -92,8 +90,7 @@ function ViewJewelryDetails() {
     formData.append('Materials', jewelryDetails.materials);
     formData.append('Description', jewelryDetails.description);
     formData.append('Category', jewelryDetails.category);
-    formData.append('Weight', `${jewelryDetails.weight} ${jewelryDetails.weightUnit}`);
-    formData.append('Price', jewelryDetails.price);
+    formData.append('Weight', `${jewelryDetails.weight}`);
     formData.append('Collection', jewelryDetails.collection || ''); // Assuming collection is a string
     if (jewelryDetails.materials === 'gold') {
       formData.append('Goldage', jewelryDetails.goldAge);
@@ -200,12 +197,7 @@ function ViewJewelryDetails() {
             </select>
             {errors.weight && <span className="error-renamed">{errors.weight}</span>}
           </div>
-          <div className="input-container-renamed">
-            <label htmlFor="price">Price</label>
-            <input type="text" name="price" value={jewelryDetails.price} onChange={handleInputChange} />
-            <span className="suffix-renamed">$</span>
-            {errors.price && <span className="error-renamed">{errors.price}</span>}
-          </div>
+          
           <button className="update-button-renamed" onClick={handleUpdateJewelry}>Update</button>
         </div>
       </div>

@@ -13,23 +13,18 @@ function MemberJewelry() {
   useEffect(() => {
     const fetchJewelry = async () => {
       try {
-        const [goldResponse, silverResponse] = await Promise.all([
-          api.get('/api/JewelryGold'),
-          api.get('/api/JewelrySilver')
-        ]);
+        const response = await api.get('/api/Jewelries');
+        console.log('API response:', response);  // Debug log
+        console.log('API response:', response.data);
+        const { jewelrySilver, jewelryGold, jewelryGoldDiamond } = response.data;
 
-        const goldJewelry = goldResponse.data && goldResponse.data.$values ? goldResponse.data.$values : [];
-        const silverJewelry = silverResponse.data && silverResponse.data.$values ? silverResponse.data.$values : [];
-        const combinedJewelry = [...goldJewelry, ...silverJewelry];
+        const combinedJewelry = [
+          ...(jewelrySilver?.$values || []),
+          ...(jewelryGold?.$values || []),
+          ...(jewelryGoldDiamond?.$values || [])
+        ];
 
-        const jewelryWithImages = await Promise.all(
-          combinedJewelry.map(async (item) => {
-            const imageUrl = await fetchJewelryImage(item);
-            return { ...item, imageUrl };
-          })
-        );
-
-        setJewelry(jewelryWithImages);
+        setJewelry(combinedJewelry);
       } catch (err) {
         console.error('Error fetching jewelry', err);
       }
@@ -37,21 +32,6 @@ function MemberJewelry() {
 
     fetchJewelry();
   }, []);
-
-  const fetchJewelryImage = async (item) => {
-    try {
-      const apiUrl = item.jewelryGoldId
-        ? `/api/JewelryGold/GetById/${item.jewelryGoldId}`
-        : `/api/JewelrySilver/GetById/${item.jewelrySilverId}`;
-
-      const response = await api.get(apiUrl);
-      const imageUrl = response.data.jewelryImg || 'src/assets/img/jewelry_introduction.jpg';
-      return imageUrl;
-    } catch (err) {
-      console.error('Error fetching jewelry image:', err);
-      return 'src/assets/img/jewelry_introduction.jpg';
-    }
-  };
 
   const nextPage = () => {
     if (currentPage < totalPages) {
@@ -85,22 +65,26 @@ function MemberJewelry() {
       <div className="member-jewelry-container">
         {displayedItems.map((item, index) => (
           <div
-            key={`${item.jewelryId}-${index}`}
+            key={item.jewelrySilverId || item.jewelryGoldId || item.jewelryGolddiaId}
             className="member-jewelry-item"
-            onClick={() => handleJewelryClick(item.jewelryGoldId || item.jewelrySilverId)}
+            onClick={() => handleJewelryClick(item.jewelrySilverId || item.jewelryGoldId || item.jewelryGolddiaId)}
           >
             <img
-              src={`https://localhost:44361/${item.imageUrl}`}
+              src={`https://localhost:44361/${item.jewelryImg}`}
               alt={item.name}
               onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
             />
             <h3>{item.name}</h3>
             <p>Description: {item.description}</p>
-            {item.jewelryGoldId ? (
-              <p>Gold Age: {item.goldAge}</p>
-            ) : (
-              <p>Purity: {item.purity}</p>
+            {item.jewelryGoldId && <p>Gold Age: {item.goldAge}</p>}
+            {item.jewelryGolddiaId && (
+              <>
+                <p>Clarity: {item.clarity}</p>
+                <p>Carat: {item.carat}</p>
+                <p>Gold Age: {item.goldAge}</p>
+              </>
             )}
+            {item.jewelrySilverId && <p>Purity: {item.purity}</p>}
             <p>Materials: {item.materials}</p>
             <p>Weight: {item.weight}</p>
             <p className="price">{item.price}$</p>
