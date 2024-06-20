@@ -103,11 +103,6 @@ const JewelryUploadForm: React.FC = () => {
 
     if (!jewelry.category) newErrors.category = 'Category is required';
 
-    if (!jewelry.price) {
-      newErrors.price = 'Price is required';
-    } else if (isNaN(parseFloat(jewelry.price)) || parseFloat(jewelry.price) <= 0) {
-      newErrors.price = 'Price must be a positive number';
-    }
 
     return newErrors;
   };
@@ -182,8 +177,9 @@ const JewelryUploadForm: React.FC = () => {
     formData.append('materials', jewelry.materials);
     formData.append('description', jewelry.description);
     formData.append('weight', `${jewelry.weight} ${jewelry.weightUnit}`);
-    formData.append('Category', jewelry.category);
-    formData.append('price', `${jewelry.price}`);
+      formData.append('Category', jewelry.category);
+      formData.append('price', `${jewelry.price}`);
+      console.log(jewelry.imageFile);
     if (jewelry.imageFile) {
       formData.append('jewelryImg', jewelry.imageFile);
     }

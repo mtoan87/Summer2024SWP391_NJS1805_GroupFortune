@@ -82,6 +82,7 @@ const App: React.FC = () => {
                 <>
                   {/* Add your manager routes here */}
                   <Route index element={<ManagerHomePg />} />
+                  <Route path='/managerA&DJew' element ={<ProfileStaff/>}/>
                 </>
               )}
             </>
