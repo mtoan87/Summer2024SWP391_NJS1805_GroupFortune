@@ -5,7 +5,9 @@ import './AuctionsTable.scss';
 interface Auction {
   auctionId: number;
   accountId: number | null;
-  jewelryId: number | null;
+  jewelryGoldId?: number | null;
+  jewelryGolddiaId?: number | null;
+  jewelrySilverId?: number | null;
   starttime: string;
   endtime: string;
   status: string;
@@ -15,7 +17,7 @@ function AuctionTable() {
   const [auctions, setAuctions] = useState<Auction[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const loginedUser = JSON.parse(sessionStorage.getItem('loginedUser'));
+  const loginedUser = JSON.parse(sessionStorage.getItem('loginedUser') || '{}');
   const accountId = loginedUser?.accountId;
 
   useEffect(() => {
@@ -46,7 +48,9 @@ function AuctionTable() {
     try {
       const response = await api.put(`/api/Auctions/UpdateAuction?id=${auction.auctionId}`, {
         accountId: auction.accountId,
-        jewelryId: auction.jewelryId,
+        jewelryGoldId: auction.jewelryGoldId,
+        jewelryGolddiaId: auction.jewelryGolddiaId,
+        jewelrySilverId: auction.jewelrySilverId,
         starttime: auction.starttime,
         endtime: auction.endtime,
         status: newStatus
@@ -89,7 +93,7 @@ function AuctionTable() {
               <tr key={auction.auctionId}>
                 <td>{auction.auctionId}</td>
                 <td>{auction.accountId}</td>
-                <td>{auction.jewelryId}</td>
+                <td>{auction.jewelryGoldId ?? auction.jewelryGolddiaId ?? auction.jewelrySilverId ?? 'N/A'}</td>
                 <td>{new Date(auction.starttime).toLocaleString()}</td>
                 <td>{new Date(auction.endtime).toLocaleString()}</td>
                 <td>

@@ -81,7 +81,7 @@ function GuestJewelry() {
 
   return (
     <>
-      <div className="jewel-content">
+      <div className="jewelry-content">
         <h1>JEWELRY</h1>
       </div>
       <div className="jewelry-container">

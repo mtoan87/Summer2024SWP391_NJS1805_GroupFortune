@@ -22,6 +22,7 @@ import MemberJewDetailsPg from './WebApplication/MemberPage/components/pages/mem
 import StaffJewelryPg from './WebApplication/StaffPage/components/pages/staff-view-jewelry/staff-view-jewelry';
 import StaffViewJewelry from './WebApplication/StaffPage/components/molucules/jewelry-details/staffViewJewelry';
 import StaffViewJewelryPg from './WebApplication/StaffPage/components/pages/stafff-Jewelry-pg/staff-View-Jewelry-Details-Pg';
+import GuestAuctionDetailsPg from './WebApplication/GuestPage/components/guest-auction-details-page/guest-auction-details-pg';
 const App: React.FC = () => {
   const { user, setUser } = useUser();
   useEffect(() => {
@@ -41,6 +42,7 @@ const App: React.FC = () => {
               <Route path='register' element={<RegisterPg />} />
               <Route path='forgotpass' element={<ForgotPass />} />
               <Route path='login' element={<Loginpg />} />
+              <Route path="/guest-auction/:id" element ={<GuestAuctionDetailsPg />} />
             </>
           ) : (
             <>

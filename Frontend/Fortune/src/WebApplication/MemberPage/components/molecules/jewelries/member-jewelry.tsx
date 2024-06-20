@@ -107,7 +107,7 @@ function MemberJewelry() {
           </div>
         ))}
       </div>
-      <div className="navigation-buttons">
+      <div className="member-navigation-buttons">
         <button onClick={prevPage} disabled={currentPage === 1}>
           Previous
         </button>

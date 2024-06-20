@@ -1,17 +1,20 @@
 import { useEffect, useState } from 'react';
 import api from '../../../config/axios';
 import '../styles/auctions.scss';
+import { useNavigate } from 'react-router-dom';
 
 function Auctions() {
     const [auctions, setAuctions] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 3;
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchAuctions = async () => {
             try {
                 const response = await api.get('api/Auctions/GetAllActiveAuctions');
                 const auctionsData = response.data.$values;
+                console.log(auctionsData);
 
                 const auctionsWithImages = await Promise.all(
                     auctionsData.map(async (auction) => {
@@ -19,7 +22,7 @@ function Auctions() {
                         return { ...auction, imageUrl };
                     })
                 );
-
+                console.log(auctionsWithImages);
                 setAuctions(auctionsWithImages);
             } catch (err) {
                 console.error('Error fetching auctions:', err);
@@ -45,6 +48,10 @@ function Auctions() {
             console.error('Error fetching auction image:', err);
             return 'src/assets/img/jewelry_introduction.jpg';
         }
+    };
+
+    const handleAuctionClick = (auctionId) => {
+        navigate(`/guest-auction/${auctionId}`);
     };
 
     const nextPage = () => {
@@ -79,36 +86,45 @@ function Auctions() {
 
     return (
         <>
-            <div className="auctions-content">
+            <div className="auction-content">
                 <h1>AUCTIONS</h1>
             </div>
             <div className="auctions-container">
-                {displayedAuctions.map((auction) => (
-                    <div key={auction.auctionId} className="auction-item">
-                        <img
-                            src={auction.imageUrl}
-                            onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
-                            alt="Jewelry"
-                        />
-                        <p>Date: {formatDate(auction.starttime)}</p>
-                        <p>Start Time: {formatTime(auction.starttime)}</p>
-                        <p>End Time: {formatTime(auction.endtime)}</p>
-                    </div>
-                ))}
+                {auctions.length === 0 ? (
+                    <p>There are no available auctions</p>
+                ) : (
+                    displayedAuctions.map((auction) => (
+                        <div
+                            key={auction.auctionId}
+                            className="auction-item"
+                            onClick={() => handleAuctionClick(auction.auctionId)} // Pass auctionId here
+                        >
+                            <img
+                                src={`https://localhost:44361/${auction.imageUrl}`}
+                                onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
+                            />
+                            <p>Date: {formatDate(auction.starttime)}</p>
+                            <p>Start Time: {formatTime(auction.starttime)}</p>
+                            <p>End Time: {formatTime(auction.endtime)}</p>
+                        </div>
+                    ))
+                )}
             </div>
-            <div className="navigation-buttons">
-                <button onClick={prevPage} disabled={currentPage === 1}>Previous</button>
-                {[...Array(totalPages)].map((_, index) => (
-                    <button
-                        key={index + 1}
-                        onClick={() => goToPage(index + 1)}
-                        className={currentPage === index + 1 ? 'active' : ''}
-                    >
-                        {index + 1}
-                    </button>
-                ))}
-                <button onClick={nextPage} disabled={currentPage === totalPages}>Next</button>
-            </div>
+            {auctions.length > 0 && (
+                <div className="navigation-buttons">
+                    <button onClick={prevPage} disabled={currentPage === 1}>Previous</button>
+                    {[...Array(totalPages)].map((_, index) => (
+                        <button
+                            key={index + 1}
+                            onClick={() => goToPage(index + 1)}
+                            className={currentPage === index + 1 ? 'active' : ''}
+                        >
+                            {index + 1}
+                        </button>
+                    ))}
+                    <button onClick={nextPage} disabled={currentPage === totalPages}>Next</button>
+                </div>
+            )}
         </>
     );
 }
