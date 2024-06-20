@@ -1,26 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import './register-jewelry.scss';
 import api from '../../../../../config/axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function RegisterJewelryForAuction() {
+  const navigate = useNavigate();
   const location = useLocation();
   const { jewelryId } = location.state || {};
   const { material } = useParams();
   const loginedUser = JSON.parse(sessionStorage.getItem('loginedUser'));
   const accountId = loginedUser?.accountId;
 
-  const [formData, setFormData] = useState({
+  const initialFormData = {
     accountId: accountId,
     jewelryGoldId: material === 'gold' ? jewelryId : null,
     jewelrySilverId: material === 'silver' ? jewelryId : null,
     date: '',
     startTime: '',
     endTime: '',
-    jewelryDetails: {} // Object to store jewelry details
-  });
+    jewelryDetails: {}
+  };
+
+  const [formData, setFormData] = useState(initialFormData);
 
   useEffect(() => {
     const fetchJewelryDetails = async () => {
@@ -40,7 +43,7 @@ function RegisterJewelryForAuction() {
           ...prevState,
           jewelryDetails: {
             ...response.data,
-            materials: material // Update material type dynamically
+            materials: material
           }
         }));
       } catch (error) {
@@ -63,46 +66,46 @@ function RegisterJewelryForAuction() {
 
   const handleSubmit = async e => {
     e.preventDefault();
-  
+
     // Validate the date is at least 3 days from today
     const chosenDate = new Date(formData.date);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const minDate = new Date(today);
     minDate.setDate(today.getDate() + 3);
-  
+
     if (chosenDate < minDate) {
       toast.error('The auction date must be at least 3 days from today.', { position: 'top-right' });
       return;
     }
-  
+
     // Validate end time is at least 30 minutes after start time
     const [startHours, startMinutes] = formData.startTime.split(':').map(Number);
     const [endHours, endMinutes] = formData.endTime.split(':').map(Number);
     const startDateTime = new Date(chosenDate);
     const endDateTime = new Date(chosenDate);
-  
+
     startDateTime.setHours(startHours, startMinutes, 0, 0);
     endDateTime.setHours(endHours, endMinutes, 0, 0);
-  
+
     const timeDifference = (endDateTime - startDateTime) / (1000 * 60); // Difference in minutes
-  
+
     if (timeDifference < 30) {
       toast.error('The auction must take part at least 30 minutes.', { position: 'top-right' });
       return;
     }
-  
+
     // Format start and end times as ISO strings
     const starttime = startDateTime.toISOString();
     const endtime = endDateTime.toISOString();
-  
+
     try {
       const requestData = {
         accountId: accountId,
         starttime: starttime,
         endtime: endtime
       };
-  
+
       if (material === 'gold') {
         requestData.jewelryGoldId = formData.jewelryGoldId;
       } else if (material === 'silver') {
@@ -111,12 +114,21 @@ function RegisterJewelryForAuction() {
         console.error('Unsupported jewelry material type');
         return;
       }
-  
+
       const apiUrl = material === 'gold' ? '/api/Auctions/CreateGoldJewelryAuction' : '/api/Auctions/CreateSilverJewelryAuction';
-  
+
       const response = await api.post(apiUrl, requestData);
       console.log('Auction created successfully:', response.data);
       toast.success('Auction registered successfully!', { position: 'top-right' });
+
+      // Clear form data
+      setFormData(initialFormData);
+
+      // Delayed navigation after toast appears
+      setTimeout(() => {
+        navigate('/userJewel');
+      }, 1000);
+
     } catch (error) {
       console.error('Error creating auction:', error);
       if (error.response && error.response.data) {
@@ -125,7 +137,6 @@ function RegisterJewelryForAuction() {
       toast.error('Error creating auction. Please try again!', { position: 'top-right' });
     }
   };
-  
 
   return (
     <div className="register-jewelry-form">
