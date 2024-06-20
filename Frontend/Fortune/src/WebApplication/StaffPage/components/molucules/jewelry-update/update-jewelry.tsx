@@ -21,6 +21,7 @@ function ViewJewelryDetails() {
     jewelryImg: ''
   });
   const [errors, setErrors] = useState({});
+  const [isApproved, setIsApproved] = useState(false);
   const { id, material } = useParams();
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
@@ -115,6 +116,10 @@ function ViewJewelryDetails() {
     }
   };
 
+  const handleApprovalChange = (e) => {
+    setIsApproved(e.target.checked);
+  };
+
   return (
     <div>
       <div className="jewel-content">
@@ -138,20 +143,22 @@ function ViewJewelryDetails() {
               onChange={handleImageUpload}
               accept="image/*"
               style={{ display: 'none' }}
+              disabled={isApproved}
             />
           </div>
           <label htmlFor="name">Name</label>
-          <input type="text" name="name" value={jewelryDetails.name} onChange={handleInputChange} />
+          <input type="text" name="name" value={jewelryDetails.name} onChange={handleInputChange} disabled={true} />
           {errors.name && <span className="error">{errors.name}</span>}
           
           <label htmlFor="weight">Weight</label>
           <div className="input-container">
-            <input type="text" name="weight" value={jewelryDetails.weight} onChange={handleInputChange} />
+            <input type="text" name="weight" value={jewelryDetails.weight} onChange={handleInputChange} disabled={true} />
             <select
               className="weight-unit-select"
               name="weightUnit"
               value={jewelryDetails.weightUnit}
               onChange={handleInputChange}
+              disabled={isApproved}
             >
               <option value="grams">g</option>
               <option value="kilograms">kg</option>
@@ -163,17 +170,17 @@ function ViewJewelryDetails() {
           
           <label htmlFor="price">Price</label>
           <div className="input-container">
-            <input type="text" name="price" value={jewelryDetails.price} onChange={handleInputChange} />
+            <input type="text" name="price" value={jewelryDetails.price} onChange={handleInputChange} disabled={isApproved} />
             <span className="suffix">$</span>
           </div>
           {errors.price && <span className="error">{errors.price}</span>}
           
           <label htmlFor="description">Description</label>
-          <textarea name="description" value={jewelryDetails.description} onChange={handleInputChange} />
+          <textarea name="description" value={jewelryDetails.description} onChange={handleInputChange} disabled={true} />
           {errors.description && <span className="error">{errors.description}</span>}
 
           <label htmlFor="materials">Materials</label>
-          <select name="materials" value={jewelryDetails.materials} onChange={handleInputChange}>
+          <select name="materials" value={jewelryDetails.materials} onChange={handleInputChange} disabled={true}>
             <option value="">Select Material</option>
             <option value="gold">Gold</option>
             <option value="silver">Silver</option>
@@ -185,7 +192,7 @@ function ViewJewelryDetails() {
           {jewelryDetails.materials === 'gold' && (
             <div className="input-container">
               <label htmlFor="goldAge">Gold Age</label>
-              <input type="text" name="goldAge" value={jewelryDetails.goldAge} onChange={handleInputChange} />
+              <input type="text" name="goldAge" value={jewelryDetails.goldAge} onChange={handleInputChange} disabled={isApproved} />
               {errors.goldAge && <span className="error">{errors.goldAge}</span>}
               <span className="suffix">k</span>
             </div>
@@ -194,14 +201,14 @@ function ViewJewelryDetails() {
           {jewelryDetails.materials === 'silver' && (
             <div className="input-container">
               <label htmlFor="purity">Purity</label>
-              <input type="text" name="purity" value={jewelryDetails.purity} onChange={handleInputChange} />
+              <input type="text" name="purity" value={jewelryDetails.purity} onChange={handleInputChange} disabled={isApproved} />
               {errors.purity && <span className="error">{errors.purity}</span>}
               <span className="suffix">%</span>
             </div>
           )}
 
           <label htmlFor="category">Category</label>
-          <select name="category" value={jewelryDetails.category} onChange={handleInputChange}>
+          <select name="category" value={jewelryDetails.category} onChange={handleInputChange} disabled={true}>
             <option value="">Select Category</option>
             <option value="necklace">Necklace</option>
             <option value="ring">Ring</option>
@@ -210,7 +217,18 @@ function ViewJewelryDetails() {
           </select>
           {errors.category && <span className="error">{errors.category}</span>}
           
-          <button onClick={handleUpdateJewelry}>Update</button>
+          <div className="checkbox-container">
+            <input 
+              type="checkbox" 
+              id="approve" 
+              name="approve" 
+              checked={isApproved} 
+              onChange={handleApprovalChange} 
+            />
+            <label htmlFor="approve">Approve (Lock fields)</label>
+          </div>
+          
+          <button onClick={handleUpdateJewelry} disabled={isApproved}>Update</button>
         </div>
       </div>
     </div>

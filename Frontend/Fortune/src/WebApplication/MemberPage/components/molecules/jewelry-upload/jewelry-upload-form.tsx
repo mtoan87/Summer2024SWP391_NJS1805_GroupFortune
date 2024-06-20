@@ -293,7 +293,6 @@ const JewelryUploadForm: React.FC = () => {
                 <option value="">Select Material</option>
                 <option value="Gold">Gold</option>
                 <option value="Silver">Silver</option>
-                <option value="Platinum">Platinum</option>
                 <option value="Diamond">Diamond</option>
               </select>
               {errors.materials && <span className="error">{errors.materials}</span>}
