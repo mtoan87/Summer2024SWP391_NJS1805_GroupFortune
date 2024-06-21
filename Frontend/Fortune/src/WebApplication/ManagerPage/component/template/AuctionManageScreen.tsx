@@ -1,6 +1,6 @@
 
 import AuctionTable from '../molecules/Auctions/AuctionTable';
-function ManagerHomeBody() {
+function AuctionManageScreen() {
   return (
     <div className="App">
 <AuctionTable />
@@ -8,4 +8,4 @@ function ManagerHomeBody() {
   )
 }
 
-export default ManagerHomeBody
+export default AuctionManageScreen

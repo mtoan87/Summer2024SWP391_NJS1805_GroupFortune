@@ -125,7 +125,7 @@ function AuctionTable() {
                 <td>
                   <button
                     onClick={() => handleStatusChange(auction)}
-                    className={`status-button ${auction.status.toLowerCase()} ${auction.status === 'Active' ? 'flip-to-inactive' : 'flip-to-active'}`}
+                    className={`AUButton ${auction.status.toLowerCase()} ${auction.status === 'Active' ? 'flip-to-inactive' : 'flip-to-active'}`}
                     onAnimationEnd={(e) => e.currentTarget.classList.remove('flip-to-active', 'flip-to-inactive')}
                   >
                     {auction.status === 'Active' ? 'Active' : 'UnActive'}
