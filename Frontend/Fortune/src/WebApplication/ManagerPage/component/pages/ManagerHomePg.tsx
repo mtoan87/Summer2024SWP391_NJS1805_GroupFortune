@@ -6,6 +6,8 @@ import Sidebar from '../atoms/manager-SideBar/SideBar'; // Adjust the import pat
 import './ManagerHomePg.scss';
 import JewelryManageScreen from '../template/JewelryManageScreen';
 import GoldManageScreen from '../template/GoldManageScreen';
+import SilverManageScreen from '../template/SilverManageScreen';
+import GoldDiaManageScreen from '../template/GoldDIaManageScreen';
 
 const { Header, Content } = Layout;
 
@@ -35,6 +37,8 @@ const ManagerHomePg: React.FC = () => {
             {currentPage === '1' && <AuctionManageScreen />}
             {currentPage === '2' && <JewelryManageScreen />}
             {currentPage === '3' && <GoldManageScreen />}
+            {currentPage === '4' && <SilverManageScreen />}
+            {currentPage === '5' && <GoldDiaManageScreen />}
             {/* Add conditions for other pages if needed */}
           </div>
         </Content>

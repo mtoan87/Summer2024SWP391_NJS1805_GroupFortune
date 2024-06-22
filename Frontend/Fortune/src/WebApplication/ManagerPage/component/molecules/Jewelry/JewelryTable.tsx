@@ -60,7 +60,6 @@ function JewelryTable() {
       materials: jewelry.materials,
       category: jewelry.category,
       description: jewelry.description,
-      purity: jewelry.purity || jewelry.goldAge, // Assuming goldAge serves as purity for gold jewelries
       price: jewelry.price,
       weight: jewelry.weight,
       status: jewelry.status,
@@ -91,7 +90,6 @@ function JewelryTable() {
               <th>Description</th>
               <th>Material</th>
               <th>Category</th>
-              <th>Purity</th>
               <th>Price</th>
               <th>Weight</th>
               <th>Status</th>
@@ -116,7 +114,6 @@ function JewelryTable() {
                 <td>{jewelry.description}</td>
                 <td>{jewelry.materials}</td>
                 <td>{jewelry.category}</td>
-                <td>{jewelry.purity}</td>
                 <td>{jewelry.price}</td>
                 <td>{jewelry.weight}</td>
                 <td>{jewelry.status}</td>
