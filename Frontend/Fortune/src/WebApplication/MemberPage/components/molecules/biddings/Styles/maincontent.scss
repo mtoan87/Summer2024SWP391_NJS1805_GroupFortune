@@ -1,0 +1,37 @@
+.auction-details {
+    padding: 20px;
+}
+
+.auction-details-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.jewelry-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.jewelry-item {
+    display: flex;
+    margin-bottom: 20px;
+    border: 1px solid #e0e0e0;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.item-img {
+    max-width: 200px;
+    max-height: 200px;
+    margin-right: 20px;
+    object-fit: cover;
+}
+
+.jewelry-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.jewelry-info p {
+    margin: 5px 0;
+}

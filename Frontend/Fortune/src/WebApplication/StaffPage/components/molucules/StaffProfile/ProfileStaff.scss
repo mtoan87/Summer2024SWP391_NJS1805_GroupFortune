@@ -1,5 +1,43 @@
-h1 {
-    text-align: center;
-    color: #824d4d;
-  }
-  
+// ProfileStaff.scss
+
+.ProfileStaff {
+  max-width: 500px;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.ProfileStaff h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.ProfileStaff .form-label {
+  font-weight: bold;
+}
+
+.ProfileStaff .form-control {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.ProfileStaff .btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
+.ProfileStaff .btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}

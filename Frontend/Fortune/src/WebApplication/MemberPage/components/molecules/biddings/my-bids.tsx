@@ -1,10 +1,27 @@
-import React from 'react'
+import React from 'react';
+import CommentForm from './components/comment';
+import MainContent from './components/maincontent';
+import MemberHeader from '../../atoms/member-header/member-header';
+import MemberFooter from '../../atoms/member-footer/member-footer';
+import BiddingForm from './components/biddingForm';
+import './Styles/mybidding.scss'; // Import your custom CSS file
 
-function MemberBids() {
+function MyBidding() {
   return (
     <>
+      <header>
+        <MemberHeader />
+      </header>
+        <body >
+          <BiddingForm />
+          <MainContent/>
+        </body>
+
+      <footer>
+        <MemberFooter />
+      </footer>
     </>
-  )
+  );
 }
 
-export default MemberBids
+export default MyBidding;

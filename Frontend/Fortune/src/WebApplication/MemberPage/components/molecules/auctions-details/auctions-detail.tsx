@@ -69,7 +69,7 @@ function AuctionDetails() {
 
             // Delayed navigation after joining auction
             setTimeout(() => {
-                navigate('/'); // Navigate to home or any desired route
+                navigate('/mybidding/${id}'); // Navigate to home or any desired route
             }, 1000); // 1 second delay
 
         } catch (err) {
