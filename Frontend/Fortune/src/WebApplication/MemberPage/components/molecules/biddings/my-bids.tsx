@@ -4,7 +4,7 @@ import MainContent from './components/maincontent';
 import MemberHeader from '../../atoms/member-header/member-header';
 import MemberFooter from '../../atoms/member-footer/member-footer';
 import BiddingForm from './components/biddingForm';
-import './Styles/mybidding.scss'; // Import your custom CSS file
+import './Styles/biddingPG.scss'; // Import your custom CSS file
 
 function MyBidding() {
   return (
@@ -12,10 +12,12 @@ function MyBidding() {
       <header>
         <MemberHeader />
       </header>
-        <body >
+      <main>
+        <div className="content-container">
           <BiddingForm />
-          <MainContent/>
-        </body>
+          <MainContent />
+        </div>
+      </main>
 
       <footer>
         <MemberFooter />

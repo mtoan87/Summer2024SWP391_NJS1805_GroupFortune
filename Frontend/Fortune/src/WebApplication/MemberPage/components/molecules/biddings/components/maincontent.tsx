@@ -32,9 +32,9 @@ function MainContent() {
     }
 
     return (
-        <div className="auctions-details">
-            <h1>Auction Details</h1>
-            <div className="auction-details-content">
+        <div className="contents-details">
+            <h1>Jewelry</h1>
+            <div className="contents-details-content">
                 <div className="jewelry-details">
                     {jewelryDetails.map((jewelry, index) => (
                         <div key={index} className="jewelry-item">
@@ -51,15 +51,12 @@ function MainContent() {
                                 <p><strong>Weight:</strong> {jewelry.weight}</p>
                                 <p><strong>Gold Age:</strong> {jewelry.goldAge}</p>
                                 <p><strong>Category:</strong> {jewelry.category}</p>
+                                
                             </div>
                         </div>
                     ))}
                 </div>
-                <div className="auction-info">
-                    <p><strong>Start Time:</strong> {auction.starttime}</p>
-                    <p><strong>End Time:</strong> {auction.endtime}</p>
-                    <p><strong>Description:</strong> {auction.description}</p>
-                </div>
+
             </div>
             <Comment auctionId={id} /> {/* Add the Comment component */}
         </div>
