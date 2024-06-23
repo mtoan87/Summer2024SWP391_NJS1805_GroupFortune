@@ -4,6 +4,7 @@ import api from '../../../../../config/axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { EditOutlined, FileAddOutlined,SearchOutlined  } from '@ant-design/icons';
 
 function StaffViewJewelry() {
   const [goldJewelry, setGoldJewelry] = useState([]);
@@ -55,11 +56,11 @@ function StaffViewJewelry() {
     }
   }, [successMessage]);
 
-  const handleUpdateJewelry = (jewelryId,material) => {
+  const handleUpdateJewelry = (jewelryId, material) => {
     navigate(`/staff/update-jewelry/${jewelryId}/${material}`);
   };
 
-  const handleRegisterAuction = (jewelryId,material) => {
+  const handleRegisterAuction = (jewelryId, material) => {
     navigate(`/register-jewelry-auction/${jewelryId}/${material}`, { state: { jewelryId } });
   };
 
@@ -78,7 +79,6 @@ function StaffViewJewelry() {
       (jewelry.weight && jewelry.weight.toLowerCase().includes(lowerCaseQuery))
     );
   };
-  
 
   return (
     <>
@@ -87,6 +87,7 @@ function StaffViewJewelry() {
       </div>
       <div className='searchBar'>
         <div className="fui-input-label-animation">
+          <SearchOutlined className="search-icon" />
           <input 
             type="text" 
             className="form-input" 
@@ -99,7 +100,6 @@ function StaffViewJewelry() {
       </div>
       <div className="jewelry-container">
        
-
         {/* Display Gold Jewelry */}
         {goldJewelry.length > 0 && (
           <>
@@ -119,8 +119,12 @@ function StaffViewJewelry() {
                 <p>Weight: {jewelry.weight}</p>
                 <p>Price: {jewelry.price}$</p>
                 <div className="jewelry-item-buttons">
-                  <button onClick={() => handleUpdateJewelry(jewelry.jewelryGoldId,"gold")}>Update</button>
-                  <button onClick={() => handleRegisterAuction(jewelry.jewelryGoldId,"gold"  )}>Register Auction</button>
+                  <button onClick={() => handleUpdateJewelry(jewelry.jewelryGoldId, "gold")}>
+                    <EditOutlined /> Update
+                  </button>
+                  <button onClick={() => handleRegisterAuction(jewelry.jewelryGoldId, "gold")}>
+                    <FileAddOutlined /> Register 
+                  </button>
                 </div>
               </div>
             ))}
@@ -146,8 +150,12 @@ function StaffViewJewelry() {
                 <p>Weight: {jewelry.weight}</p>
                 <p>Price: {jewelry.price}$</p>
                 <div className="jewelry-item-buttons">
-                  <button onClick={() => handleUpdateJewelry(jewelry.jewelrySilverId,"silver")}>Update</button>
-                  <button onClick={() => handleRegisterAuction(jewelry.jewelrySilverId,"silver")}>Register Auction</button>
+                  <button onClick={() => handleUpdateJewelry(jewelry.jewelrySilverId, "silver")}>
+                    <EditOutlined /> Update
+                  </button>
+                  <button onClick={() => handleRegisterAuction(jewelry.jewelrySilverId, "silver")}>
+                    <FileAddOutlined /> Register 
+                  </button>
                 </div>
               </div>
             ))}

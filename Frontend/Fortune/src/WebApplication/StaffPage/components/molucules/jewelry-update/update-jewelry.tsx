@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../../../../../config/axios';
 import './update-jewelry.scss';
+import {EditOutlined } from '@ant-design/icons';
 
 function ViewJewelryDetails() {
   const [jewelryDetails, setJewelryDetails] = useState({
@@ -123,7 +124,7 @@ function ViewJewelryDetails() {
           </div>
           {errors.price && <span className="error">{errors.price}</span>}
 
-          <button onClick={handleUpdateJewelry}>Update</button>
+          <button onClick={handleUpdateJewelry}><EditOutlined/> Update</button>
         </div>
       </div>
     </div>
