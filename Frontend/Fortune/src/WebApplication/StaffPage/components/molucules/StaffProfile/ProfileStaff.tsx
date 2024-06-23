@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { UserOutlined, MailOutlined, LockOutlined, PhoneOutlined, EditOutlined } from '@ant-design/icons';
 import api from "../../../../../config/axios";
 import { useUser } from '../../../../Data/UserContext';
 import Alert from 'react-bootstrap/Alert';
 import "react-toastify/dist/ReactToastify.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import './ProfileStaff.scss';  // Make sure to create this stylesheet for custom styles
+import './ProfileStaff.scss';  // Đảm bảo bạn đã tạo stylesheet này cho các style tùy chỉnh
+import StaffFooter from "../../atoms/staff-footer/staff-footer";
+import StaffHeader from "../../atoms/staff-header/staff-header";
 
 const ProfileStaff: React.FC = () => {
   const [name, setName] = useState<string>("");
@@ -46,17 +49,23 @@ const ProfileStaff: React.FC = () => {
   };
 
   return (
-    <div>
+    <>
+    <header>
+      <StaffHeader/>
+    </header>
+      <div className="profile-staff">
       <div className="LoadedMessage">
         {successMessage && (
           <Alert key={'success'} variant={'success'} className="Alert">
             {successMessage}
           </Alert>
         )}
-        <h1> INFORMATION</h1>
+        <h1>INFORMATION</h1>
       </div>
-      <div className="mb-3">
-        <label htmlFor="name" className="form-label">Name</label>
+      <div className="form-group">
+        <label htmlFor="name" className="form-label">
+          <UserOutlined /> Name
+        </label>
         <input
           type="text"
           id="name"
@@ -66,8 +75,10 @@ const ProfileStaff: React.FC = () => {
           onChange={(e) => setName(e.target.value)}
         />
       </div>
-      <div className="mb-3">
-        <label htmlFor="email" className="form-label">Email</label>
+      <div className="form-group">
+        <label htmlFor="email" className="form-label">
+          <MailOutlined /> Email
+        </label>
         <input
           type="email"
           id="email"
@@ -78,8 +89,10 @@ const ProfileStaff: React.FC = () => {
           disabled // Email shouldn't be changed
         />
       </div>
-      <div className="mb-3">
-        <label htmlFor="password" className="form-label">Password</label>
+      <div className="form-group">
+        <label htmlFor="password" className="form-label">
+          <LockOutlined /> Password
+        </label>
         <input
           type="password"
           id="password"
@@ -89,8 +102,10 @@ const ProfileStaff: React.FC = () => {
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
-      <div className="mb-3">
-        <label htmlFor="phone" className="form-label">Phone</label>
+      <div className="form-group">
+        <label htmlFor="phone" className="form-label">
+          <PhoneOutlined /> Phone
+        </label>
         <input
           type="text"
           id="phone"
@@ -101,9 +116,15 @@ const ProfileStaff: React.FC = () => {
         />
       </div>
       <div className="bt">
-        <button type="button" className="btn btn-primary" onClick={handleUpdate}>Update Account</button>
+        <button type="button" className="btn btn-primary" onClick={handleUpdate}>
+          <EditOutlined /> Update Account
+        </button>
       </div>
     </div>
+    <footer>
+      <StaffFooter/>
+    </footer>
+    </>
   );
 };
 
