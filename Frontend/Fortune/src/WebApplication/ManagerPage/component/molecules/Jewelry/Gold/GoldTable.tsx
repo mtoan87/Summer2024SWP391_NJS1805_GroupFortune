@@ -80,7 +80,7 @@ const columns = (toggleStatus: (record: JewelryGold) => void) => [
     title: 'Price',
     dataIndex: 'price',
     width: '8%',
-    render: (price: number | null) => (price !== null ? `$${price}` : 'null'),
+    render: (price: number | null) => (price !== null ? `$${price}` : 'Appraising...'),
   },
   {
     title: 'Weight',
@@ -95,8 +95,12 @@ const columns = (toggleStatus: (record: JewelryGold) => void) => [
     ],
     onFilter: (value, record) => record.status.includes(value as string),
     render: (_: string, record: JewelryGold) => (
-      <Button type="primary" onClick={() => toggleStatus(record)}>
-        {record.status === 'Available' ? 'Mark as UnVerified' : 'Mark as Available'}
+      <Button 
+        type="primary" 
+        onClick={() => toggleStatus(record)} 
+        disabled={record.price === null}
+      >
+        {record.status === 'Available' ? 'UnVerified' : 'Available'}
       </Button>
     ),
   },
@@ -117,12 +121,10 @@ const GoldTable: React.FC = () => {
     const params = getJewelryGoldParams(tableParams);
     api.get('/api/JewelryGold', { params })
       .then((response) => {
-        const jewelryGoldData = response.data.$values
-          .filter((item: any) => item.price !== undefined) // Filter out items without price
-          .map((item: any) => ({
-            ...item,
-            price: item.price, // Price is already defined here
-          }));
+        const jewelryGoldData = response.data.$values.map((item: any) => ({
+          ...item,
+          price: item.price !== undefined ? item.price : null, // Set price to null if it's undefined
+        }));
         setData(jewelryGoldData);
         setLoading(false);
         setTableParams({
@@ -179,20 +181,21 @@ const GoldTable: React.FC = () => {
   };
 
   const toggleStatus = (record: JewelryGold) => {
-    console.log(record);
     const newStatus = record.status === 'Available' ? 'UnVerified' : 'Available';
     const updatedRecord = { ...record, status: newStatus };
-    
-    api.put(`api/JewelryGold/UpdateJewelryGoldManager?${record.jewelryGoldId}`, {
+
+    api.put(`/api/JewelryGold/UpdateJewelryGoldManager`, {
+      jewelryGoldId: record.jewelryGoldId,
       accountId: record.accountId,
-      Name: record.name,
-      Category: record.category,
-      Materials: record.materials,
-      Description: record.description,
-      Goldage: record.goldAge,
+      name: record.name,
+      category: record.category,
+      materials: record.materials,
+      description: record.description,
+      goldAge: record.goldAge,
       price: record.price,
-      Weight: record.weight,
+      weight: record.weight,
       status: newStatus,
+      jewelryImg: record.jewelryImg,
     })
       .then(() => {
         setData((prevData) =>

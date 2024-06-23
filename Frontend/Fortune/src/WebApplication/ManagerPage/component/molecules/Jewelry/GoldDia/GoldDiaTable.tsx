@@ -1,9 +1,6 @@
-// SilverTable.tsx
-
 import React, { useEffect, useState } from 'react';
-import { Table, Tooltip, Slider, Button } from 'antd';
+import { Table, Tooltip, Button, message } from 'antd';
 import type { TableProps } from 'antd';
-import axios from 'axios';
 import api from '../../../../../../config/axios';
 
 interface JewelryGoldDia {
@@ -16,7 +13,7 @@ interface JewelryGoldDia {
   clarity: string;
   carat: string;
   goldAge: string;
-  price: number;
+  price: number | null; // Allow null for price field
   weight: string;
   status: string;
   jewelryImg: string;
@@ -50,7 +47,7 @@ const GoldDiaTable: React.FC = () => {
       .then((response) => {
         const jewelryGoldDiaData = response.data.$values.map((item: any) => ({
           ...item,
-          price: item.price, // Ensure price is properly mapped if needed
+          price: item.price !== undefined ? item.price : null, // Set price to null if it's undefined
         }));
         setData(jewelryGoldDiaData);
         setLoading(false);
@@ -101,6 +98,38 @@ const GoldDiaTable: React.FC = () => {
     });
   };
 
+  const toggleStatus = (record: JewelryGoldDia) => {
+    const newStatus = record.status === 'Available' ? 'UnVerified' : 'Available';
+    const updatedRecord = { ...record, status: newStatus };
+
+    const formData = new FormData();
+    formData.append('id', record.jewelryGolddiaId.toString());
+    formData.append('AccountId', record.accountId.toString());
+    formData.append('Name', record.name);
+    formData.append('Category', record.category);
+    formData.append('Materials', record.materials);
+    formData.append('Description', record.description);
+    formData.append('Clarity', record.clarity);
+    formData.append('Carat', record.carat);
+    formData.append('GoldAge', record.goldAge);
+    formData.append('Price', record.price?.toString() || '');
+    formData.append('Weight', record.weight);
+    formData.append('Status', newStatus);
+
+    api.put(`/api/JewelryGoldDia/UpdateJewelryGoldDiamondManager`, formData)
+      .then(() => {
+        setData((prevData) =>
+          prevData.map((item) =>
+            item.jewelryGolddiaId === record.jewelryGolddiaId ? updatedRecord : item
+          )
+        );
+        message.success(`Status updated to ${newStatus}`);
+      })
+      .catch((error) => {
+        console.error('Error updating status:', error);
+        message.error('Failed to update status');
+      });
+  };
 
   const columns = [
     {
@@ -163,7 +192,7 @@ const GoldDiaTable: React.FC = () => {
       title: 'Price',
       dataIndex: 'price',
       width: '8%',
-      render: (price: number) => `$${price}`,
+      render: (price: number | null) => (price !== null ? `$${price}` : 'Appraising...'),
     },
     {
       title: 'Weight',
@@ -177,6 +206,15 @@ const GoldDiaTable: React.FC = () => {
         { text: 'UnVerified', value: 'UnVerified' },
       ],
       onFilter: (value, record) => record.status.includes(value as string),
+      render: (_: string, record: JewelryGoldDia) => (
+        <Button 
+          type="primary" 
+          onClick={() => toggleStatus(record)} 
+          disabled={record.price === null}
+        >
+          {record.status === 'Available' ? 'Mark as UnVerified' : 'Mark as Available'}
+        </Button>
+      ),
     },
   ];
 
