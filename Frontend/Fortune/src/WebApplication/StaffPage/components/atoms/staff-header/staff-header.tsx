@@ -23,14 +23,14 @@ const StaffHeader: React.FC = () => {
     };
 
     return (
-        <div className="member-header-home">
+        <div className="staff-header-home">
             <nav>
                 <div>
                     <img src={logo} alt="logo" className='logo' onClick={hometag} />
                 </div>
                 <ul>
                     {user && (
-                        <div className="member-header-items">
+                        <div className="staff-header-items">
                             <li
                                 className="inline-block"
                                 onMouseEnter={() => setIsHovered(true)}

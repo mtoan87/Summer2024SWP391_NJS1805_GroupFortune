@@ -4,6 +4,7 @@ import '../Styles/maincontent.scss';
 import api from '../../../../../../config/axios';
 import Comment from './comment'; // Import Comment component
 
+
 function MainContent() {
     const { id } = useParams();
     const [auction, setAuction] = useState(null);

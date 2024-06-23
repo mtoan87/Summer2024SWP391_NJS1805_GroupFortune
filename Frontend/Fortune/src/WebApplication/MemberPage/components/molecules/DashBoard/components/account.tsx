@@ -5,7 +5,8 @@ import { useUser } from '../../../../../../WebApplication/Data/UserContext';
 import Alert from 'react-bootstrap/Alert';
 import "react-toastify/dist/ReactToastify.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import '../styles/account.scss';  // Make sure to create this stylesheet for custom styles
+import '../styles/account.scss';  // Đảm bảo rằng bạn đã tạo file stylesheet này để điều chỉnh kiểu dáng tùy chỉnh
+import { UserOutlined, LockOutlined, PhoneOutlined, MailOutlined, EditOutlined } from '@ant-design/icons';
 
 const AccountForm: React.FC = () => {
   const [name, setName] = useState<string>("");
@@ -32,16 +33,16 @@ const AccountForm: React.FC = () => {
         phone
       });
       const data = response.data;
-      setUser(data);  // Update user context
+      setUser(data);  // Cập nhật context người dùng
       sessionStorage.setItem("loginedUser", JSON.stringify(data));
-      setSuccessMessage("Account updated successfully!");
+      setSuccessMessage("Cập nhật tài khoản thành công!");
       const timer = setTimeout(() => {
         setSuccessMessage(null);
       }, 5000);
       return () => clearTimeout(timer);
     } catch (error) {
       console.log(error);
-      toast.error("Failed to update account. Try again!");
+      toast.error("Cập nhật tài khoản thất bại. Vui lòng thử lại!");
     }
   };
 
@@ -53,21 +54,25 @@ const AccountForm: React.FC = () => {
             {successMessage}
           </Alert>
         )}
-        <h1> INFORMATION</h1>
+        <h1> Information</h1>
       </div>
       <div className="mb-3">
-        <label htmlFor="name" className="form-label">Name</label>
+        <label htmlFor="name" className="form-label">
+          <UserOutlined className="icon" />Name
+        </label>
         <input
           type="text"
           id="name"
           className="form-control"
-          placeholder="Name"
+          placeholder="Họ và tên"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
       </div>
       <div className="mb-3">
-        <label htmlFor="email" className="form-label">Email</label>
+        <label htmlFor="email" className="form-label">
+          <MailOutlined className="icon" /> Email
+        </label>
         <input
           type="email"
           id="email"
@@ -75,33 +80,37 @@ const AccountForm: React.FC = () => {
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          disabled // Email shouldn't be changed
+          disabled // Email không được thay đổi
         />
       </div>
       <div className="mb-3">
-        <label htmlFor="password" className="form-label">Password</label>
+        <label htmlFor="password" className="form-label">
+          <LockOutlined className="icon" /> Password
+        </label>
         <input
           type="password"
           id="password"
           className="form-control"
-          placeholder="Password"
+          placeholder="Mật khẩu"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
       <div className="mb-3">
-        <label htmlFor="phone" className="form-label">Phone</label>
+        <label htmlFor="phone" className="form-label">
+          <PhoneOutlined className="icon" /> Phone
+        </label>
         <input
           type="text"
           id="phone"
           className="form-control"
-          placeholder="Phone"
+          placeholder="Số điện thoại"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
         />
       </div>
       <div className="bt">
-        <button type="button" className="btn btn-primary" onClick={handleUpdate}>Update Account</button>
+        <button type="button" className="btn btn-primary" onClick={handleUpdate}><EditOutlined /> Update Account</button>
       </div>
     </div>
   );
