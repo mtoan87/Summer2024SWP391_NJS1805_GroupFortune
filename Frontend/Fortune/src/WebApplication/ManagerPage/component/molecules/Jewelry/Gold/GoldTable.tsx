@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Tooltip } from 'antd';
+import { Table, Tooltip, Button, message } from 'antd';
+import { TableProps } from 'antd/es/table';
 import api from '../../../../../../config/axios';
 
 interface JewelryGold {
@@ -28,7 +29,7 @@ interface TableParams {
   filters?: Record<string, React.ReactText[]>;
 }
 
-const columns = [
+const columns = (toggleStatus: (record: JewelryGold) => void) => [
   {
     title: 'Jewelry ID',
     dataIndex: 'jewelryGoldId',
@@ -93,8 +94,12 @@ const columns = [
       { text: 'UnVerified', value: 'UnVerified' },
     ],
     onFilter: (value, record) => record.status.includes(value as string),
+    render: (_: string, record: JewelryGold) => (
+      <Button type="primary" onClick={() => toggleStatus(record)}>
+        {record.status === 'Available' ? 'Mark as UnVerified' : 'Mark as Available'}
+      </Button>
+    ),
   },
-  
 ];
 
 const GoldTable: React.FC = () => {
@@ -133,7 +138,6 @@ const GoldTable: React.FC = () => {
         setLoading(false);
       });
   };
-  
 
   const getJewelryGoldParams = (params: TableParams) => ({
     results: params.pagination?.pageSize,
@@ -174,9 +178,39 @@ const GoldTable: React.FC = () => {
     }
   };
 
+  const toggleStatus = (record: JewelryGold) => {
+    console.log(record);
+    const newStatus = record.status === 'Available' ? 'UnVerified' : 'Available';
+    const updatedRecord = { ...record, status: newStatus };
+    
+    api.put(`api/JewelryGold/UpdateJewelryGoldManager?${record.jewelryGoldId}`, {
+      accountId: record.accountId,
+      Name: record.name,
+      Category: record.category,
+      Materials: record.materials,
+      Description: record.description,
+      Goldage: record.goldAge,
+      price: record.price,
+      Weight: record.weight,
+      status: newStatus,
+    })
+      .then(() => {
+        setData((prevData) =>
+          prevData.map((item) =>
+            item.jewelryGoldId === record.jewelryGoldId ? updatedRecord : item
+          )
+        );
+        message.success(`Status updated to ${newStatus}`);
+      })
+      .catch((error) => {
+        console.error('Error updating status:', error);
+        message.error('Failed to update status');
+      });
+  };
+
   return (
     <Table
-      columns={columns}
+      columns={columns(toggleStatus)}
       rowKey={(record) => record.jewelryGoldId.toString()}
       dataSource={data}
       pagination={tableParams.pagination}

@@ -137,7 +137,7 @@ function MemberViewJewelry() {
               <div key={jewelry.jewelrySilverId} className="jewelry-item">
                 <img
                   className='item-img'
-                  src={`https://localhost:44361/${jewelry.jewelryImg}`}
+                  src={jewelry.jewelryImg}
                   alt={jewelry.name}
                   onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
                 />
