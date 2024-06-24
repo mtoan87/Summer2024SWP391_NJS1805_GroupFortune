@@ -1,8 +1,9 @@
-import ViewJewelryDetails from "../../molucules/jewelry-update/update-jewelry"
+import StaffViewJewelryDetails from "../../molucules/jewelry-update/update-jewelry"
+
 function StaffViewJewelryBody() {
   return (
     <div> 
-    <ViewJewelryDetails/>
+    <StaffViewJewelryDetails/>
     </div>
   )
 }
