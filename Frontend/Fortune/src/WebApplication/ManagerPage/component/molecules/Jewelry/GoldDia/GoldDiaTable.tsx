@@ -13,7 +13,7 @@ interface JewelryGoldDia {
   clarity: string;
   carat: string;
   goldAge: string;
-  price: number | null; // Allow null for price field
+  price: number | null;
   weight: string;
   status: string;
   jewelryImg: string;
@@ -47,7 +47,7 @@ const GoldDiaTable: React.FC = () => {
       .then((response) => {
         const jewelryGoldDiaData = response.data.$values.map((item: any) => ({
           ...item,
-          price: item.price !== undefined ? item.price : null, // Set price to null if it's undefined
+          price: item.price !== undefined ? item.price : null, 
         }));
         setData(jewelryGoldDiaData);
         setLoading(false);
@@ -55,7 +55,7 @@ const GoldDiaTable: React.FC = () => {
           ...tableParams,
           pagination: {
             ...tableParams.pagination!,
-            total: response.data.$values.length, // Adjust according to your API response
+            total: response.data.$values.length,
           },
         });
       })
