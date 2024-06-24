@@ -177,14 +177,7 @@ const SilverTable: React.FC = () => {
       title: 'Category',
       dataIndex: 'category',
       width: '15%',
-      filters: [
-        { text: 'Ring', value: 'ring' },
-        { text: 'Necklace', value: 'necklace' },
-        { text: 'Bracelet', value: 'bracelet' },
-      ],
-      onFilter: (value, record) =>
-        record.category.toLowerCase().includes((value as string).toLowerCase()),
-    },
+      },
     {
       title: 'Materials',
       dataIndex: 'materials',
@@ -196,35 +189,6 @@ const SilverTable: React.FC = () => {
     {
       title: 'Purity',
       dataIndex: 'purity',
-      filterDropdown: () => (
-        <div style={{ padding: 8 }}>
-          <Slider
-            range
-            step={0.01}
-            defaultValue={purityRange}
-            onChange={handlePurityRangeChange}
-            max={100}
-            marks={{ 0: '0%', 100: '100%' }}
-          />
-          <Button
-            type="primary"
-            onClick={applyPurityFilter}
-            style={{ marginTop: 8 }}
-          >
-            Apply
-          </Button>
-        </div>
-      ),
-      filterIcon: () => (
-        <Tooltip title={`Purity range: ${purityRange[0]}% - ${purityRange[1]}%`}>
-          <span>{`Purity: ${purityRange[0]}% - ${purityRange[1]}%`}</span>
-        </Tooltip>
-      ),
-      onFilter: (value, record) => {
-        const [min, max] = value as [number, number];
-        const purityValue = parseFloat(record.purity);
-        return purityValue >= min && purityValue <= max;
-      },
     },
     {
       title: 'Price',
@@ -239,11 +203,6 @@ const SilverTable: React.FC = () => {
     {
       title: 'Status',
       dataIndex: 'status',
-      filters: [
-        { text: 'Available', value: 'Available' },
-        { text: 'UnVerified', value: 'UnVerified' },
-      ],
-      onFilter: (value, record) => record.status.includes(value as string),
       render: (_: string, record: JewelrySilver) => (
         <Button 
           type="primary" 
