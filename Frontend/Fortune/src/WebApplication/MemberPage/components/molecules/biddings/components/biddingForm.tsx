@@ -1,8 +1,9 @@
 import { ClockCircleOutlined, DollarCircleOutlined } from '@ant-design/icons';
+import '../../../../../../config/axios'
 import '../Styles/bidding.scss';
 
 function BiddingForm() {
-    
+
     return (
         <>
             <div className="bidding-form">
