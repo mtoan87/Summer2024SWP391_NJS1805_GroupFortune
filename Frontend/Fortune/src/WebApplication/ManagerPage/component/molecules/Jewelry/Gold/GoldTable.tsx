@@ -184,7 +184,8 @@ const GoldTable: React.FC = () => {
     const newStatus = record.status === 'Available' ? 'UnVerified' : 'Available';
     const updatedRecord = { ...record, status: newStatus };
 
-    api.put(`/api/JewelryGold/UpdateJewelryGoldManager`, {
+    api.put(`/api/JewelryGold/UpdateJewelryGoldManager?${record.jewelryGoldId}`, {
+      id:record.jewelryGoldId,
       jewelryGoldId: record.jewelryGoldId,
       accountId: record.accountId,
       name: record.name,

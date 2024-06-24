@@ -125,18 +125,19 @@ const SilverTable: React.FC = () => {
 
     const formData = new FormData();
     formData.append('id', record.jewelrySilverId.toString());
+    formData.append('jewelrySilverId', record.jewelrySilverId.toString());
     formData.append('AccountId', record.accountId.toString());
-    formData.append('Name', record.name);
-    formData.append('Category', record.category);
-    formData.append('Materials', record.materials);
-    formData.append('Description', record.description);
+    formData.append('Name', record.name.toString());
+    formData.append('Category', record.category.toString());
+    formData.append('Materials', record.materials.toString());
+    formData.append('Description', record.description.toString());
     formData.append('Purity', record.purity);
     formData.append('Price', record.price?.toString() || '');
     formData.append('Weight', record.weight);
     formData.append('Status', newStatus);
     formData.append('JewelryImg', record.jewelryImg);
 
-    api.put(`/api/JewelrySilver/UpdateJewelrySilverManager`, formData)
+    api.put(`/api/JewelrySilver/UpdateJewelrySilverManager?${record.jewelrySilverId}`, formData)
       .then(() => {
         setData((prevData) =>
           prevData.map((item) =>
