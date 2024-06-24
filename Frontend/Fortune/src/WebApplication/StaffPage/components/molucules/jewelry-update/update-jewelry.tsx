@@ -4,7 +4,7 @@ import api from '../../../../../config/axios';
 import './update-jewelry.scss';
 import {EditOutlined } from '@ant-design/icons';
 
-function ViewJewelryDetails() {
+function StaffViewJewelryDetails() {
   const [jewelryDetails, setJewelryDetails] = useState({
     accountId: '',
     imageUrl: '',
@@ -131,4 +131,4 @@ function ViewJewelryDetails() {
   );
 }
 
-export default ViewJewelryDetails;
+export default StaffViewJewelryDetails;

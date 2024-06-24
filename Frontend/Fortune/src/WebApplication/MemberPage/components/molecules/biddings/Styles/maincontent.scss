@@ -25,12 +25,13 @@
 }
 
 .item-img {
-    width: 150px; /* Reduce width */
-    height: 150px; /* Reduce height */
+    width: 150px; /* Maintain the width as per your design */
+    height: 100%; /* Make the height 100% to fill the parent div */
     margin-right: 20px;
     object-fit: cover;
     border-radius: 5px;
 }
+
 
 .jewelry-info {
     display: flex;

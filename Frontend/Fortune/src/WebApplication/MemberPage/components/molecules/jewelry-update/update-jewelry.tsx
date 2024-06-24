@@ -7,13 +7,12 @@ function ViewJewelryDetails() {
   const [jewelryDetails, setJewelryDetails] = useState({
     accountId: '',
     imageUrl: '',
-    imageFile: null,
+    imageFile: '',
     name: '',
     materials: '',
     description: '',
     category: '',
     weight: '',
-    weightUnit: 'grams',
     goldAge: '',
     purity: '',
     collection: '',
@@ -31,6 +30,7 @@ function ViewJewelryDetails() {
       try {
         const response = await api.get(`/api/Jewelry${material === 'gold' ? 'Gold' : 'Silver'}/GetById/${id}`);
         setJewelryDetails({ ...response.data, accountId: accountId });
+        console.log(response.data);
       } catch (error) {
         console.error('Error fetching jewelry details:', error);
       }
@@ -41,7 +41,7 @@ function ViewJewelryDetails() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    console.log(`Updating ${name} with value:`, value); // Log the updated field and its value
+    console.log(`Updating ${name} with value:`, value);
     setJewelryDetails(prevState => ({
       ...prevState,
       [name]: value
@@ -69,21 +69,7 @@ function ViewJewelryDetails() {
     }
   };
 
-  const validateInputs = () => {
-    let tempErrors = {};
-    if (!jewelryDetails.name) tempErrors.name = "Name is required";
-    if (!jewelryDetails.description) tempErrors.description = "Description is required";
-    if (jewelryDetails.materials === 'gold' && !jewelryDetails.goldAge) tempErrors.goldAge = "Gold age is required";
-    if (jewelryDetails.materials === 'silver' && !jewelryDetails.purity) tempErrors.purity = "Purity is required";
-    if (!jewelryDetails.materials) tempErrors.materials = "Materials are required";
-    if (!jewelryDetails.category) tempErrors.category = "Category is required";
-    setErrors(tempErrors);
-    return Object.keys(tempErrors).length === 0;
-  };
-
   const handleUpdateJewelry = async () => {
-    if (!validateInputs()) return;
-
     const formData = new FormData();
     formData.append('AccountId', jewelryDetails.accountId);
     formData.append('Name', jewelryDetails.name);
@@ -91,9 +77,8 @@ function ViewJewelryDetails() {
     formData.append('Description', jewelryDetails.description);
     formData.append('Category', jewelryDetails.category);
     formData.append('Weight', `${jewelryDetails.weight}`);
-    formData.append('Collection', jewelryDetails.collection || ''); // Assuming collection is a string
-    if (jewelryDetails.materials === 'gold') {
-      formData.append('Goldage', jewelryDetails.goldAge);
+    if (jewelryDetails.materials === 'Gold') {
+      formData.append('GoldAge', jewelryDetails.goldAge);
     } else {
       formData.append('Purity', jewelryDetails.purity);
     }
@@ -102,7 +87,7 @@ function ViewJewelryDetails() {
     }
 
     try {
-      const endpoint = jewelryDetails.materials === 'gold' 
+      const endpoint = jewelryDetails.materials === 'Gold' 
         ? `/api/JewelryGold/UpdateJewelryGoldMember?id=${id}` 
         : `/api/JewelrySilver/UpdateJewelrySilverMember?id=${id}`;
       await api.put(endpoint, formData);
@@ -122,9 +107,9 @@ function ViewJewelryDetails() {
           <label htmlFor="image">Image</label>
           <div className="upload-label-details-renamed" onClick={handleImageClick}>
             <img className='item-img-renamed'
-              src={jewelryDetails.imageUrl || `https://localhost:44361/${jewelryDetails.jewelryImg}`}
+              src={jewelryDetails.imageUrl ? jewelryDetails.imageUrl : `https://localhost:44361/assets/${jewelryDetails.jewelryImg}`}
               alt={jewelryDetails.name}
-              onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
+              onError={(e) => { e.target.src = "/assets/img/jewelry_introduction.jpg"; }}
             />
             <div className="upload-text-details-renamed">Upload Image</div>
             <input
@@ -198,7 +183,9 @@ function ViewJewelryDetails() {
             {errors.weight && <span className="error-renamed">{errors.weight}</span>}
           </div>
           
-          <button className="update-button-renamed" onClick={handleUpdateJewelry}>Update</button>
+          <button className="update-button-renamed" onClick={handleUpdateJewelry}>
+            Update Jewelry
+          </button>
         </div>
       </div>
     </div>

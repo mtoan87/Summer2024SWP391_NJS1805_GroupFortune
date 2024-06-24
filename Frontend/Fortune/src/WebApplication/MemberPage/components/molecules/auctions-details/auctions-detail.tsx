@@ -90,7 +90,7 @@ function AuctionDetails() {
                     {jewelryDetails.map((jewelry, index) => (
                         <div key={index}>
                             <img className='item-img'
-                                src={`https://localhost:44361/${jewelry.jewelryImg}`} 
+                                src={`https://localhost:44361/assets/${jewelry.jewelryImg}`} 
                                 alt={jewelry.name} 
                             />
                             <p><strong>Name:</strong> {jewelry.name}</p>

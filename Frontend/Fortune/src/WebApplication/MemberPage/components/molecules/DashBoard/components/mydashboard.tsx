@@ -65,10 +65,11 @@ const MyDashboard: React.FC = () => {
           onClick={handleMenuClick}
         />
       </Sider>
-      <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }}>
+      <Header style={{ padding: 0, background: colorBgContainer }}>
           <MemberHeader />
         </Header>
+      <Layout>
+
         <Content style={{ margin: '-10px 0px' }}>
           <Breadcrumb style={{ margin: '50px 0px' }}>
             <Breadcrumb.Item>DashBoard</Breadcrumb.Item>
@@ -101,7 +102,9 @@ const MyDashboard: React.FC = () => {
         <footer>
           <MemberFooter/>
         </footer>
+
       </Layout>
+
     </Layout>
   );
 };

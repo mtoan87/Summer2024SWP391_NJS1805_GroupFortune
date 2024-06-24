@@ -4,6 +4,7 @@ import '../Styles/maincontent.scss';
 import api from '../../../../../../config/axios';
 import Comment from './comment'; // Import Comment component
 
+
 function MainContent() {
     const { id } = useParams();
     const [auction, setAuction] = useState(null);
@@ -40,7 +41,7 @@ function MainContent() {
                         <div key={index} className="jewelry-item">
                             <img
                                 className='item-img'
-                                src={`https://localhost:44361/${jewelry.jewelryImg}`} 
+                                src={`https://localhost:44361/assets/${jewelry.jewelryImg}`} 
                                 alt={jewelry.name} 
                             />
                             <div className="jewelry-info">

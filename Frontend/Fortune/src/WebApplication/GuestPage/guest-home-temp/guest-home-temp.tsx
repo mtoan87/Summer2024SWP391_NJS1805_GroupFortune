@@ -1,14 +1,16 @@
-import Auctions from "../components/auctions"
-import Introduction from "../components/introduction"
-import Jewelry from "../components/jewelry"
-import Rules from "../components/rules"
+import Auctions from "../components/organisms/auctions"
+import Introduction from "../components/organisms/introduction"
+import Jewelry from "../components/organisms/jewelry"
+import Rules from "../components/organisms/rules"
+import './guest-home-temp.scss'
 function GuestHomeTemp() {
   return (
-    <>
+    <><div className="guest-body-container">
       <Introduction />
       <Auctions />
       <Jewelry />
       <Rules />
+    </div>
     </>
   )
 }

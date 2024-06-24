@@ -70,7 +70,7 @@ function MemberJewelry() {
             onClick={() => handleJewelryClick(item.jewelrySilverId || item.jewelryGoldId || item.jewelryGolddiaId)}
           >
             <img
-              src={`https://localhost:44361/${item.jewelryImg}`}
+              src={`https://localhost:44361/assets/${item.jewelryImg}`}
               alt={item.name}
               onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
             />
