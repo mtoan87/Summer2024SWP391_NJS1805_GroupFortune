@@ -71,10 +71,7 @@ const SilverTable: React.FC = () => {
     page: params.pagination?.current,
     sortField: params.sortField,
     sortOrder: params.sortOrder,
-    filters: JSON.stringify({
       ...params.filters,
-      purity: purityRange,
-    }),
   });
 
   useEffect(() => {
@@ -99,6 +96,12 @@ const SilverTable: React.FC = () => {
       sortOrder: sorter.order,
       sortField: sorter.field,
     });
+      if (
+      pagination.pageSize &&
+      pagination.pageSize !== tableParams.pagination?.pageSize
+    ) {
+      setData([]);
+    }
   };
 
   const handlePurityRangeChange = (range: [number, number]) => {
@@ -120,23 +123,26 @@ const SilverTable: React.FC = () => {
   };
 
   const toggleStatus = (record: JewelrySilver) => {
+    console.log(record);
     const newStatus = record.status === 'Available' ? 'UnVerified' : 'Available';
     const updatedRecord = { ...record, status: newStatus };
-
-    const formData = new FormData();
-    formData.append('id', record.jewelrySilverId.toString());
-    formData.append('AccountId', record.accountId.toString());
-    formData.append('Name', record.name);
-    formData.append('Category', record.category);
-    formData.append('Materials', record.materials);
-    formData.append('Description', record.description);
-    formData.append('Purity', record.purity);
-    formData.append('Price', record.price?.toString() || '');
-    formData.append('Weight', record.weight);
-    formData.append('Status', newStatus);
-    formData.append('JewelryImg', record.jewelryImg);
-
-    api.put(`/api/JewelrySilver/UpdateJewelrySilverManager`, formData)
+  
+    const payloadSilver = {
+      accountId: record.accountId,
+      jewelryImg: record.jewelryImg,
+      name: record.name,
+      category: record.category,
+      materials: record.materials,
+      description: record.description,
+      purity: record.purity,
+      price: record.price,
+      weight: record.weight,
+      status: newStatus,
+    };
+  
+    console.log('Payload:', payloadSilver); // Log payload for debugging
+  
+    api.put(`/api/JewelrySilver/UpdateJewelrySilverManager?id=${record.jewelrySilverId}`, payloadSilver)
       .then(() => {
         setData((prevData) =>
           prevData.map((item) =>

@@ -236,11 +236,11 @@ const JewelryUploadForm: React.FC = () => {
           <div className="image-upload-section">
             <label htmlFor="image">Image</label>
             <div className="upload-label-details" onClick={handleImageClick}>
-              <img
-                src={jewelry.imageUrl || "../../../../../../src/assets/img/jewelry_introduction.jpg"}
-                alt="jewelry"
-                className="upload-preview"
-              />
+            <img 
+              src={`https://localhost:44361/${jewelry.jewelryImg}`} 
+              alt={jewelry.name} 
+              onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
+            />
               <div className="upload-text-details">Upload Image</div>
               <input ref={fileInputRef} type="file" id="image" name="image" onChange={handleImageUpload} accept="image/*" style={{ display: 'none' }} />
             </div>
