@@ -80,7 +80,7 @@ const columns = (toggleStatus: (record: JewelryGold) => void) => [
     title: 'Price',
     dataIndex: 'price',
     width: '8%',
-    render: (price: number | null) => (price !== null ? `$${price}` : 'Appraising...'),
+    render: (price: number | null) => (price !== null ? `$${price}` : 'null'),
   },
   {
     title: 'Weight',
@@ -95,11 +95,7 @@ const columns = (toggleStatus: (record: JewelryGold) => void) => [
     ],
     onFilter: (value, record) => record.status.includes(value as string),
     render: (_: string, record: JewelryGold) => (
-      <Button 
-        type="primary" 
-        onClick={() => toggleStatus(record)} 
-        disabled={record.price === null}
-      >
+      <Button type="primary" onClick={() => toggleStatus(record)}>
         {record.status === 'Available' ? 'UnVerified' : 'Available'}
       </Button>
     ),
@@ -121,10 +117,12 @@ const GoldTable: React.FC = () => {
     const params = getJewelryGoldParams(tableParams);
     api.get('/api/JewelryGold', { params })
       .then((response) => {
-        const jewelryGoldData = response.data.$values.map((item: any) => ({
-          ...item,
-          price: item.price !== undefined ? item.price : null, // Set price to null if it's undefined
-        }));
+        const jewelryGoldData = response.data.$values
+          .filter((item: any) => item.price !== undefined) // Filter out items without price
+          .map((item: any) => ({
+            ...item,
+            price: item.price, // Price is already defined here
+          }));
         setData(jewelryGoldData);
         setLoading(false);
         setTableParams({
@@ -181,13 +179,13 @@ const GoldTable: React.FC = () => {
   };
 
   const toggleStatus = (record: JewelryGold) => {
+    console.log(record);
     const newStatus = record.status === 'Available' ? 'UnVerified' : 'Available';
     const updatedRecord = { ...record, status: newStatus };
-
-    api.put(`/api/JewelryGold/UpdateJewelryGoldManager?${record.jewelryGoldId}`, {
-      id:record.jewelryGoldId,
-      jewelryGoldId: record.jewelryGoldId,
+  
+    const payload = {
       accountId: record.accountId,
+      jewelryImg: record.jewelryImg,
       name: record.name,
       category: record.category,
       materials: record.materials,
@@ -196,8 +194,11 @@ const GoldTable: React.FC = () => {
       price: record.price,
       weight: record.weight,
       status: newStatus,
-      jewelryImg: record.jewelryImg,
-    })
+    };
+  
+    console.log('Payload:', payload); // Log payload for debugging
+  
+    api.put(`/api/JewelryGold/UpdateJewelryGoldManager?id=${record.jewelryGoldId}`, payload)
       .then(() => {
         setData((prevData) =>
           prevData.map((item) =>
