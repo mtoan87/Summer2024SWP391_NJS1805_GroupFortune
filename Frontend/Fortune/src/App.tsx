@@ -25,6 +25,7 @@ import StaffViewJewelryPg from './WebApplication/StaffPage/components/pages/staf
 import GuestAuctionDetailsPg from './WebApplication/GuestPage/components/guest-auction-details-page/guest-auction-details-pg';
 import ProfileStaff from './WebApplication/StaffPage/components/molucules/StaffProfile/ProfileStaff';
 import BiddingPG from './WebApplication/MemberPage/components/pages/member-bidding-pg/BiddingPG';
+import MemberMyBidsPg from './WebApplication/MemberPage/components/pages/member-my-bids-pg/member-my-bids-pg';
 const App: React.FC = () => {
   const { user, setUser } = useUser();
   useEffect(() => {
@@ -62,7 +63,7 @@ const App: React.FC = () => {
                   <Route path="/auction/:id" element ={<MemberAucDetailsPg />} />
                   <Route path="/mybidding/:id" element ={<BiddingPG/>} />
                   <Route path="/jewelry/:id" element ={<MemberJewDetailsPg />} />
-                  <Route path='/userBid' element={<MemberAuctionPg />} />
+                  <Route path='/userBid' element={<MemberMyBidsPg />} />
                   <Route path='/userAuc' element={<MemberAuctionPg />} />
                   <Route path='/userJewel/upload' element={<JewelryUploadPg />} />
                   <Route path='/userJewel' element={<MemberJewelryPg />} />
