@@ -107,7 +107,7 @@ function ViewJewelryDetails() {
           <label htmlFor="image">Image</label>
           <div className="upload-label-details-renamed" onClick={handleImageClick}>
             <img className='item-img-renamed'
-              src={jewelryDetails.imageUrl ? jewelryDetails.imageUrl : `https://localhost:44361/assets/${jewelryDetails.jewelryImg}`}
+              src={jewelryDetails.imageUrl ? jewelryDetails.imageUrl : `https://localhost:44361/${jewelryDetails.jewelryImg}`}
               alt={jewelryDetails.name}
               onError={(e) => { e.target.src = "/assets/img/jewelry_introduction.jpg"; }}
             />
