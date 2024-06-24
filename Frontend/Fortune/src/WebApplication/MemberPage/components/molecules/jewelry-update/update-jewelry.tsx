@@ -7,7 +7,7 @@ function ViewJewelryDetails() {
   const [jewelryDetails, setJewelryDetails] = useState({
     accountId: '',
     imageUrl: '',
-    imageFile: null,
+    imageFile: '',
     name: '',
     materials: '',
     description: '',
@@ -31,6 +31,7 @@ function ViewJewelryDetails() {
       try {
         const response = await api.get(`/api/Jewelry${material === 'gold' ? 'Gold' : 'Silver'}/GetById/${id}`);
         setJewelryDetails({ ...response.data, accountId: accountId });
+        console.log(response.data);
       } catch (error) {
         console.error('Error fetching jewelry details:', error);
       }
@@ -41,7 +42,7 @@ function ViewJewelryDetails() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    console.log(`Updating ${name} with value:`, value); // Log the updated field and its value
+    console.log(`Updating ${name} with value:`, value);
     setJewelryDetails(prevState => ({
       ...prevState,
       [name]: value
@@ -91,7 +92,8 @@ function ViewJewelryDetails() {
     formData.append('Description', jewelryDetails.description);
     formData.append('Category', jewelryDetails.category);
     formData.append('Weight', `${jewelryDetails.weight}`);
-    formData.append('Collection', jewelryDetails.collection || ''); // Assuming collection is a string
+    formData.append('WeightUnit', jewelryDetails.weightUnit);
+    formData.append('Collection', jewelryDetails.collection || '');
     if (jewelryDetails.materials === 'gold') {
       formData.append('Goldage', jewelryDetails.goldAge);
     } else {

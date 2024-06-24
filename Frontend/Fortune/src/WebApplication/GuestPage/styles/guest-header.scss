@@ -1,9 +1,14 @@
 .guest-header-home {
-    position: relative;
-    margin-bottom: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
     .logo {
-        height: 8rem;
+        height: 6rem;
+        margin-bottom: -10px;
     }
 
     .account {
@@ -13,7 +18,7 @@
     nav {
         ul {
             display: flex;
-            height: 9rem;
+            height: 10rem;
             justify-content: center;
             align-items: center;
             margin-bottom: -1rem;
@@ -28,7 +33,6 @@
                 transition: background-color 0.25s ease-out;
 
                 &:hover {
-                    background-color: beige;
                     cursor: pointer;
                 }
 

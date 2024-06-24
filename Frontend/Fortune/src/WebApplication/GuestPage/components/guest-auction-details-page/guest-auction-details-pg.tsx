@@ -1,6 +1,6 @@
-import GuestHeader from '../guest-header'
+import GuestHeader from '../organisms/guest-header'
 import GuestAuctionDetailsTemp from '../guest-auction-details-temp/guest-auction-detail-temp'
-import GuestFooter from '../guest-footer'
+import GuestFooter from '../organisms/guest-footer'
 
 function GuestAuctionDetailsPg() {
   return (
