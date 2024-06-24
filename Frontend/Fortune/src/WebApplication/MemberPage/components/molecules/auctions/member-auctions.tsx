@@ -40,7 +40,7 @@ function MemberAuctions() {
 
             const response = await api.get(apiUrl);
             const imageUrl = response.data?.jewelryImg || 'src/assets/img/jewelry_introduction.jpg';
-            return `https://localhost:44361/${imageUrl}`;
+            return `https://localhost:44361/assets/${imageUrl}`;
         } catch (err) {
             console.error('Error fetching auction image:', err);
             return 'src/assets/img/jewelry_introduction.jpg';

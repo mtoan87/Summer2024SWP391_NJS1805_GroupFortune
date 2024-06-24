@@ -62,7 +62,7 @@ function GuestAuctionDetails() {
                 <div className="guest-jewelry-details">
                     <img
                         className='guest-item-img'
-                        src={`https://localhost:44361/${jewelry.jewelryImg}`}
+                        src={`https://localhost:44361/assets/${jewelry.jewelryImg}`}
                         alt={jewelry.name}
                         onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
                     />

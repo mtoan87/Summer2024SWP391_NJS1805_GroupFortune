@@ -15,13 +15,14 @@ function RegisterJewelryForAuction() {
 
   const initialFormData = {
     accountId: accountId,
-    jewelryGoldId: material === 'gold' ? jewelryId : null,
-    jewelrySilverId: material === 'silver' ? jewelryId : null,
+    jewelryGoldId: material === 'Gold' ? jewelryId : null,
+    jewelrySilverId: material === 'Silver' ? jewelryId : null,
     date: '',
     startTime: '',
     endTime: '',
     jewelryDetails: {}
   };
+  
 
   const [formData, setFormData] = useState(initialFormData);
 
@@ -29,9 +30,9 @@ function RegisterJewelryForAuction() {
     const fetchJewelryDetails = async () => {
       try {
         let response;
-        if (material === 'gold') {
+        if (material === 'Gold') {
           response = await api.get(`/api/JewelryGold/GetById/${jewelryId}`);
-        } else if (material === 'silver') {
+        } else if (material === 'Silver') {
           response = await api.get(`/api/JewelrySilver/GetById/${jewelryId}`);
         } else {
           console.error('Unsupported jewelry material type');
@@ -105,17 +106,18 @@ function RegisterJewelryForAuction() {
         starttime: starttime,
         endtime: endtime
       };
-
-      if (material === 'gold') {
+      
+      if (material === 'Gold') {
         requestData.jewelryGoldId = formData.jewelryGoldId;
-      } else if (material === 'silver') {
+      } else if (material === 'Silver') {
         requestData.jewelrySilverId = formData.jewelrySilverId;
       } else {
         console.error('Unsupported jewelry material type');
         return;
       }
+      
 
-      const apiUrl = material === 'gold' ? '/api/Auctions/CreateGoldJewelryAuction' : '/api/Auctions/CreateSilverJewelryAuction';
+      const apiUrl = material === 'Gold' ? '/api/Auctions/CreateGoldJewelryAuction' : '/api/Auctions/CreateSilverJewelryAuction';
 
       const response = await api.post(apiUrl, requestData);
       console.log('Auction created successfully:', response.data);
@@ -148,7 +150,7 @@ function RegisterJewelryForAuction() {
             <p>
               Image:{' '}
               <img
-                src={`https://localhost:44361/${formData.jewelryDetails.jewelryImg}`}
+                src={`https://localhost:44361/assets/${formData.jewelryDetails.jewelryImg}`}
                 alt={formData.jewelryDetails.name}
                 onError={e => {
                   e.target.src = 'src/assets/img/jewelry_introduction.jpg';

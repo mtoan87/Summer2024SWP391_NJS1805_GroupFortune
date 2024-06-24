@@ -41,7 +41,7 @@ function MainContent() {
                         <div key={index} className="jewelry-item">
                             <img
                                 className='item-img'
-                                src={`https://localhost:44361/${jewelry.jewelryImg}`} 
+                                src={`https://localhost:44361/assets/${jewelry.jewelryImg}`} 
                                 alt={jewelry.name} 
                             />
                             <div className="jewelry-info">

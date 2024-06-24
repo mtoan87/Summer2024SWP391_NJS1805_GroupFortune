@@ -103,7 +103,7 @@ function Auctions() {
                             onClick={() => handleAuctionClick(auction.auctionId)} // Pass auctionId here
                         >
                             <img
-                                src={`https://localhost:44361/${auction.imageUrl}`}
+                                src={`https://localhost:44361/assets/${auction.imageUrl}`}
                                 onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
                             />
                             <p>Date: {formatDate(auction.starttime)}</p>

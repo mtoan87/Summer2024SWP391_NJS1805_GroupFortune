@@ -7,7 +7,7 @@ function ViewJewelryDetails() {
   const [jewelryDetails, setJewelryDetails] = useState({
     accountId: '',
     imageUrl: '',
-    imageFile: null,
+    imageFile: '',
     name: '',
     materials: '',
     description: '',
@@ -30,7 +30,7 @@ function ViewJewelryDetails() {
       try {
         const response = await api.get(`/api/Jewelry${material === 'gold' ? 'Gold' : 'Silver'}/GetById/${id}`);
         setJewelryDetails({ ...response.data, accountId: accountId });
-        console.log('Fetched Jewelry Details:', response.data);
+        console.log(response.data);
       } catch (error) {
         console.error('Error fetching jewelry details:', error);
       }
@@ -77,7 +77,7 @@ function ViewJewelryDetails() {
     formData.append('Description', jewelryDetails.description);
     formData.append('Category', jewelryDetails.category);
     formData.append('Weight', `${jewelryDetails.weight}`);
-    if (jewelryDetails.materials === 'gold') {
+    if (jewelryDetails.materials === 'Gold') {
       formData.append('GoldAge', jewelryDetails.goldAge);
     } else {
       formData.append('Purity', jewelryDetails.purity);
@@ -87,7 +87,7 @@ function ViewJewelryDetails() {
     }
 
     try {
-      const endpoint = jewelryDetails.materials === 'gold' 
+      const endpoint = jewelryDetails.materials === 'Gold' 
         ? `/api/JewelryGold/UpdateJewelryGoldMember?id=${id}` 
         : `/api/JewelrySilver/UpdateJewelrySilverMember?id=${id}`;
       await api.put(endpoint, formData);
@@ -107,17 +107,21 @@ function ViewJewelryDetails() {
           <label htmlFor="image">Image</label>
           <div className="upload-label-details-renamed" onClick={handleImageClick}>
             <img className='item-img-renamed'
-              src={jewelryDetails.imageUrl ? `https://localhost:44361/${jewelryDetails.imageUrl}` : "/assets/img/jewelry_introduction.jpg"}
+              src={jewelryDetails.imageUrl ? jewelryDetails.imageUrl : `https://localhost:44361/assets/${jewelryDetails.jewelryImg}`}
               alt={jewelryDetails.name}
               onError={(e) => { e.target.src = "/assets/img/jewelry_introduction.jpg"; }}
             />
+            <div className="upload-text-details-renamed">Upload Image</div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              id="image"
+              name="image"
+              onChange={handleImageUpload}
+              accept="image/*"
+              style={{ display: 'none' }}
+            />
           </div>
-          <input
-            type="file"
-            ref={fileInputRef}
-            style={{ display: 'none' }}
-            onChange={handleImageUpload}
-          />
           <label htmlFor="name">Name</label>
           <input type="text" name="name" value={jewelryDetails.name} onChange={handleInputChange} />
           {errors.name && <span className="error-renamed">{errors.name}</span>}
@@ -130,6 +134,7 @@ function ViewJewelryDetails() {
             <option value="">Select Material</option>
             <option value="gold">Gold</option>
             <option value="silver">Silver</option>
+            <option value="platinum">Platinum</option>
             <option value="diamond">Diamond</option>
           </select>
           {errors.materials && <span className="error-renamed">{errors.materials}</span>}
@@ -164,10 +169,23 @@ function ViewJewelryDetails() {
           <div className="input-container-renamed">
             <label htmlFor="weight">Weight</label>
             <input type="text" name="weight" value={jewelryDetails.weight} onChange={handleInputChange} />
-
+            <select
+              className="weight-unit-select-renamed"
+              name="weightUnit"
+              value={jewelryDetails.weightUnit}
+              onChange={handleInputChange}
+            >
+              <option value="grams">g</option>
+              <option value="kilograms">kg</option>
+              <option value="ounces">oz</option>
+              <option value="pounds">lb</option>
+            </select>
             {errors.weight && <span className="error-renamed">{errors.weight}</span>}
           </div>
-          <button className="update-button-renamed" onClick={handleUpdateJewelry}>Update</button>
+          
+          <button className="update-button-renamed" onClick={handleUpdateJewelry}>
+            Update Jewelry
+          </button>
         </div>
       </div>
     </div>
