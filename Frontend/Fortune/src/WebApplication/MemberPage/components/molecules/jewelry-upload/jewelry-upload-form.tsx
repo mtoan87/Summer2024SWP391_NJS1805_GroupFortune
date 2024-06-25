@@ -3,7 +3,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './jewelry-upload-form.scss';
 import api from '../../../../../config/axios';
-
+import placeholderImg from '../../../../../assets/img/jewelry_introduction.jpg';
 interface Jewelry {
   accountId: number;
   imageUrl: string;
@@ -233,16 +233,35 @@ const JewelryUploadForm: React.FC = () => {
       <form onSubmit={handleSubmit}>
         <h3>Upload a Jewelry</h3>
         <div className="form-content">
-          <div className="image-upload-section">
+        <div className="image-upload-section">
             <label htmlFor="image">Image</label>
             <div className="upload-label-details" onClick={handleImageClick}>
-            <img 
-              src={`https://localhost:44361/${jewelry.jewelryImg}`} 
-              alt={jewelry.name} 
-              onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
-            />
-              <div className="upload-text-details">Upload Image</div>
-              <input ref={fileInputRef} type="file" id="image" name="image" onChange={handleImageUpload} accept="image/*" style={{ display: 'none' }} />
+              {jewelry.imageUrl ? (
+                <img
+                  src={jewelry.imageUrl}
+                  alt={jewelry.name}
+                  onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = placeholderImg; // Set placeholder image on error
+                  }}
+                />
+              ) : (
+                <div
+                  className="upload-placeholder"
+                  style={{ backgroundImage: `url(${placeholderImg})` }}
+                >
+                  Upload Image
+                </div>
+              )}
+              <input
+                ref={fileInputRef}
+                type="file"
+                id="image"
+                name="image"
+                onChange={handleImageUpload}
+                accept="image/*"
+                style={{ display: 'none' }}
+              />
             </div>
             {errors.imageFile && <span className="error">{errors.imageFile}</span>}
           </div>

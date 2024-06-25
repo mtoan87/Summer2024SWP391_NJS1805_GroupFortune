@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Tooltip, Slider, Button, message } from 'antd';
-import type { TableProps } from 'antd';
+import { Table, Tooltip, Button, message } from 'antd';
+import { TableProps } from 'antd/es/table';
 import api from '../../../../../../config/axios';
 
 interface JewelrySilver {
@@ -11,10 +11,11 @@ interface JewelrySilver {
   materials: string;
   description: string;
   purity: string;
-  price: number | null;
+  price: number | null; // Allow null for price field
   weight: string;
   status: string;
-  jewelryImg: string;
+  jewelryImg: string; // Assuming this field is present in your API response
+  // Add more fields as needed
 }
 
 interface TableParams {
@@ -25,13 +26,78 @@ interface TableParams {
   };
   sortField?: string;
   sortOrder?: 'ascend' | 'descend' | undefined;
-  filters?: Record<string, React.ReactText[] | [number, number]>;
+  filters?: Record<string, React.ReactText[]>;
 }
+
+const columns = (toggleStatus: (record: JewelrySilver) => void) => [
+  {
+    title: 'Jewelry ID',
+    dataIndex: 'jewelrySilverId',
+    width: '11%',
+  },
+  {
+    title: 'Name',
+    dataIndex: 'name',
+    width: '20%',
+    render: (text: string, record: JewelrySilver) => (
+      <Tooltip title={<img src={`https://localhost:44361/${record.jewelryImg}`} alt={record.name} style={{ maxWidth: '200px' }} />}>
+        <span>{text}</span>
+      </Tooltip>
+    ),
+  },
+  {
+    title: 'Category',
+    dataIndex: 'category',
+    width: '15%',
+    filters: [
+      { text: 'Ring', value: 'Ring' },
+      { text: 'Necklace', value: 'Necklace' },
+      { text: 'Bracelet', value: 'Bracelet' },
+    ],
+    onFilter: (value, record) => record.category.includes(value as string),
+  },
+  {
+    title: 'Materials',
+    dataIndex: 'materials',
+  },
+  {
+    title: 'Description',
+    dataIndex: 'description',
+  },
+  {
+    title: 'Purity',
+    dataIndex: 'purity',
+    
+  },
+  {
+    title: 'Price',
+    dataIndex: 'price',
+    width: '8%',
+    render: (price: number | null) => (price !== null ? `$${price}` : 'null'),
+  },
+  {
+    title: 'Weight',
+    dataIndex: 'weight',
+  },
+  {
+    title: 'Status',
+    dataIndex: 'status',
+    filters: [
+      { text: 'Verified', value: 'Verified' },
+      { text: 'UnVerified', value: 'UnVerified' },
+    ],
+    onFilter: (value, record) => record.status.includes(value as string),
+    render: (_: string, record: JewelrySilver) => (
+      <Button type="primary" onClick={() => toggleStatus(record)}>
+        {record.status === 'Verified' ? 'Verified' : 'UnVerified'}
+      </Button>
+    ),
+  },
+];
 
 const SilverTable: React.FC = () => {
   const [data, setData] = useState<JewelrySilver[]>([]);
   const [loading, setLoading] = useState(false);
-  const [purityRange, setPurityRange] = useState<[number, number]>([0, 100]);
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: {
       current: 1,
@@ -45,10 +111,10 @@ const SilverTable: React.FC = () => {
     api.get('/api/JewelrySilver', { params })
       .then((response) => {
         const jewelrySilverData = response.data.$values
-          .filter((item: any) => item.price !== undefined)
+          .filter((item: any) => item.price !== undefined) 
           .map((item: any) => ({
             ...item,
-            price: item.price,
+            price: item.price, 
           }));
         setData(jewelrySilverData);
         setLoading(false);
@@ -56,7 +122,7 @@ const SilverTable: React.FC = () => {
           ...tableParams,
           pagination: {
             ...tableParams.pagination!,
-            total: response.data.totalCount,
+            total: jewelrySilverData.length,
           },
         });
       })
@@ -71,7 +137,7 @@ const SilverTable: React.FC = () => {
     page: params.pagination?.current,
     sortField: params.sortField,
     sortOrder: params.sortOrder,
-      ...params.filters,
+    ...params.filters, 
   });
 
   useEffect(() => {
@@ -82,7 +148,6 @@ const SilverTable: React.FC = () => {
     tableParams?.sortOrder,
     tableParams?.sortField,
     JSON.stringify(tableParams.filters),
-    JSON.stringify(purityRange),
   ]);
 
   const handleTableChange: TableProps<JewelrySilver>['onChange'] = (
@@ -96,7 +161,9 @@ const SilverTable: React.FC = () => {
       sortOrder: sorter.order,
       sortField: sorter.field,
     });
-      if (
+
+   
+    if (
       pagination.pageSize &&
       pagination.pageSize !== tableParams.pagination?.pageSize
     ) {
@@ -104,45 +171,23 @@ const SilverTable: React.FC = () => {
     }
   };
 
-  const handlePurityRangeChange = (range: [number, number]) => {
-    setPurityRange(range);
-  };
-
-  const applyPurityFilter = () => {
-    setTableParams({
-      ...tableParams,
-      filters: {
-        ...tableParams.filters,
-        purity: purityRange,
-      },
-      pagination: {
-        ...tableParams.pagination,
-        current: 1,
-      },
-    });
-  };
-
   const toggleStatus = (record: JewelrySilver) => {
-    console.log(record);
-    const newStatus = record.status === 'Available' ? 'UnVerified' : 'Available';
+    const newStatus = record.status === 'Verified' ? 'UnVerified' : 'Verified';
     const updatedRecord = { ...record, status: newStatus };
   
-    const payloadSilver = {
-      accountId: record.accountId,
-      jewelryImg: record.jewelryImg,
-      name: record.name,
-      category: record.category,
-      materials: record.materials,
-      description: record.description,
-      purity: record.purity,
-      price: record.price,
-      weight: record.weight,
-      status: newStatus,
-    };
+    const formData = new FormData();
+    formData.append('AccountId', record.accountId.toString());
+    formData.append('JewelryImg', record.jewelryImg);
+    formData.append('Name', record.name);
+    formData.append('Materials', record.materials);
+    formData.append('Category', record.category);
+    formData.append('Description', record.description);
+    formData.append('Weight', record.weight);
+    formData.append('Purity', record.purity);
+    formData.append('Price', record.price !== null ? record.price.toString() : '');
+    formData.append('Status', newStatus);
   
-    console.log('Payload:', payloadSilver); // Log payload for debugging
-  
-    api.put(`/api/JewelrySilver/UpdateJewelrySilverManager?id=${record.jewelrySilverId}`, payloadSilver)
+    api.put(`/api/JewelrySilver/UpdateJewelrySilverManager?id=${record.jewelrySilverId}`, formData)
       .then(() => {
         setData((prevData) =>
           prevData.map((item) =>
@@ -156,68 +201,10 @@ const SilverTable: React.FC = () => {
         message.error('Failed to update status');
       });
   };
-
-  const columns = [
-    {
-      title: 'Jewelry ID',
-      dataIndex: 'jewelrySilverId',
-      width: '11%',
-    },
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      width: '20%',
-      render: (text: string, record: JewelrySilver) => (
-        <Tooltip title={<img src={`https://localhost:44361/${record.jewelryImg}`} alt={record.name} style={{ maxWidth: '200px' }} />}>
-          <span>{text}</span>
-        </Tooltip>
-      ),
-    },
-    {
-      title: 'Category',
-      dataIndex: 'category',
-      width: '15%',
-      },
-    {
-      title: 'Materials',
-      dataIndex: 'materials',
-    },
-    {
-      title: 'Description',
-      dataIndex: 'description',
-    },
-    {
-      title: 'Purity',
-      dataIndex: 'purity',
-    },
-    {
-      title: 'Price',
-      dataIndex: 'price',
-      width: '8%',
-      render: (price: number | null) => (price !== null ? `$${price}` : 'Appraising...'),
-    },
-    {
-      title: 'Weight',
-      dataIndex: 'weight',
-    },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-      render: (_: string, record: JewelrySilver) => (
-        <Button 
-          type="primary" 
-          onClick={() => toggleStatus(record)} 
-          disabled={record.price === null}
-        >
-          {record.status === 'Available' ? 'Mark as UnVerified' : 'Mark as Available'}
-        </Button>
-      ),
-    },
-  ];
-
+  
   return (
     <Table
-      columns={columns}
+      columns={columns(toggleStatus)}
       rowKey={(record) => record.jewelrySilverId.toString()}
       dataSource={data}
       pagination={tableParams.pagination}

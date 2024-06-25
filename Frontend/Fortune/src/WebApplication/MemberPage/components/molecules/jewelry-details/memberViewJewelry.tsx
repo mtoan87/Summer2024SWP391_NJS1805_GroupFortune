@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 function MemberViewJewelry() {
   const [goldJewelry, setGoldJewelry] = useState([]);
   const [silverJewelry, setSilverJewelry] = useState([]);
+  const [goldDiamondJewelry, setGoldDiamondJewelry] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const loginedUser = JSON.parse(sessionStorage.getItem('loginedUser'));
   const accountId = loginedUser?.accountId;
@@ -39,9 +40,21 @@ function MemberViewJewelry() {
       }
     };
 
+    const fetchGoldDiamondJewelry = async () => {
+      try {
+        const response = await api.get(`api/JewelryGoldDia/GetAuctionAndJewelryGoldDiamondByAccountId/${accountId}`);
+        console.log(response.data);
+        setGoldDiamondJewelry(response.data?.$values || []);
+      } catch (err) {
+        console.error('Error fetching gold diamond jewelry', err);
+        setGoldDiamondJewelry([]);
+      }
+    };
+
     if (accountId) {
       fetchGoldJewelry();
       fetchSilverJewelry();
+      fetchGoldDiamondJewelry();
     } else {
       console.error('No accountId found in loginedUser');
     }
@@ -73,18 +86,12 @@ function MemberViewJewelry() {
   };
 
   const handleUpdateJewelry = (jewelry, material) => {
-    if (jewelry.price) {
-      toast.warning("This jewelry is approving. Cannot update!", {
-        position: "top-right"
-      });
-      return;
-    }
-    const id = material === 'Gold' ? jewelry.jewelryGoldId : jewelry.jewelrySilverId;
+    const id = material === 'Gold' ? jewelry.jewelryGoldId : material === 'Silver' ? jewelry.jewelrySilverId : jewelry.jewelryGolddiaId;
     navigate(`/update-jewelry/${id}/${material}`);
   };
 
   const handleRegisterAuction = async (jewelry, material) => {
-    const id = material === 'Gold' ? jewelry.jewelryGoldId : jewelry.jewelrySilverId;
+    const id = material === 'Gold' ? jewelry.jewelryGoldId : material === 'Silver' ? jewelry.jewelrySilverId : jewelry.jewelryGolddiaId;
     const auctionExists = await checkAuction(id, material);
 
     if (!auctionExists) {
@@ -191,8 +198,37 @@ function MemberViewJewelry() {
           </>
         )}
 
+        {/* Display Gold Diamond Jewelry */}
+        {goldDiamondJewelry.length > 0 && (
+          <>
+            {goldDiamondJewelry.filter(filterJewelry).map((jewelry) => (
+              <div key={jewelry.jewelryGolddiaId} className="jewelry-item">
+                <img
+                  className='item-img'
+                  src={`https://localhost:44361/assets/${jewelry.jewelryImg}`}
+                  alt={jewelry.name}
+                  onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
+                />
+                <h3>{jewelry.name}</h3>
+                <p>Description: {jewelry.description}</p>
+                <p>Category: {jewelry.category}</p>
+                <p>Clarity: {jewelry.clarity}</p>
+                <p>Carat: {jewelry.carat}</p>
+                <p>Gold Age: {jewelry.goldAge}</p>
+                <p>Materials: {jewelry.materials}</p>
+                <p>Weight: {jewelry.weight}</p>
+                <p>Price: {jewelry.price}$</p>
+                <div className="jewelry-item-buttons">
+                  <button onClick={() => handleUpdateJewelry(jewelry, 'GoldDiamond')}>Update</button>
+                  <button onClick={() => handleRegisterAuction(jewelry, 'GoldDiamond')}>Register Auction</button>
+                </div>
+              </div>
+            ))}
+          </>
+        )}
+
         {/* No jewelry found message */}
-        {goldJewelry.length === 0 && silverJewelry.length === 0 && (
+        {goldJewelry.length === 0 && silverJewelry.length === 0 && goldDiamondJewelry.length === 0 && (
           <p>No jewelry items found.</p>
         )}
       </div>
