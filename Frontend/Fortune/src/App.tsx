@@ -27,7 +27,7 @@ import ProfileStaff from './WebApplication/StaffPage/components/molucules/StaffP
 import BiddingPG from './WebApplication/MemberPage/components/pages/member-bidding-pg/BiddingPG';
 import MemberMyBidsPg from './WebApplication/MemberPage/components/pages/member-my-bids-pg/member-my-bids-pg';
 const App: React.FC = () => {
-  const { user, setUser } = useUser();
+  const { user, setUser } = useUser(); 
   useEffect(() => {
     const storedUser = sessionStorage.getItem("loginedUser");
     if (storedUser) {
