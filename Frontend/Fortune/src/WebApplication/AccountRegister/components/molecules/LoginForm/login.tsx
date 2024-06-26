@@ -32,7 +32,7 @@ const LoginForm: React.FC = () => {
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!email || !password) {
-      toast.error("Vui lòng nhập địa chỉ email và mật khẩu.");
+      toast.error("Please enter your email addres and Password.");
       return;
     }
 
