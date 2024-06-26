@@ -10,14 +10,16 @@ function GuestJewelry() {
   useEffect(() => {
     const fetchJewelry = async () => {
       try {
-        const [goldResponse, silverResponse] = await Promise.all([
+        const [goldResponse, silverResponse, diamondResponse] = await Promise.all([
           api.get('/api/JewelryGold'),
-          api.get('/api/JewelrySilver')
+          api.get('/api/JewelrySilver'),
+          api.get('/api/JewelryGoldDia')
         ]);
 
         const goldJewelry = goldResponse.data && goldResponse.data.$values ? goldResponse.data.$values : [];
         const silverJewelry = silverResponse.data && silverResponse.data.$values ? silverResponse.data.$values : [];
-        const combinedJewelry = [...goldJewelry, ...silverJewelry];
+        const diamondJewelry = diamondResponse.data && diamondResponse.data.$values ? diamondResponse.data.$values : [];
+        const combinedJewelry = [...goldJewelry, ...silverJewelry, ...diamondJewelry];
 
         const jewelryWithImages = await Promise.all(
           combinedJewelry.map(async (item) => {
@@ -37,22 +39,20 @@ function GuestJewelry() {
 
   const fetchJewelryImage = async (item) => {
     try {
-      let jewelryId;
+      let apiUrl;
       if (item.jewelryGoldId) {
-        jewelryId = item.jewelryGoldId;
+        apiUrl = `/api/JewelryGold/GetById/${item.jewelryGoldId}`;
       } else if (item.jewelrySilverId) {
-        jewelryId = item.jewelrySilverId;
+        apiUrl = `/api/JewelrySilver/GetById/${item.jewelrySilverId}`;
+      } else if (item.jewelryGolddiaId) {
+        apiUrl = `/api/JewelryGoldDia/GetById/${item.jewelryGolddiaId}`;
       } else {
         throw new Error("No valid jewelryId found");
       }
 
-      const apiUrl = item.jewelryGoldId
-        ? `/api/JewelryGold/GetById/${item.jewelryGoldId}`
-        : `/api/JewelrySilver/GetById/${item.jewelrySilverId}`;
-
       const response = await api.get(apiUrl);
       const imageUrl = response.data.jewelryImg || 'src/assets/img/jewelry_introduction.jpg';
-      return imageUrl;
+      return `https://localhost:44361/${imageUrl.replace(/\\/g, '/')}`;
     } catch (err) {
       console.error('Error fetching jewelry image:', err);
       return 'src/assets/img/jewelry_introduction.jpg';
@@ -98,10 +98,22 @@ function GuestJewelry() {
             <h3>{item.name}</h3>
             <p>Description: {item.description}</p>
             <p>Category: {item.category}</p>
-            {item.jewelryGoldId ? (
-              <p>Gold Age: {item.goldAge}</p>
-            ) : (
-              <p>Purity: {item.purity}</p>
+            {item.jewelryGoldId && (
+              <>
+                <p>Gold Age: {item.goldAge}</p>
+              </>
+            )}
+            {item.jewelrySilverId && (
+              <>
+                <p>Purity: {item.purity}</p>
+              </>
+            )}
+            {item.materials.includes('Gold') && item.materials.includes('Diamond') && (
+              <>
+                <p>Clarity: {item.clarity}</p>
+                <p>Carat: {item.carat}</p>
+                <p>Gold Age: {item.goldAge}</p>
+              </>
             )}
             <p>Materials: {item.materials}</p>
             <p>Weight: {item.weight}</p>

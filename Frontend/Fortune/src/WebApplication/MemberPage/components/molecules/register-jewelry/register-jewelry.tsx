@@ -150,10 +150,10 @@ function RegisterJewelryForAuction() {
             <p>
               Image:{' '}
               <img
-                src={`https://localhost:44361/assets/${formData.jewelryDetails.jewelryImg}`}
+                src={`https://localhost:44361/${formData.jewelryDetails.jewelryImg}`}
                 alt={formData.jewelryDetails.name}
                 onError={e => {
-                  e.target.src = 'src/assets/img/jewelry_introduction.jpg';
+                  e.target.src = '../../../../../../src/assets/img/jewelry_introduction.jpg';
                 }}
               />
             </p>

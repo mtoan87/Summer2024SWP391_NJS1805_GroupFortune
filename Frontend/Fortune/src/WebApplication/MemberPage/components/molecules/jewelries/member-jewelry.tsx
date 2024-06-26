@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './member-jewelry.scss';
 import api from '../../../../../config/axios';
 import { useNavigate } from 'react-router-dom';
@@ -14,7 +14,6 @@ function MemberJewelry() {
     const fetchJewelry = async () => {
       try {
         const response = await api.get('/api/Jewelries');
-        console.log('API response:', response);  // Debug log
         console.log('API response:', response.data);
         const { jewelrySilver, jewelryGold, jewelryGoldDiamond } = response.data;
 
@@ -63,14 +62,14 @@ function MemberJewelry() {
         <h1>Jewelry</h1>
       </div>
       <div className="member-jewelry-container">
-        {displayedItems.map((item, index) => (
+        {displayedItems.map((item) => (
           <div
             key={item.jewelrySilverId || item.jewelryGoldId || item.jewelryGolddiaId}
             className="member-jewelry-item"
             onClick={() => handleJewelryClick(item.jewelrySilverId || item.jewelryGoldId || item.jewelryGolddiaId)}
           >
             <img
-              src={`https://localhost:44361/assets/${item.jewelryImg}`}
+              src={`https://localhost:44361/${item.jewelryImg}`}
               alt={item.name}
               onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
             />

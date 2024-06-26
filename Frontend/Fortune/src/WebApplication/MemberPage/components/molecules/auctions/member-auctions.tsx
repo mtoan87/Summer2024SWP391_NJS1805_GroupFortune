@@ -98,7 +98,7 @@ function MemberAuctions() {
                         >
                             <img
                                 src={auction.imageUrl}
-                                onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
+                                onError={(e) => { e.target.src = "../../../../../../src/assets/img/jewelry_introduction.jpg"; }}
                                 alt="Jewelry"
                             />
                             <p>Date: {formatDate(auction.starttime)}</p>

@@ -11,22 +11,22 @@
 .jewelry-details {
     display: flex;
     flex-direction: column;
-    width: 100%; /* Ensure it takes the full width of the parent container */
+    width: 100%; 
 }
 
 .jewelry-item {
     display: flex;
-    width: 100%; /* Ensure it takes the full width of the parent container */
+    width: 100%; 
     margin-bottom: 10px;
     border: 1px solid #6e4126;
     padding: 10px;
     border-radius: 5px;
-    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    box-sizing: border-box; 
 }
 
 .item-img {
-    width: 150px; /* Maintain the width as per your design */
-    height: 100%; /* Make the height 100% to fill the parent div */
+    width: 150px; 
+    height: 1000px; 
     margin-right: 20px;
     object-fit: cover;
     border-radius: 5px;
@@ -36,14 +36,14 @@
 .jewelry-info {
     display: flex;
     flex-direction: column;
-    flex: 1; /* Allow this section to grow and fill available space */
+    flex: 1;
 }
 
 .jewelry-info p {
     margin: 5px 0;
-    white-space: nowrap; /* Prevent text from wrapping */
+    white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; /* Add ellipsis (...) for overflow text */
+    text-overflow: ellipsis; 
 }
 
     

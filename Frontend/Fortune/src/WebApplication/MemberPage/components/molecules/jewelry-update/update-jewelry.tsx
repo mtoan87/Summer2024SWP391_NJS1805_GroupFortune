@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../../../../../config/axios';
 import './update-jewelry.scss';
@@ -29,28 +29,87 @@ function ViewJewelryDetails() {
   const loginedUser = JSON.parse(sessionStorage.getItem('loginedUser'));
   const accountId = loginedUser?.accountId;
 
+  const purity = {
+    '92.5%': 'PureSilver925',
+    '99.9%': 'PureSilver999',
+    '90.0%': 'PureSilver900',
+    '95.8%': 'PureSilver958'
+  };
+
+  const category = {
+    'Ring': 'Ring',
+    'Necklace': 'Necklace', //- Vòng cổ
+    'Bracelet': 'Bracelet', //- Vòng tay
+    'Earrings': 'Earrings', //- Bông tai
+    'Pendant': 'Pendant', //- Mặt dây chuyền
+    'Brooch': 'Brooch', //- Trâm cài áo
+    'Anklet': 'Anklet', //- Lắc chân
+    'Charm': 'Charm', //- Mặt dây chuyền nhỏ (thường đeo trên vòng tay)
+    'Clufflinks': 'Cufflinks', //- Khuy măng sét
+    'Tiara': 'Tiara', //- Vương miện nhỏ
+    'Diadem': 'Diadem', //- Vương miện
+    'Choker': 'Choker', //- Vòng cổ sát cổ
+    'Bangle': 'Bangle', //- Vòng tay cứng
+    'Hairpin': 'Hairpin', // - Kẹp tóc
+    'Barrette': 'Barrette', //- Kẹp tóc trang trí
+    'Locket': 'Locket', //- Mặt dây chuyền có thể mở ra
+    'Signet Ring': 'SignetRing', //- Nhẫn có dấu hiệu hoặc biểu tượng
+    'Stud Earrings': 'StudEarrings', //- Bông tai đinh
+    'Hoop Earrings': 'HoopEarrings', //- Bông tai vòng
+    'Cameo': 'Cameo', //- Trang sức điêu khắc nổi
+    'Cluster Ring': 'ClusterRing', //- Nhẫn đính nhiều viên đá quý nhỏ
+    'Cocktail Ring': 'CocktailRing', //- Nhẫn to, thường có một viên đá quý lớn
+    'Cuff Bracelet': 'CuffBracelet' //- Vòng tay bản lớn
+  }
+
+  const materials = {
+    'Gold': 'Gold',
+    'Silver': 'Silver',
+    'Gold, Diamond': 'GoldDiamond'
+  };
+  
+  const clarity = {
+    'FL': 'FL',
+    'IF': 'IF',
+    'VVS1': 'VVS1',
+    'VVS2': 'VVS2',
+    'VS1': 'VS1',
+    'VS2': 'VS2',
+    'SI1': 'SI1',
+    'SI2': 'SI2',
+    'I1': 'I1',
+    'I2': 'I2',
+    'I3': 'I3'
+  };
+
   useEffect(() => {
     const fetchJewelryDetails = async () => {
       try {
-        const endpoint = material === 'gold'
-          ? `/api/JewelryGold/GetById/${id}`
-          : material === 'silver'
-          ? `/api/JewelrySilver/GetById/${id}`
-          : `/api/JewelryGoldDia/GetById/${id}`;
-        const response = await api.get(endpoint);
-        setJewelryDetails({ ...response.data, accountId: accountId });
-        console.log(response.data);
+        let response;
+        if (material === 'Gold') {
+          response = await api.get(`/api/JewelryGold/GetById/${id}`);
+        } else if (material === 'Gold, Diamond') {
+          response = await api.get(`/api/JewelryGoldDia/GetById/${id}`);
+        } else {
+          response = await api.get(`/api/JewelrySilver/GetById/${id}`);
+        }
+
+        console.log('API response:', response.data);
+
+        setJewelryDetails(prevState => ({
+          ...prevState,
+          ...response.data
+        }));
       } catch (error) {
         console.error('Error fetching jewelry details:', error);
       }
     };
 
     fetchJewelryDetails();
-  }, [id, accountId, material]);
+  }, [id, material]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    console.log(`Updating ${name} with value:`, value);
     setJewelryDetails(prevState => ({
       ...prevState,
       [name]: value
@@ -86,22 +145,39 @@ function ViewJewelryDetails() {
     formData.append('Description', jewelryDetails.description);
     formData.append('Category', jewelryDetails.category);
     formData.append('Weight', `${jewelryDetails.weight}`);
-    formData.append('GoldAge', jewelryDetails.goldAge);
-    formData.append('Purity', jewelryDetails.purity);
     formData.append('Clarity', jewelryDetails.clarity);
     formData.append('Carat', jewelryDetails.carat);
     formData.append('Price', jewelryDetails.price);
     formData.append('Status', jewelryDetails.status);
+    if (jewelryDetails.materials === 'Gold') {
+      formData.append('GoldAge', jewelryDetails.goldAge);
+    } else {
+      // Ensure Purity is a valid enum value
+      if (purity[jewelryDetails.purity!]) {
+        formData.append('Purity', purity[jewelryDetails.purity!]);
+      } else {
+        setErrors(prevErrors => ({
+          ...prevErrors,
+          purity: 'Invalid Purity value'
+        }));
+        return;
+      }
+    }
+
     if (jewelryDetails.imageFile) {
       formData.append('JewelryImg', jewelryDetails.imageFile);
+    } else {
+      formData.append('JewelryImg', jewelryDetails.jewelryImg);
     }
 
     try {
-      const endpoint = jewelryDetails.materials === 'gold'
-        ? `/api/JewelryGold/UpdateJewelryGoldMember?id=${id}` 
-        : jewelryDetails.materials === 'silver'
+
+      const endpoint = jewelryDetails.materials === 'Gold'
+        ? `/api/JewelryGold/UpdateJewelryGoldMember?id=${id}`
+        : jewelryDetails.materials === 'Silver'
         ? `/api/JewelrySilver/UpdateJewelrySilverMember?id=${id}`
         : `/api/JewelryGoldDia/UpdateJewelryGoldDiamondManager?id=${id}`;
+
       await api.put(endpoint, formData);
       navigate('/userJewel', { state: { successMessage: 'Jewelry updated successfully!' } });
     } catch (error) {
@@ -118,8 +194,9 @@ function ViewJewelryDetails() {
         <div className="jewelry-details-item-renamed">
           <label htmlFor="image">Image</label>
           <div className="upload-label-details-renamed" onClick={handleImageClick}>
-            <img className='item-img-renamed'
-              src={jewelryDetails.imageUrl ? jewelryDetails.imageUrl : `https://localhost:44361/${jewelryDetails.jewelryImg}`}
+            <img
+              className='item-img-renamed'
+              src={`https://localhost:44361/${jewelryDetails.jewelryImg}`}
               alt={jewelryDetails.name}
               onError={(e) => { e.target.src = "/assets/img/jewelry_introduction.jpg"; }}
             />
@@ -134,6 +211,7 @@ function ViewJewelryDetails() {
               style={{ display: 'none' }}
             />
           </div>
+          {errors.jewelryImg && <span className="error-renamed">{errors.jewelryImg}</span>}
           <label htmlFor="name">Name</label>
           <input type="text" name="name" value={jewelryDetails.name} onChange={handleInputChange} />
           {errors.name && <span className="error-renamed">{errors.name}</span>}
@@ -144,14 +222,13 @@ function ViewJewelryDetails() {
           <label htmlFor="materials">Materials</label>
           <select name="materials" value={jewelryDetails.materials} onChange={handleInputChange}>
             <option value="">Select Material</option>
-            <option value="gold">Gold</option>
-            <option value="silver">Silver</option>
-            <option value="platinum">Platinum</option>
-            <option value="diamond">Diamond</option>
+            <option value="Gold">Gold</option>
+            <option value="Silver">Silver</option>
+            <option value="Diamond">Diamond</option>
           </select>
           {errors.materials && <span className="error-renamed">{errors.materials}</span>}
-          
-          {jewelryDetails.materials === 'gold' && (
+
+          {jewelryDetails.materials === 'Gold' && (
             <div className="input-container-renamed">
               <label htmlFor="goldAge">Gold Age</label>
               <input type="text" name="goldAge" value={jewelryDetails.goldAge} onChange={handleInputChange} />
@@ -160,13 +237,24 @@ function ViewJewelryDetails() {
             </div>
           )}
 
-          {jewelryDetails.materials === 'silver' && (
+          {jewelryDetails.materials === 'Silver' && (
             <div className="input-container-renamed">
-              <label htmlFor="purity">Purity</label>
-              <input type="text" name="purity" value={jewelryDetails.purity} onChange={handleInputChange} />
-              {errors.purity && <span className="error-renamed">{errors.purity}</span>}
-              <span className="suffix-renamed">%</span>
-            </div>
+            <label htmlFor="purity">Purity</label>
+            <select
+              id="purity"
+              name="purity"
+              value={jewelryDetails.purity}
+              onChange={handleInputChange}
+              required
+            >
+              <option value="">Select Purity</option>
+              {Object.keys(purity).map(key => (
+                <option key={key} value={key}>{key}</option>
+              ))}
+            </select>
+            {errors.purity && <span className="error-renamed">{errors.purity}</span>}
+          </div>
+          
           )}
 
           {jewelryDetails.materials === 'diamond' && (
@@ -192,10 +280,10 @@ function ViewJewelryDetails() {
           <label htmlFor="category">Category</label>
           <select name="category" value={jewelryDetails.category} onChange={handleInputChange}>
             <option value="">Select Category</option>
-            <option value="necklace">Necklace</option>
-            <option value="ring">Ring</option>
-            <option value="bracelet">Bracelet</option>
-            <option value="earrings">Earrings</option>
+            <option value="Necklace">Necklace</option>
+            <option value="Ring">Ring</option>
+            <option value="Bracelet">Bracelet</option>
+            <option value="Earrings">Earrings</option>
           </select>
           {errors.category && <span className="error-renamed">{errors.category}</span>}
           <div className="input-container-renamed">
@@ -214,7 +302,7 @@ function ViewJewelryDetails() {
             </select>
             {errors.weight && <span className="error-renamed">{errors.weight}</span>}
           </div>
-          
+
           <button className="update-button-renamed" onClick={handleUpdateJewelry}>
             Update Jewelry
           </button>

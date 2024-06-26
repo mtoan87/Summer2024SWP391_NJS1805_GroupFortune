@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './auctions-details.scss';
 import api from '../../../../../config/axios';
@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function AuctionDetails() {
     const { id } = useParams();
-    const navigate = useNavigate(); // Use useNavigate instead of useHistory
+    const navigate = useNavigate();
     const [auction, setAuction] = useState(null);
     const [jewelryDetails, setJewelryDetails] = useState(null);
     const [attendeeCount, setAttendeeCount] = useState(0);
@@ -25,7 +25,6 @@ function AuctionDetails() {
                 const jewelryDetails = await fetchJewelryDetails(auctionData);
                 console.log('Jewelry Details:', jewelryDetails);
                 setJewelryDetails(jewelryDetails);
-
             } catch (err) {
                 console.error('Error fetching auction details:', err);
             }
@@ -40,7 +39,6 @@ function AuctionDetails() {
                 console.error('Error fetching attendee count:', err);
             }
         };
-
         fetchAuctionDetails();
         fetchAttendeeCount();
     }, [id]);
@@ -67,10 +65,9 @@ function AuctionDetails() {
             console.log('Join Auction Response:', response.data);
             toast.success('Successfully joined the auction', { position: "top-right" });
 
-            // Delayed navigation after joining auction
             setTimeout(() => {
-                navigate(`/mybidding/${id}`); // Navigate to home or any desired route
-            }, 1000); // 1 second delay
+                navigate(`/mybidding/${id}`);
+            }, 1000);
 
         } catch (err) {
             console.error('Error joining auction:', err);
@@ -90,21 +87,27 @@ function AuctionDetails() {
                     {jewelryDetails.map((jewelry, index) => (
                         <div key={index}>
                             <img className='item-img'
-                                src={`https://localhost:44361/assets/${jewelry.jewelryImg}`} 
+                                src={`https://localhost:44361/${jewelry.jewelryImg}`} 
                                 alt={jewelry.name} 
+                                onError={(e) => { e.target.src = "../../../../../../src/assets/img/"; }} // Provide a default image path
                             />
                             <p><strong>Name:</strong> {jewelry.name}</p>
                             <p><strong>Materials:</strong> {jewelry.materials}</p>
                             <p><strong>Description:</strong> {jewelry.description}</p>
                             <p><strong>Price:</strong> ${jewelry.price}</p>
                             <p><strong>Weight:</strong> {jewelry.weight}</p>
-                            <p><strong>Gold Age:</strong> {jewelry.goldAge}</p>
+                            {jewelry.materials.toLowerCase().includes('gold') && (
+                                <p><strong>Gold Age:</strong> {jewelry.goldAge}</p>
+                            )}
+                            {jewelry.materials.toLowerCase().includes('silver') && (
+                                <p><strong>Purity:</strong> {jewelry.purity}</p>
+                            )}
                             <p><strong>Category:</strong> {jewelry.category}</p>
                         </div>
                     ))}
                     
-                    <p><strong>Start Time:</strong> {auction.starttime}</p>
-                    <p><strong>End Time:</strong> {auction.endtime}</p>
+                    <p><strong>Start Time:</strong> {new Date(auction.starttime).toLocaleString()}</p>
+                    <p><strong>End Time:</strong> {new Date(auction.endtime).toLocaleString()}</p>
                     <p><strong>Auction Description:</strong> {auction.description}</p>
                     <p><strong>Number of Attendees:</strong> {attendeeCount}</p>
                     <button className="join-auction-button" onClick={handleJoinAuction}>Join Auction</button>
