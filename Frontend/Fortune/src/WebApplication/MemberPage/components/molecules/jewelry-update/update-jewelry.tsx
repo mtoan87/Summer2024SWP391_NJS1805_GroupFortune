@@ -16,7 +16,11 @@ function ViewJewelryDetails() {
     goldAge: '',
     purity: '',
     collection: '',
-    jewelryImg: ''
+    jewelryImg: '',
+    clarity: '',
+    carat: '',
+    price: '',
+    status: ''
   });
   const [errors, setErrors] = useState({});
   const { id, material } = useParams();
@@ -28,7 +32,12 @@ function ViewJewelryDetails() {
   useEffect(() => {
     const fetchJewelryDetails = async () => {
       try {
-        const response = await api.get(`/api/Jewelry${material === 'gold' ? 'Gold' : 'Silver'}/GetById/${id}`);
+        const endpoint = material === 'gold'
+          ? `/api/JewelryGold/GetById/${id}`
+          : material === 'silver'
+          ? `/api/JewelrySilver/GetById/${id}`
+          : `/api/JewelryGoldDia/GetById/${id}`;
+        const response = await api.get(endpoint);
         setJewelryDetails({ ...response.data, accountId: accountId });
         console.log(response.data);
       } catch (error) {
@@ -77,19 +86,22 @@ function ViewJewelryDetails() {
     formData.append('Description', jewelryDetails.description);
     formData.append('Category', jewelryDetails.category);
     formData.append('Weight', `${jewelryDetails.weight}`);
-    if (jewelryDetails.materials === 'Gold') {
-      formData.append('GoldAge', jewelryDetails.goldAge);
-    } else {
-      formData.append('Purity', jewelryDetails.purity);
-    }
+    formData.append('GoldAge', jewelryDetails.goldAge);
+    formData.append('Purity', jewelryDetails.purity);
+    formData.append('Clarity', jewelryDetails.clarity);
+    formData.append('Carat', jewelryDetails.carat);
+    formData.append('Price', jewelryDetails.price);
+    formData.append('Status', jewelryDetails.status);
     if (jewelryDetails.imageFile) {
       formData.append('JewelryImg', jewelryDetails.imageFile);
     }
 
     try {
-      const endpoint = jewelryDetails.materials === 'Gold' 
+      const endpoint = jewelryDetails.materials === 'gold'
         ? `/api/JewelryGold/UpdateJewelryGoldMember?id=${id}` 
-        : `/api/JewelrySilver/UpdateJewelrySilverMember?id=${id}`;
+        : jewelryDetails.materials === 'silver'
+        ? `/api/JewelrySilver/UpdateJewelrySilverMember?id=${id}`
+        : `/api/JewelryGoldDia/UpdateJewelryGoldDiamondManager?id=${id}`;
       await api.put(endpoint, formData);
       navigate('/userJewel', { state: { successMessage: 'Jewelry updated successfully!' } });
     } catch (error) {
@@ -155,6 +167,26 @@ function ViewJewelryDetails() {
               {errors.purity && <span className="error-renamed">{errors.purity}</span>}
               <span className="suffix-renamed">%</span>
             </div>
+          )}
+
+          {jewelryDetails.materials === 'diamond' && (
+            <>
+              <div className="input-container-renamed">
+                <label htmlFor="clarity">Clarity</label>
+                <input type="text" name="clarity" value={jewelryDetails.clarity} onChange={handleInputChange} />
+                {errors.clarity && <span className="error-renamed">{errors.clarity}</span>}
+              </div>
+              <div className="input-container-renamed">
+                <label htmlFor="carat">Carat</label>
+                <input type="text" name="carat" value={jewelryDetails.carat} onChange={handleInputChange} />
+                {errors.carat && <span className="error-renamed">{errors.carat}</span>}
+              </div>
+              <div className="input-container-renamed">
+                <label htmlFor="price">Price</label>
+                <input type="text" name="price" value={jewelryDetails.price} onChange={handleInputChange} />
+                {errors.price && <span className="error-renamed">{errors.price}</span>}
+              </div>
+            </>
           )}
 
           <label htmlFor="category">Category</label>

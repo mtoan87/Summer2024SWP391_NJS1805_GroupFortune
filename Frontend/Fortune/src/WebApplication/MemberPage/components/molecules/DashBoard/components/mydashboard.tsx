@@ -14,6 +14,7 @@ import {
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import PaymentForm from './payment';
+import PaymentHistory from './PaymentHistory';
 
 const { Header, Content, Sider } = Layout;
 
@@ -38,8 +39,9 @@ const items: MenuItem[] = [
   getItem('Account', '2', <UserOutlined />),
   getItem('Payment', 'sub1', <WalletFilled />, [
     getItem('500', '4', <PayCircleOutlined/>),
+    getItem('Payment History', '5', <PayCircleOutlined/>),
   ]),
-  getItem('My Auction', '5', <ProductOutlined/>),
+  getItem('My Auction', '6', <ProductOutlined/>),
 ];
 
 const MyDashboard: React.FC = () => {
@@ -76,7 +78,8 @@ const MyDashboard: React.FC = () => {
             {currentPage === '2' && <Breadcrumb.Item>Account</Breadcrumb.Item>}
             {currentPage === '3' && <Breadcrumb.Item>Payment / Wallet</Breadcrumb.Item>}
             {currentPage === '4' && <Breadcrumb.Item>Payment / Point</Breadcrumb.Item>}
-            {currentPage === '5' && <Breadcrumb.Item>My Auction</Breadcrumb.Item>}
+            {currentPage === '5' && <Breadcrumb.Item>Payment History</Breadcrumb.Item>}
+            {currentPage === '6' && <Breadcrumb.Item>My Auction</Breadcrumb.Item>}
 
 
 
@@ -94,6 +97,7 @@ const MyDashboard: React.FC = () => {
             {currentPage === '1' && <div><Account/></div>}
             {currentPage === '2' && <div><Account/></div>}
             {currentPage === '4' && <div><PaymentForm/></div>}
+            {currentPage === '5' && <div><PaymentHistory/></div>}
 
 
             {/* Add similar conditions for other pages if needed */}

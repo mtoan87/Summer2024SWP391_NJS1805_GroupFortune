@@ -4,6 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import './jewelry-upload-form.scss';
 import api from '../../../../../config/axios';
 import placeholderImg from '../../../../../assets/img/jewelry_introduction.jpg';
+
 interface Jewelry {
   accountId: number;
   imageUrl: string;
@@ -18,6 +19,8 @@ interface Jewelry {
   category: string;
   price: string;
   calculatedPrice?: string;
+  clarity?: string; // New field for diamond
+  carat?: string; // New field for diamond
 }
 
 const loginedUser = JSON.parse(sessionStorage.getItem('loginedUser') || '{}');
@@ -99,10 +102,16 @@ const JewelryUploadForm: React.FC = () => {
       if (!jewelry.purity) {
         newErrors.purity = 'Purity is required';
       }
+    } else if (jewelry.materials === 'Diamond') {
+      if (!jewelry.clarity) {
+        newErrors.clarity = 'Clarity is required';
+      }
+      if (!jewelry.carat) {
+        newErrors.carat = 'Carat is required';
+      }
     }
 
     if (!jewelry.category) newErrors.category = 'Category is required';
-
 
     return newErrors;
   };
@@ -177,9 +186,8 @@ const JewelryUploadForm: React.FC = () => {
     formData.append('materials', jewelry.materials);
     formData.append('description', jewelry.description);
     formData.append('weight', `${jewelry.weight} ${jewelry.weightUnit}`);
-      formData.append('Category', jewelry.category);
-      formData.append('price', `${jewelry.price}`);
-      console.log(jewelry.imageFile);
+    formData.append('Category', jewelry.category);
+    formData.append('price', `${jewelry.price}`);
     if (jewelry.imageFile) {
       formData.append('jewelryImg', jewelry.imageFile);
     }
@@ -188,6 +196,9 @@ const JewelryUploadForm: React.FC = () => {
       formData.append('goldage', `${jewelry.goldage!}k`);
     } else if (jewelry.materials === 'Silver') {
       formData.append('purity', `${jewelry.purity!}%`);
+    } else if (jewelry.materials === 'Diamond') {
+      formData.append('clarity', `${jewelry.clarity}`);
+      formData.append('carat', `${jewelry.carat}`);
     }
 
     logFormData(formData);
@@ -198,6 +209,8 @@ const JewelryUploadForm: React.FC = () => {
         apiEndpoint = '/api/JewelryGold/CreateJewelryGold';
       } else if (jewelry.materials === 'Silver') {
         apiEndpoint = '/api/JewelrySilver/CreateSilverJewelry';
+      } else if (jewelry.materials === 'Diamond') {
+        apiEndpoint = '/api/JewelryGoldDia/CreateJewelryGoldDiamond';
       }
 
       const response = await api.post(apiEndpoint, formData, {
@@ -233,8 +246,8 @@ const JewelryUploadForm: React.FC = () => {
       <form onSubmit={handleSubmit}>
         <h3>Upload a Jewelry</h3>
         <div className="form-content">
-        <div className="image-upload-section">
-            <label htmlFor="image">Image</label>
+          <div className="image-upload-section">
+          <label htmlFor="image">Image</label>
             <div className="upload-label-details" onClick={handleImageClick}>
               {jewelry.imageUrl ? (
                 <img
@@ -339,14 +352,15 @@ const JewelryUploadForm: React.FC = () => {
                 onChange={handleChange}
               >
                 <option value="grams">Grams (g)</option>
-           
                 <option value="milligrams">Milligrams (mg)</option>
                 <option value="ounces">Ounces (oz)</option>
                 <option value="pennyweights">Pennyweights (dwt)</option>
               </select>
               {errors.weight && <span className="error">{errors.weight}</span>}
             </div>
-            {jewelry.materials === 'Gold' && (
+            {(
+  jewelry.materials === 'Gold' || jewelry.materials === 'Diamond'
+) && (
               <>
                 <label htmlFor="goldage">Gold Age:</label>
                 <div className="input-container">
@@ -389,7 +403,36 @@ const JewelryUploadForm: React.FC = () => {
                 </div>
               </>
             )}
-            
+            {jewelry.materials === 'Diamond' && (
+              <>
+
+              
+                <label htmlFor="clarity">Clarity:</label>
+                <div className="input-container">
+                  <input
+                    type="text"
+                    id="clarity"
+                    name="clarity"
+                    value={jewelry.clarity}
+                    onChange={handleChange}
+                    required
+                  />
+                  {errors.clarity && <span className="error">{errors.clarity}</span>}
+                </div>
+                <label htmlFor="carat">Carat:</label>
+                <div className="input-container">
+                  <input
+                    type="text"
+                    id="carat"
+                    name="carat"
+                    value={jewelry.carat}
+                    onChange={handleChange}
+                    required
+                  />
+                  {errors.carat && <span className="error">{errors.carat}</span>}
+                </div>
+              </>
+            )}
             <div className="calculated-price">
               Calculated Price: {jewelry.calculatedPrice} $
             </div>
@@ -403,3 +446,4 @@ const JewelryUploadForm: React.FC = () => {
 };
 
 export default JewelryUploadForm;
+
