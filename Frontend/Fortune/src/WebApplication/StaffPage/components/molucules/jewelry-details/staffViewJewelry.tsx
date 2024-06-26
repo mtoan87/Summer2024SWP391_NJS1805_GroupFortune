@@ -24,7 +24,7 @@ function StaffViewJewelry() {
         console.log(response.data);
         setGoldJewelry(response.data?.$values || []); 
       } catch (err) {
-        console.error('Error fetching Gold jewelry', err);
+        console.error('Error fetching gold jewelry', err);
         setGoldJewelry([]);
       }
     };
@@ -100,7 +100,7 @@ function StaffViewJewelry() {
       </div>
       <div className="jewelry-container">
        
-      
+        {/* Display Gold Jewelry */}
         {goldJewelry.length > 0 && (
           <>
             {goldJewelry.filter(filterJewelry).map((jewelry) => (
@@ -119,10 +119,10 @@ function StaffViewJewelry() {
                 <p>Weight: {jewelry.weight}</p>
                 <p>Price: {jewelry.price}$</p>
                 <div className="jewelry-item-buttons">
-                  <button onClick={() => handleUpdateJewelry(jewelry.jewelryGoldId, "Gold")}>
+                  <button onClick={() => handleUpdateJewelry(jewelry.jewelryGoldId, "gold")}>
                     <EditOutlined /> Update
                   </button>
-                  <button onClick={() => handleRegisterAuction(jewelry.jewelryGoldId, "Gold")}>
+                  <button onClick={() => handleRegisterAuction(jewelry.jewelryGoldId, "gold")}>
                     <FileAddOutlined /> Register 
                   </button>
                 </div>
@@ -131,7 +131,7 @@ function StaffViewJewelry() {
           </>
         )}
 
-      
+        {/* Display Silver Jewelry */}
         {silverJewelry.length > 0 && (
           <>
             {silverJewelry.filter(filterJewelry).map((jewelry) => (
@@ -150,10 +150,10 @@ function StaffViewJewelry() {
                 <p>Weight: {jewelry.weight}</p>
                 <p>Price: {jewelry.price}$</p>
                 <div className="jewelry-item-buttons">
-                  <button onClick={() => handleUpdateJewelry(jewelry.jewelrySilverId, "Silver")}>
+                  <button onClick={() => handleUpdateJewelry(jewelry.jewelrySilverId, "silver")}>
                     <EditOutlined /> Update
                   </button>
-                  <button onClick={() => handleRegisterAuction(jewelry.jewelrySilverId, "Silver")}>
+                  <button onClick={() => handleRegisterAuction(jewelry.jewelrySilverId, "silver")}>
                     <FileAddOutlined /> Register 
                   </button>
                 </div>
@@ -162,7 +162,7 @@ function StaffViewJewelry() {
           </>
         )}
 
-  
+        {/* No jewelry found message */}
         {goldJewelry.length === 0 && silverJewelry.length === 0 && (
           <p>No jewelry items found.</p>
         )}

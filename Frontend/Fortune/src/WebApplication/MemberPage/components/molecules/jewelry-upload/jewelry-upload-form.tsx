@@ -352,6 +352,7 @@ const JewelryUploadForm: React.FC = () => {
                 onChange={handleChange}
               >
                 <option value="grams">Grams (g)</option>
+                {/* <option value="carats">Carats (ct)</option> */}
                 <option value="milligrams">Milligrams (mg)</option>
                 <option value="ounces">Ounces (oz)</option>
                 <option value="pennyweights">Pennyweights (dwt)</option>
