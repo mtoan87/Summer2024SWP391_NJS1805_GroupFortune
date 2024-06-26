@@ -118,10 +118,10 @@ const GoldTable: React.FC = () => {
     api.get('/api/JewelryGold', { params })
       .then((response) => {
         const jewelryGoldData = response.data.$values
-          .filter((item: any) => item.price !== undefined) // Filter out items without price
+          .filter((item: any) => item.price !== undefined) 
           .map((item: any) => ({
             ...item,
-            price: item.price, // Price is already defined here
+            price: item.price, 
           }));
         setData(jewelryGoldData);
         setLoading(false);
@@ -144,7 +144,7 @@ const GoldTable: React.FC = () => {
     page: params.pagination?.current,
     sortField: params.sortField,
     sortOrder: params.sortOrder,
-    ...params.filters, // Include filters directly in the params object
+    ...params.filters, 
   });
 
   useEffect(() => {
@@ -169,7 +169,7 @@ const GoldTable: React.FC = () => {
       sortField: sorter.field,
     });
 
-    // Clear data when pagination settings change
+   
     if (
       pagination.pageSize &&
       pagination.pageSize !== tableParams.pagination?.pageSize
@@ -196,7 +196,7 @@ const GoldTable: React.FC = () => {
       status: newStatus,
     };
   
-    console.log('Payload:', payload); // Log payload for debugging
+    console.log('Payload:', payload); 
   
     api.put(`/api/JewelryGold/UpdateJewelryGoldManager?id=${record.jewelryGoldId}`, payload)
       .then(() => {

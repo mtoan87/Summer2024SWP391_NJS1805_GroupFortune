@@ -3,7 +3,7 @@ import { Menu } from 'antd';
 import { UserOutlined, LogoutOutlined, AppstoreOutlined, CrownOutlined, InfoCircleOutlined, RubyOutlined, GoldOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import Sider from 'antd/es/layout/Sider';
-import '../manager-SideBar/Sidebar.scss'; // Ensure this path is correct
+import '../manager-SideBar/Sidebar.scss';
 import { useNavigate } from 'react-router-dom';
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -47,7 +47,7 @@ const Sidebar: React.FC<{ onMenuClick: (e: any) => void }> = ({ onMenuClick }) =
   ];
 
   const handleMenuClick = (e: any) => {
-    if (e.key === '6') {
+    if (e.key === '7') {
       handleLogout();
     } else {
       onMenuClick(e);
