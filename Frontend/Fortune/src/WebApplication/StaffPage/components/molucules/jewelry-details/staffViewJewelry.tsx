@@ -60,9 +60,7 @@ function StaffViewJewelry() {
     navigate(`/staff/update-jewelry/${jewelryId}/${material}`);
   };
 
-  const handleRegisterAuction = (jewelryId, material) => {
-    navigate(`/register-jewelry-auction/${jewelryId}/${material}`, { state: { jewelryId } });
-  };
+
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
@@ -122,9 +120,7 @@ function StaffViewJewelry() {
                   <button onClick={() => handleUpdateJewelry(jewelry.jewelryGoldId, "Gold")}>
                     <EditOutlined /> Update
                   </button>
-                  <button onClick={() => handleRegisterAuction(jewelry.jewelryGoldId, "Gold")}>
-                    <FileAddOutlined /> Register 
-                  </button>
+
                 </div>
               </div>
             ))}
@@ -152,9 +148,6 @@ function StaffViewJewelry() {
                 <div className="jewelry-item-buttons">
                   <button onClick={() => handleUpdateJewelry(jewelry.jewelrySilverId, "Silver")}>
                     <EditOutlined /> Update
-                  </button>
-                  <button onClick={() => handleRegisterAuction(jewelry.jewelrySilverId, "Silver")}>
-                    <FileAddOutlined /> Register 
                   </button>
                 </div>
               </div>
