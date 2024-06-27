@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import '../Styles/maincontent.scss';
 import api from '../../../../../../config/axios';
-import Comment from './comment'; // Import Comment component
-
 
 function MainContent() {
     const { id } = useParams();
     const [auction, setAuction] = useState(null);
     const [jewelryDetails, setJewelryDetails] = useState(null);
+    const [loading, setLoading] = useState(true); // State for loading indicator
 
     useEffect(() => {
         const fetchAuctionDetails = async () => {
@@ -19,18 +18,61 @@ function MainContent() {
 
                 const jewelryDetails = await fetchJewelryDetails(auctionData);
                 setJewelryDetails(jewelryDetails);
+                setLoading(false); // Set loading to false after data is fetched
             } catch (err) {
                 console.error('Error fetching auction details:', err);
+                setLoading(false); // Set loading to false on error
             }
         };
 
         fetchAuctionDetails();
     }, [id]);
-    console.log(auction)
-    console.log(jewelryDetails)
-    if (!auction || !jewelryDetails) {
+
+    async function fetchJewelryDetails(item) {
+        try {
+            let jewelryId;
+            let apiUrl;
+
+            if (item.jewelryGoldId) {
+                jewelryId = item.jewelryGoldId;
+                apiUrl = `/api/JewelryGold/GetById/${jewelryId}`;
+            } else if (item.jewelrySilverId) {
+                jewelryId = item.jewelrySilverId;
+                apiUrl = `/api/JewelrySilver/GetById/${jewelryId}`;
+            } else {
+                throw new Error("No valid jewelryId found");
+            }
+
+            const response = await api.get(apiUrl);
+            return [response.data];
+        } catch (err) {
+            console.error('Error fetching jewelry details:', err);
+            return [];
+        }
+    }
+
+    if (loading) {
         return <div>Loading...</div>;
     }
+
+    if (!auction || !jewelryDetails) {
+        return <div>No auction or jewelry details found.</div>;
+    }
+
+    const purity = {
+        'PureSilver925': '92.5%',
+        'PureSilver999': '99.9%',
+        'PureSilver900': '90.0%',
+        'PureSilver958': '95.8%'
+      };
+    
+      const goldAge = {
+        Gold24: '24K',
+        Gold22: '22K',
+        Gold20: '20K',
+        Gold18: '18K',
+        Gold14: '14K'
+      };
 
     return (
         <div className="contents-details">
@@ -41,8 +83,9 @@ function MainContent() {
                         <div key={index} className="jewelry-item">
                             <img
                                 className='item-img'
-                                src={`https://localhost:44361/assets/${jewelry.jewelryImg}`} 
+                                src={`https://localhost:44361/${jewelry.jewelryImg}`} 
                                 alt={jewelry.name} 
+                                onError={(e) => { e.target.src = '../../../../../../../src/assets/img/jewelry_introduction.jpg'; }} // Handle image loading error
                             />
                             <div className="jewelry-info">
                                 <p><strong>Name:</strong> {jewelry.name}</p>
@@ -50,41 +93,20 @@ function MainContent() {
                                 <p><strong>Description:</strong> {jewelry.description}</p>
                                 <p><strong>Price:</strong> ${jewelry.price}</p>
                                 <p><strong>Weight:</strong> {jewelry.weight}</p>
-                                <p><strong>Gold Age:</strong> {jewelry.goldAge}</p>
+                                {jewelry.materials.toLowerCase().includes('gold') && (
+                                    <p><strong>Gold Age:</strong> {goldAge[jewelry.goldAge]}</p>
+                                )}
+                                {jewelry.materials.toLowerCase().includes('silver') && (
+                                    <p><strong>Purity:</strong> {purity[jewelry.purity]}</p>
+                                )}
                                 <p><strong>Category:</strong> {jewelry.category}</p>
-                                
                             </div>
                         </div>
                     ))}
                 </div>
-
             </div>
-            <Comment auctionId={id} /> {/* Add the Comment component */}
         </div>
     );
-}
-
-async function fetchJewelryDetails(item) {
-    try {
-        let jewelryId;
-        let apiUrl;
-
-        if (item.jewelryGoldId) {
-            jewelryId = item.jewelryGoldId;
-            apiUrl = `/api/JewelryGold/GetById/${jewelryId}`;
-        } else if (item.jewelrySilverId) {
-            jewelryId = item.jewelrySilverId;
-            apiUrl = `/api/JewelrySilver/GetById/${jewelryId}`;
-        } else {
-            throw new Error("No valid jewelryId found");
-        }
-
-        const response = await api.get(apiUrl);
-        return [response.data];
-    } catch (err) {
-        console.error('Error fetching jewelry details:', err);
-        return [];
-    }
 }
 
 export default MainContent;
