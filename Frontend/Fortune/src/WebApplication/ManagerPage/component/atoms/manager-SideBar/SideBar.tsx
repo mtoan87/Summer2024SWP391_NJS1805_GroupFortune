@@ -47,7 +47,7 @@ const Sidebar: React.FC<{ onMenuClick: (e: any) => void }> = ({ onMenuClick }) =
   ];
 
   const handleMenuClick = (e: any) => {
-    if (e.key === '6') {
+    if (e.key === '7') {
       handleLogout();
     } else {
       onMenuClick(e);

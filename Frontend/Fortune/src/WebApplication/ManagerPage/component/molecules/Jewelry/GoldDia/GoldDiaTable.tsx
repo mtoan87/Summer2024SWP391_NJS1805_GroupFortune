@@ -30,7 +30,13 @@ interface TableParams {
   sortOrder?: 'ascend' | 'descend' | undefined;
   filters?: Record<string, React.ReactText[]>;
 }
-
+const goldage = {
+  '14K':'Gold14',
+  '18K': 'Gold18',
+  '20K':'Gold20',
+  '22K': 'Gold22',
+  '24K': 'Gold24',
+}
 const columns = (toggleStatus: (record: JewelryGoldDia) => void) => [
   {
     title: 'Jewelry ID',
@@ -55,6 +61,26 @@ const columns = (toggleStatus: (record: JewelryGoldDia) => void) => [
       { text: 'Ring', value: 'Ring' },
       { text: 'Necklace', value: 'Necklace' },
       { text: 'Bracelet', value: 'Bracelet' },
+      { text: 'Earrings', value: 'Earrings' },
+      { text: 'Pendant', value: 'Pendant' },
+      { text: 'Brooch', value: 'Brooch' },
+      { text: 'Anklet', value: 'Anklet' },
+      { text: 'Charm', value: 'Charm' },
+      { text: 'Cufflinks', value: 'Cufflinks' },
+      { text: 'Tiara', value: 'Tiara' },
+      { text: 'Diadem', value: 'Diadem' },
+      { text: 'Choker', value: 'Choker' },
+      { text: 'Bangle', value: 'Bangle' },
+      { text: 'Hairpin', value: 'Hairpin' },
+      { text: 'Barrette', value: 'Barrette' },
+      { text: 'Locket', value: 'Locket' },
+      { text: 'SignetRing', value: 'SignetRing' },
+      { text: 'StudEarrings', value: 'StudEarrings' },
+      { text: 'HoopEarrings', value: 'HoopEarrings' },
+      { text: 'Cameo', value: 'Cameo' },
+      { text: 'ClusterRing', value: 'ClusterRing' },
+      { text: 'CocktailRing', value: 'CocktailRing' },
+      { text: 'CuffBracelet', value: 'CuffBracelet' }
     ],
     onFilter: (value, record) => record.category.includes(value as string),
   },
@@ -78,13 +104,14 @@ const columns = (toggleStatus: (record: JewelryGoldDia) => void) => [
     title: 'Gold Age',
     dataIndex: 'goldAge',
     filters: [
-      { text: '24K', value: '24K' },
-      { text: '22K', value: '22K' },
-      { text: '18K', value: '18K' },
-      { text: '14K', value: '14K' },
-      { text: '10K', value: '10K' },
+      { text: '24K', value: 'Gold24' },
+      { text: '22K', value: 'Gold22' },
+      { text: '20K', value: 'Gold20' },
+      { text: '18K', value: 'Gold18' },
+      { text: '14K', value: 'Gold14' },
     ],
     onFilter: (value, record) => record.goldAge.includes(value as string),
+    render: (goldAge: string) => Object.keys(goldage).find(key => goldage[key] === goldAge),
   },
   {
     title: 'Price',
@@ -100,13 +127,13 @@ const columns = (toggleStatus: (record: JewelryGoldDia) => void) => [
     title: 'Status',
     dataIndex: 'status',
     filters: [
-      { text: 'Available', value: 'Available' },
-      { text: 'UnVerified', value: 'UnVerified' },
+      { text: 'Verified', value: 'Verified' },
+      { text: 'Unverified', value: 'Unverified' },
     ],
     onFilter: (value, record) => record.status.includes(value as string),
     render: (_: string, record: JewelryGoldDia) => (
       <Button type="primary" onClick={() => toggleStatus(record)}>
-        {record.status === 'Available' ? 'UnVerified' : 'Available'}
+        {record.status === 'Verified' ? 'Unverified' : 'Verified'}
       </Button>
     ),
   },
@@ -191,13 +218,15 @@ const GoldTable: React.FC = () => {
 
   const toggleStatus = (record: JewelryGoldDia) => {
     console.log(record);
-    const newStatus = record.status === 'Available' ? 'UnVerified' : 'Available';
+    const newStatus = record.status === 'Verified' ? 'Unverified' : 'Verified';
     const updatedRecord = { ...record, status: newStatus };
   
     const payload = {
       accountId: record.accountId,
       jewelryImg: record.jewelryImg,
       name: record.name,
+      carat: record.carat,
+      clarity: record.clarity,
       category: record.category,
       materials: record.materials,
       description: record.description,
