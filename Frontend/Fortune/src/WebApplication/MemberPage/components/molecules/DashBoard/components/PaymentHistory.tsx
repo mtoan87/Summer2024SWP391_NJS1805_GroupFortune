@@ -57,7 +57,7 @@ const PaymentHistory: React.FC = () => {
       const accountId = user.accountId;
 
       try {
-        const response = await api.get<{ $id: string, $values: Payment[] }>(`api/Payment/GetPaymentByAccountId/${accountId}`);
+        const response = await api.get<{ $id: string, $values: Payment[] }>(`api/Payment/GetPaymentByAccountId?id=${accountId}`);
         
         if (response.data && response.data.$values) {
           const formattedPayments = response.data.$values.map(payment => {

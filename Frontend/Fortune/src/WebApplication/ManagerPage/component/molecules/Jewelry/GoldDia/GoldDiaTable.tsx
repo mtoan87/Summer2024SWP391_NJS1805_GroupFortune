@@ -41,7 +41,7 @@ const columns = (toggleStatus: (record: JewelryGoldDia) => void) => [
   {
     title: 'Jewelry ID',
     dataIndex: 'jewelryGolddiaId',
-    width: '11%',
+    width: '5%',
   },
   {
     title: 'Name',
@@ -56,7 +56,7 @@ const columns = (toggleStatus: (record: JewelryGoldDia) => void) => [
   {
     title: 'Category',
     dataIndex: 'category',
-    width: '15%',
+    width: '10%',
     filters: [
       { text: 'Ring', value: 'Ring' },
       { text: 'Necklace', value: 'Necklace' },
@@ -91,6 +91,7 @@ const columns = (toggleStatus: (record: JewelryGoldDia) => void) => [
   {
     title: 'Description',
     dataIndex: 'description',
+    width: '20%',
   },
   {
     title: 'clarity',
@@ -128,12 +129,16 @@ const columns = (toggleStatus: (record: JewelryGoldDia) => void) => [
     dataIndex: 'status',
     filters: [
       { text: 'Verified', value: 'Verified' },
-      { text: 'Unverified', value: 'Unverified' },
+      { text: 'UnVerified', value: 'UnVerified' },
     ],
     onFilter: (value, record) => record.status.includes(value as string),
-    render: (_: string, record: JewelryGoldDia) => (
-      <Button type="primary" onClick={() => toggleStatus(record)}>
-        {record.status === 'Verified' ? 'Unverified' : 'Verified'}
+    render: (_: string, record: JewelrySilver) => (
+      <Button
+        type="primary"
+        onClick={() => toggleStatus(record)}
+        style={{ backgroundColor: record.status === 'Verified' ? 'green' : 'grey', borderColor: record.status === 'Verified' ? 'green' : 'grey' }}
+      >
+        {record.status === 'Verified' ? 'Verified' : 'Unverified'}
       </Button>
     ),
   },
