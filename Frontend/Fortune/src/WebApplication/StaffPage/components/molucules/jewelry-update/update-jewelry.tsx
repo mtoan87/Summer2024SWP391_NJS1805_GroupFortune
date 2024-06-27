@@ -18,7 +18,7 @@ function StaffViewJewelryDetails() {
     purity: '',
     price: '',
     collection: '',
-    jewelryImg: '' // Initialize as empty string
+    jewelryImg: '' 
   });
   const [errors, setErrors] = useState({});
   const { id, material } = useParams();
@@ -104,7 +104,7 @@ function StaffViewJewelryDetails() {
           <label htmlFor="category">Category</label>
           <input type="text" name="category" value={jewelryDetails.category} disabled />
 
-          {jewelryDetails.materials === 'gold' && (
+          {jewelryDetails.materials === 'Gold' && (
             <>
               <label htmlFor="goldAge">Gold Age</label>
               <input type="text" name="goldAge" value={jewelryDetails.goldAge} disabled />
