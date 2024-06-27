@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../../../../../config/axios';
 import './update-jewelry.scss';
-import {EditOutlined } from '@ant-design/icons';
+import { EditOutlined } from '@ant-design/icons';
 
 function StaffViewJewelryDetails() {
   const [jewelryDetails, setJewelryDetails] = useState({
@@ -18,7 +18,8 @@ function StaffViewJewelryDetails() {
     purity: '',
     price: '',
     collection: '',
-    jewelryImg: '' 
+    jewelryImg: '',
+    shipment: ''
   });
   const [errors, setErrors] = useState({});
   const { id, material } = useParams();
@@ -39,15 +40,24 @@ function StaffViewJewelryDetails() {
     fetchJewelryDetails();
   }, [id, material]);
 
-  const handlePriceChange = (e) => {
-    const { value } = e.target;
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
     setJewelryDetails(prevState => ({
       ...prevState,
-      price: value
+      [name]: value
     }));
   };
 
   const handleUpdateJewelry = async () => {
+    const newErrors = {};
+    if (jewelryDetails.materials === 'silver' && !jewelryDetails.purity) {
+      newErrors.purity = 'Purity is required for silver jewelry';
+    }
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) {
+      return;
+    }
+
     const formData = new FormData();
     formData.append('AccountId', jewelryDetails.accountId);
     formData.append('Name', jewelryDetails.name);
@@ -58,6 +68,7 @@ function StaffViewJewelryDetails() {
     formData.append('Price', jewelryDetails.price);
     formData.append('WeightUnit', jewelryDetails.weightUnit);
     formData.append('jewelryImg', jewelryDetails.jewelryImg);
+    formData.append('Shipment', jewelryDetails.shipment);
     if (jewelryDetails.materials === 'gold') {
       formData.append('GoldAge', jewelryDetails.goldAge);
     } else {
@@ -114,15 +125,19 @@ function StaffViewJewelryDetails() {
           {jewelryDetails.materials === 'silver' && (
             <>
               <label htmlFor="purity">Purity</label>
-              <input type="text" name="purity" value={jewelryDetails.purity} disabled />
+              <input type="text" name="purity" value={jewelryDetails.purity} onChange={handleInputChange} />
+              {errors.purity && <span className="error">{errors.purity}</span>}
             </>
           )}
 
           <label htmlFor="price">Price</label>
           <div className="input-container">
-            <input type="text" name="price" value={jewelryDetails.price} onChange={handlePriceChange} />
+            <input type="text" name="price" value={jewelryDetails.price} onChange={handleInputChange} />
           </div>
           {errors.price && <span className="error">{errors.price}</span>}
+
+          <label htmlFor="shipment">Shipment</label>
+          <input type="text" name="shipment" value={jewelryDetails.shipment} onChange={handleInputChange} />
 
           <button onClick={handleUpdateJewelry}><EditOutlined/> Update</button>
         </div>
