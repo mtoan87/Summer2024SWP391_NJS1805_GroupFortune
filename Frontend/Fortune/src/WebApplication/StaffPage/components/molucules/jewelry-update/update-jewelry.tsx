@@ -28,7 +28,7 @@ function StaffViewJewelryDetails() {
   useEffect(() => {
     const fetchJewelryDetails = async () => {
       try {
-        const response = await api.get(`/api/Jewelry${material === 'gold' ? 'Gold' : 'Silver'}/GetById/${id}`);
+        const response = await api.get(`/api/Jewelry${material === 'Gold' ? 'Gold' : 'Silver'}/GetById/${id}`);
         setJewelryDetails({
           ...response.data
         });
@@ -69,14 +69,14 @@ function StaffViewJewelryDetails() {
     formData.append('WeightUnit', jewelryDetails.weightUnit);
     formData.append('jewelryImg', jewelryDetails.jewelryImg);
     formData.append('Shipment', jewelryDetails.shipment);
-    if (jewelryDetails.materials === 'gold') {
+    if (material === 'Gold') {
       formData.append('GoldAge', jewelryDetails.goldAge);
     } else {
       formData.append('Purity', jewelryDetails.purity);
     }
 
     try {
-      const endpoint = jewelryDetails.materials === 'gold'
+      const endpoint = material === 'Gold'
         ? `/api/JewelryGold/UpdateJewelryGoldStaff?id=${id}`
         : `/api/JewelrySilver/UpdateJewelrySilverStaff?id=${id}`;
       await api.put(endpoint, formData, {
@@ -100,7 +100,7 @@ function StaffViewJewelryDetails() {
           <label htmlFor="image">Image</label>
           <div className="upload-label-details">
             <img className='item-img'
-              src={`https://localhost:44361/${jewelryDetails.jewelryImg}`}
+              // src={`https://localhost:44361/${jewelryDetails.jewelryImg}`}
               alt={jewelryDetails.name}
               onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
             />

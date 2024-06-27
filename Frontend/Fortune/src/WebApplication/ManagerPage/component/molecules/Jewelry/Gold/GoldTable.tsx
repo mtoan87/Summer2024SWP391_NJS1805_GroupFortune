@@ -28,6 +28,14 @@ interface TableParams {
   sortOrder?: 'ascend' | 'descend' | undefined;
   filters?: Record<string, React.ReactText[]>;
 }
+const goldage = {
+  '14K':'Gold14',
+  '18K': 'Gold18',
+  '20K':'Gold20',
+  '22K': 'Gold22',
+  '24K': 'Gold24',
+
+}
 
 const columns = (toggleStatus: (record: JewelryGold) => void) => [
   {
@@ -53,7 +61,28 @@ const columns = (toggleStatus: (record: JewelryGold) => void) => [
       { text: 'Ring', value: 'Ring' },
       { text: 'Necklace', value: 'Necklace' },
       { text: 'Bracelet', value: 'Bracelet' },
-    ],
+      { text: 'Earrings', value: 'Earrings' },
+      { text: 'Pendant', value: 'Pendant' },
+      { text: 'Brooch', value: 'Brooch' },
+      { text: 'Anklet', value: 'Anklet' },
+      { text: 'Charm', value: 'Charm' },
+      { text: 'Cufflinks', value: 'Cufflinks' },
+      { text: 'Tiara', value: 'Tiara' },
+      { text: 'Diadem', value: 'Diadem' },
+      { text: 'Choker', value: 'Choker' },
+      { text: 'Bangle', value: 'Bangle' },
+      { text: 'Hairpin', value: 'Hairpin' },
+      { text: 'Barrette', value: 'Barrette' },
+      { text: 'Locket', value: 'Locket' },
+      { text: 'SignetRing', value: 'SignetRing' },
+      { text: 'StudEarrings', value: 'StudEarrings' },
+      { text: 'HoopEarrings', value: 'HoopEarrings' },
+      { text: 'Cameo', value: 'Cameo' },
+      { text: 'ClusterRing', value: 'ClusterRing' },
+      { text: 'CocktailRing', value: 'CocktailRing' },
+      { text: 'CuffBracelet', value: 'CuffBracelet' }
+    ]
+    ,
     onFilter: (value, record) => record.category.includes(value as string),
   },
   {
@@ -68,11 +97,11 @@ const columns = (toggleStatus: (record: JewelryGold) => void) => [
     title: 'Gold Age',
     dataIndex: 'goldAge',
     filters: [
-      { text: '24K', value: '24K' },
-      { text: '22K', value: '22K' },
-      { text: '18K', value: '18K' },
-      { text: '14K', value: '14K' },
-      { text: '10K', value: '10K' },
+      { text: '24K', value: 'Gold24' },
+      { text: '22K', value: 'Gold22' },
+      { text: '20 K', value: 'Gold20' },
+      { text: '18K', value: 'Gold18' },
+      { text: '14K', value: 'Gold14' },
     ],
     onFilter: (value, record) => record.goldAge.includes(value as string),
   },
@@ -90,13 +119,13 @@ const columns = (toggleStatus: (record: JewelryGold) => void) => [
     title: 'Status',
     dataIndex: 'status',
     filters: [
-      { text: 'Available', value: 'Available' },
-      { text: 'UnVerified', value: 'UnVerified' },
+      { text: 'Verified', value: 'Verified' },
+      { text: 'Unverified', value: 'Unverified' },
     ],
     onFilter: (value, record) => record.status.includes(value as string),
     render: (_: string, record: JewelryGold) => (
       <Button type="primary" onClick={() => toggleStatus(record)}>
-        {record.status === 'Available' ? 'UnVerified' : 'Available'}
+        {record.status === 'Verified' ? 'Verified' : 'Unverified'}
       </Button>
     ),
   },
@@ -118,10 +147,10 @@ const GoldTable: React.FC = () => {
     api.get('/api/JewelryGold', { params })
       .then((response) => {
         const jewelryGoldData = response.data.$values
-          .filter((item: any) => item.price !== undefined) 
+          .filter((item: any) => item.price !== undefined) // Filter out items without price
           .map((item: any) => ({
             ...item,
-            price: item.price, 
+            price: item.price, // Price is already defined here
           }));
         setData(jewelryGoldData);
         setLoading(false);
@@ -144,7 +173,7 @@ const GoldTable: React.FC = () => {
     page: params.pagination?.current,
     sortField: params.sortField,
     sortOrder: params.sortOrder,
-    ...params.filters, 
+    ...params.filters, // Include filters directly in the params object
   });
 
   useEffect(() => {
@@ -169,7 +198,7 @@ const GoldTable: React.FC = () => {
       sortField: sorter.field,
     });
 
-   
+    // Clear data when pagination settings change
     if (
       pagination.pageSize &&
       pagination.pageSize !== tableParams.pagination?.pageSize
@@ -180,7 +209,7 @@ const GoldTable: React.FC = () => {
 
   const toggleStatus = (record: JewelryGold) => {
     console.log(record);
-    const newStatus = record.status === 'Available' ? 'UnVerified' : 'Available';
+    const newStatus = record.status === 'Verified' ? 'Unverified' : 'Verified';
     const updatedRecord = { ...record, status: newStatus };
   
     const payload = {
@@ -196,7 +225,7 @@ const GoldTable: React.FC = () => {
       status: newStatus,
     };
   
-    console.log('Payload:', payload); 
+    console.log('Payload:', payload); // Log payload for debugging
   
     api.put(`/api/JewelryGold/UpdateJewelryGoldManager?id=${record.jewelryGoldId}`, payload)
       .then(() => {
