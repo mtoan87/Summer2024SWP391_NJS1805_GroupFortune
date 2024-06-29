@@ -31,6 +31,7 @@ function StaffViewJewelryDetails() {
     const fetchJewelryDetails = async () => {
       try {
         const response = await api.get(`/api/Jewelry${material === 'Gold' ? 'Gold' : 'Silver'}/GetById/${id}`);
+        console.log("API Response:", response.data); // Log API response
         setJewelryDetails({
           ...response.data
         });
@@ -113,6 +114,7 @@ function StaffViewJewelryDetails() {
 
           <label htmlFor="materials">Materials</label>
           <input type="text" name="materials" value={jewelryDetails.materials} disabled />
+          {console.log("Materials:", jewelryDetails.materials)} {/* Log materials value */}
 
           <label htmlFor="category">Category</label>
           <input type="text" name="category" value={jewelryDetails.category} disabled />
@@ -124,10 +126,10 @@ function StaffViewJewelryDetails() {
             </>
           )}
 
-          {jewelryDetails.materials === 'silver' && (
+          {jewelryDetails.materials === 'Silver' && (
             <>
               <label htmlFor="purity">Purity</label>
-              <input type="text" name="purity" value={jewelryDetails.purity} onChange={handleInputChange} />
+              <input type="text" name="purity" value={jewelryDetails.purity} disabled onChange={handleInputChange} />
               {errors.purity && <span className="error">{errors.purity}</span>}
             </>
           )}
