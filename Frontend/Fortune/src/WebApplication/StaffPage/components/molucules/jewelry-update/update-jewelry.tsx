@@ -4,6 +4,8 @@ import api from '../../../../../config/axios';
 import './update-jewelry.scss';
 import { EditOutlined } from '@ant-design/icons';
 
+const shipmentOptions = ["Pending", "In Transit", "Delivered"];
+
 function StaffViewJewelryDetails() {
   const [jewelryDetails, setJewelryDetails] = useState({
     accountId: '',
@@ -19,7 +21,7 @@ function StaffViewJewelryDetails() {
     price: '',
     collection: '',
     jewelryImg: '',
-    shipment: ''
+    shipment: 'Pending'
   });
   const [errors, setErrors] = useState({});
   const { id, material } = useParams();
@@ -137,9 +139,13 @@ function StaffViewJewelryDetails() {
           {errors.price && <span className="error">{errors.price}</span>}
 
           <label htmlFor="shipment">Shipment</label>
-          <input type="text" name="shipment" value={jewelryDetails.shipment} onChange={handleInputChange} />
+          <select name="shipment" value={jewelryDetails.shipment} onChange={handleInputChange}>
+            {shipmentOptions.map(option => (
+              <option key={option} value={option}>{option}</option>
+            ))}
+          </select>
 
-          <button onClick={handleUpdateJewelry}><EditOutlined/> Update</button>
+          <button onClick={handleUpdateJewelry}><EditOutlined /> Update</button>
         </div>
       </div>
     </div>
