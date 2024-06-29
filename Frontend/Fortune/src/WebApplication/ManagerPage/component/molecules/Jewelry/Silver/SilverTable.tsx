@@ -88,6 +88,10 @@ const columns = (
     onFilter: (value, record) => record.category.includes(value as string),
   },
   {
+    title: 'Shipment',
+    dataIndex: 'shipment',
+  },
+  {
     title: 'Materials',
     dataIndex: 'materials',
   },
@@ -292,7 +296,8 @@ const SilverTable: React.FC = () => {
       });
   };
 
-  return (
+  return (<>
+    <h1>Silver Jewelry Management</h1>
     <Table
       columns={columns(toggleStatus, handlePriceChange, savePrice)}
       rowKey={(record) => record.jewelrySilverId.toString()}
@@ -300,7 +305,7 @@ const SilverTable: React.FC = () => {
       pagination={tableParams.pagination}
       loading={loading}
       onChange={handleTableChange}
-    />
+    /></>
   );
 };
 

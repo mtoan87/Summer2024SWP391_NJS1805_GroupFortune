@@ -89,6 +89,11 @@ const columns = (
     onFilter: (value, record) => record.category.includes(value as string),
   },
   {
+    title: 'Shipment',
+    dataIndex: 'shipment',
+  }
+  ,
+  {
     title: 'Materials',
     dataIndex: 'materials',
   },
@@ -304,6 +309,8 @@ const GoldTable: React.FC = () => {
       });
     };  
   return (
+    <>
+    <h1>Gold Jewelry Management</h1>
     <Table
     columns={columns(toggleStatus, handlePriceChange, savePrice)}
       rowKey={(record) => record.jewelryGoldId.toString()}
@@ -311,7 +318,7 @@ const GoldTable: React.FC = () => {
       pagination={tableParams.pagination}
       loading={loading}
       onChange={handleTableChange}
-    />
+    /></>
   );
 };
 

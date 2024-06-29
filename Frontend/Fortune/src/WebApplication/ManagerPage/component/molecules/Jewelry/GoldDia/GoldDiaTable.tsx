@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Tooltip, Button, message } from 'antd';
+import { Table, Tooltip, Button, message,Input } from 'antd';
 import { TableProps } from 'antd/es/table';
 import api from '../../../../../../config/axios';
 
@@ -12,6 +12,7 @@ interface JewelryGoldDia {
   description: string;
   goldAge: string;
   carat: string;
+  shipment:string;
   clarity: string;
   price: number | null; // Allow null for price field
   weight: string;
@@ -37,7 +38,11 @@ const goldage = {
   '22K': 'Gold22',
   '24K': 'Gold24',
 }
-const columns = (toggleStatus: (record: JewelryGoldDia) => void) => [
+const columns = (
+  toggleStatus: (record: JewelryGoldDia) => void,
+  handlePriceChange: (value: string, record: JewelryGoldDia) => void,
+  savePrice: (record: JewelryGoldDia) => void
+) => [
   {
     title: 'Jewelry ID',
     dataIndex: 'jewelryGolddiaId',
@@ -85,6 +90,15 @@ const columns = (toggleStatus: (record: JewelryGoldDia) => void) => [
     onFilter: (value, record) => record.category.includes(value as string),
   },
   {
+    title: 'Shipment',
+    dataIndex: 'shipment',
+    filters: [
+      { text: 'Deliveried', value: 'Deliveried' },
+      { text: 'Delivering', value: 'Delivering' },
+    ],
+    onFilter: (value, record) => record.shipment.includes(value as string)
+  },
+  {
     title: 'Materials',
     dataIndex: 'materials',
   },
@@ -96,6 +110,20 @@ const columns = (toggleStatus: (record: JewelryGoldDia) => void) => [
   {
     title: 'clarity',
     dataIndex: 'clarity',
+    filters: [
+      { text: 'FL', value: 'FL' },
+      { text: 'IF', value: 'IF' },
+      { text: 'VVS1', value: 'VVS1' },
+      { text: 'VVS2', value: 'VVS2' },
+      { text: 'VS1', value: 'VS1' },
+      { text: 'VS2', value: 'VS2' },
+      { text: 'SI1', value: 'SI1' },
+      { text: 'SI2', value: 'SI2' },
+      { text: 'I1', value: 'I1' },
+      { text: 'I2', value: 'I2' },
+      { text: 'I3', value: 'I3' },
+    ],
+    onFilter: (value, record) => record.clarity.includes(value as string)
   },
   {
     title: 'carat',
@@ -117,8 +145,18 @@ const columns = (toggleStatus: (record: JewelryGoldDia) => void) => [
   {
     title: 'Price',
     dataIndex: 'price',
-    width: '8%',
-    render: (price: number | null) => (price !== null ? `$${price}` : 'null'),
+    width: '10%',
+    render: (price: number | null, record: JewelryGoldDia) => (
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <Input
+          value={price !== null ? price.toString() : ''}
+          onChange={(e) => handlePriceChange(e.target.value, record)}
+          onBlur={() => savePrice(record)}
+          style={{ width: '10%' }}
+        />
+        <span>$</span>
+      </div>
+    ),
   },
   {
     title: 'Weight',
@@ -132,7 +170,7 @@ const columns = (toggleStatus: (record: JewelryGoldDia) => void) => [
       { text: 'UnVerified', value: 'UnVerified' },
     ],
     onFilter: (value, record) => record.status.includes(value as string),
-    render: (_: string, record: JewelrySilver) => (
+    render: (_: string, record: JewelryGoldDia) => (
       <Button
         type="primary"
         onClick={() => toggleStatus(record)}
@@ -257,16 +295,55 @@ const GoldTable: React.FC = () => {
         message.error('Failed to update status');
       });
   };
+  const handlePriceChange = (value: string, record: JewelryGoldDia) => {
+    setData((prevData) =>
+      prevData.map((item) =>
+        item.jewelryGolddiaId === record.jewelryGolddiaId ? { ...item, price: value ? parseFloat(value) : null } : item
+      )
+    );
+  };
+  const savePrice = (record: JewelryGoldDia) => {
+    const updatedRecord = { ...record };
 
-  return (
+    const payload = {
+      accountId: record.accountId,
+      jewelryImg: record.jewelryImg,
+      name: record.name,
+      carat: record.carat,
+      clarity: record.clarity,
+      category: record.category,
+      materials: record.materials,
+      description: record.description,
+      goldAge: record.goldAge,
+      price: record.price,
+      weight: record.weight,
+      status: record.status,
+    };
+
+    api.put(`/api/JewelryGoldDia/UpdateJewelryGoldDiamondManager?id=${record.jewelryGolddiaId}`, payload)
+      .then(() => {
+        setData((prevData) =>
+          prevData.map((item) =>
+            item.jewelryGolddiaId === record.jewelryGolddiaId ? updatedRecord : item
+          )
+        );
+        
+      })
+      .catch((error) => {
+        console.error('Error updating price:', error);
+        message.error('Failed to update price');
+      });
+  };
+  return (<>
+  <h1>Gold,Diamond Jewelry Management</h1>
     <Table
-      columns={columns(toggleStatus)}
+    columns={columns(toggleStatus, handlePriceChange, savePrice)}
       rowKey={(record) => record.jewelryGolddiaId.toString()}
       dataSource={data}
       pagination={tableParams.pagination}
       loading={loading}
       onChange={handleTableChange}
-    />
+    /></>
   );
 };
 
