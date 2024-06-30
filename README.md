@@ -6,7 +6,7 @@
 ### Lý Văn Mỹ
 
 ## Related Resource
-[DocumentSDS](https://docs.google.com/document/d/1IbJgdlMSLRjdFQl4de3sVSOIGHNUJqyO/edit)
+[DocumentRDS](https://docs.google.com/document/d/1IbJgdlMSLRjdFQl4de3sVSOIGHNUJqyO/edit)
 
 [DocumentSRS](https://docs.google.com/document/d/1NoY8wpff-sYAZXHdvEl5Mt5T106OcOeK/edit?usp=sharing&ouid=115472949965342184419&rtpof=true&sd=true) 
 
