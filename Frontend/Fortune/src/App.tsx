@@ -26,6 +26,7 @@ import GuestAuctionDetailsPg from './WebApplication/GuestPage/components/guest-a
 import ProfileStaff from './WebApplication/StaffPage/components/molucules/StaffProfile/ProfileStaff';
 import BiddingPG from './WebApplication/MemberPage/components/pages/member-bidding-pg/BiddingPG';
 import MemberMyBidsPg from './WebApplication/MemberPage/components/pages/member-my-bids-pg/member-my-bids-pg';
+import AdminPg from './WebApplication/AdminPage/page/AdminPg';
 const App: React.FC = () => {
   const { user, setUser } = useUser(); 
   useEffect(() => {
@@ -53,7 +54,7 @@ const App: React.FC = () => {
               <Route path='/login' element={<Loginpg />} />
               {user.role === 1 && (
                 <>
-                  {/* Add your admin routes here */}
+                 <Route index element={<AdminPg/>} />
                 </>
               )}
               {user.role === 2 && (

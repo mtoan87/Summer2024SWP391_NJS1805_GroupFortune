@@ -3,7 +3,7 @@ import { Table, Button, Spin, message, Input, Space, DatePicker } from 'antd';
 import api from '../../../../../config/axios';
 import './AuctionsTable.scss';
 import { SearchOutlined } from '@ant-design/icons';
-// import moment from 'moment'; lỗi manager kiểm tra check lại nha ! 
+import moment from 'moment'; 
 
 interface Auction {
   auctionId: number;
