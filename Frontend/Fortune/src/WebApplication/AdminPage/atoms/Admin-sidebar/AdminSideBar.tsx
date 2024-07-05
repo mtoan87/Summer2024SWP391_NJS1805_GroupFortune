@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Menu } from 'antd';
-import { UserOutlined, LogoutOutlined, AppstoreOutlined, CrownOutlined, InfoCircleOutlined, RubyOutlined, GoldOutlined } from '@ant-design/icons';
+import { UserOutlined, LogoutOutlined, UsergroupAddOutlined, DashboardOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import Sider from 'antd/es/layout/Sider';
-import './AdminSidebar.scss'; // Ensure this path is correct
+import './AdminSidebar.scss'; 
+import api from '../../../../config/axios';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '../../../Data/UserContext'; 
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -24,7 +26,19 @@ function getItem(
 
 const Sidebar: React.FC<{ onMenuClick: (e: any) => void }> = ({ onMenuClick }) => {
   const navigate = useNavigate();
+  const { user, setUser } = useUser();
   const [collapsed, setCollapsed] = useState(false);
+
+  useEffect(() => {
+    
+    api.get('/api/user')
+      .then(response => {
+        setUser(response.data); 
+      })
+      .catch(error => {
+        console.error('Error fetching user data:', error);
+      });
+  }, [setUser]);
 
   const handleLogout = () => {
     sessionStorage.removeItem("loginedUser");
@@ -33,15 +47,11 @@ const Sidebar: React.FC<{ onMenuClick: (e: any) => void }> = ({ onMenuClick }) =
   };
 
   const items: MenuItem[] = [
-    getItem('Manage Auctions', '1', <CrownOutlined />),
-    getItem('User', '8', <CrownOutlined />),
-    getItem('Manage Jewelry', 'sub1', <AppstoreOutlined />, [
-      getItem('All', '2', <CrownOutlined />),
-      getItem('Gold', '3', <GoldOutlined />),
-      getItem('Silver', '4', <GoldOutlined />),
-      getItem('Gold Diamond', '5', <RubyOutlined />),
-    ]),
+    getItem('Dashboard', '1', <DashboardOutlined />),
+    getItem('Users', '2', <UsergroupAddOutlined />),
+
     getItem('Account', 'sub2', <UserOutlined />, [
+      getItem(`Hello, ${user?.name}`, '8'),
       getItem('About', '6', <InfoCircleOutlined />),
       getItem('Log Out', '7', <LogoutOutlined />),
     ]),
@@ -60,10 +70,10 @@ const Sidebar: React.FC<{ onMenuClick: (e: any) => void }> = ({ onMenuClick }) =
       collapsible
       collapsed={collapsed}
       onCollapse={(value) => setCollapsed(value)}
-      width={250} // Increase the width as needed
-      collapsedWidth={80} // Adjust collapsed width if needed
+      width={250} 
+      collapsedWidth={80} 
       className="sider"
-      style={{ height: '150vh' }} // Ensure full height
+      style={{ height: '150vh' }} 
     >
       <div className="demo-logo-vertical" />
       <Menu
