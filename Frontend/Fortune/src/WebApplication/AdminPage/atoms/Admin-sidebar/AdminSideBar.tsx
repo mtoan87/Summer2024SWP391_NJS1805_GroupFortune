@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Menu } from 'antd';
-import { UserOutlined, LogoutOutlined, UsergroupAddOutlined, DashboardOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { AutoComplete, Menu } from 'antd';
+import { UserOutlined, LogoutOutlined, UsergroupAddOutlined, DashboardOutlined, InfoCircleOutlined, ProductOutlined, RubyOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import Sider from 'antd/es/layout/Sider';
 import './AdminSidebar.scss'; 
@@ -49,6 +49,9 @@ const Sidebar: React.FC<{ onMenuClick: (e: any) => void }> = ({ onMenuClick }) =
   const items: MenuItem[] = [
     getItem('Dashboard', '1', <DashboardOutlined />),
     getItem('Users', '2', <UsergroupAddOutlined />),
+    getItem('Auctions', '3', <ProductOutlined/>),
+    getItem('Jewelry', '4', <RubyOutlined/>),
+
 
     getItem('Account', 'sub2', <UserOutlined />, [
       getItem(`Hello, ${user?.name}`, '8'),
@@ -73,7 +76,7 @@ const Sidebar: React.FC<{ onMenuClick: (e: any) => void }> = ({ onMenuClick }) =
       width={250} 
       collapsedWidth={80} 
       className="sider"
-      style={{ height: '150vh' }} 
+      style={{ height: '200vh' }} 
     >
       <div className="demo-logo-vertical" />
       <Menu
