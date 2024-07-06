@@ -186,7 +186,7 @@ const MainContent = () => {
         </Col>
       </Row>
 
-      <Modal title="Add Plan" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel} className="custom-modal">
+      <Modal title="Add Plan" open={isModalVisible} onOk={handleOk} onCancel={handleCancel} className="custom-modal">
           <Form form={form} layout="vertical" className="modal-form">
             <Form.Item
               name="plan"

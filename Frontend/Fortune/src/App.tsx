@@ -27,6 +27,7 @@ import ProfileStaff from './WebApplication/StaffPage/components/molucules/StaffP
 import BiddingPG from './WebApplication/MemberPage/components/pages/member-bidding-pg/BiddingPG';
 import MemberMyBidsPg from './WebApplication/MemberPage/components/pages/member-my-bids-pg/member-my-bids-pg';
 import AdminPg from './WebApplication/AdminPage/page/AdminPg';
+import TableUser from './WebApplication/AdminPage/molecules/Users/TableUser';
 const App: React.FC = () => {
   const { user, setUser } = useUser(); 
   useEffect(() => {
@@ -55,6 +56,8 @@ const App: React.FC = () => {
               {user.role === 1 && (
                 <>
                  <Route index element={<AdminPg/>} />
+                 <Route path="/adminUser" element ={<TableUser/>} />
+
                 </>
               )}
               {user.role === 2 && (

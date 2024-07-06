@@ -1,0 +1,61 @@
+/* TableUser.scss */
+.table-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+  .ant-table {
+    border-radius: 8px;
+    overflow: hidden;
+
+    .ant-table-thead > tr > th {
+      background-color: #007bff;
+      color: white;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .ant-table-tbody > tr > td {
+      text-align: center;
+      vertical-align: middle;
+
+      .ant-space {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .anticon {
+          margin-right: 5px;
+        }
+
+        .ant-typography {
+          margin: 0;
+        }
+      }
+
+      &:hover {
+        background-color: #f1f1f1;
+      }
+    }
+
+    .ant-table-pagination {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+  }
+
+  .ant-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+
+    &:hover {
+      background-color: #0056b3;
+      color: white;
+    }
+  }
+}
