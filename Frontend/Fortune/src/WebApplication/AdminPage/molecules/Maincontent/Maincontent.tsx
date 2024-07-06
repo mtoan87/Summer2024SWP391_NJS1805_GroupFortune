@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Row, Col, Card, Statistic, Progress, Table, Modal, Button, Form, Input } from 'antd';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { RubyOutlined, GoldOutlined, UsergroupAddOutlined, DollarOutlined, PlusOutlined } from '@ant-design/icons';
+import { RubyOutlined, GoldOutlined, UsergroupAddOutlined, DollarOutlined, PlusOutlined,FileTextOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import './maincontent.scss';
 
@@ -76,6 +76,7 @@ const MainContent = () => {
         plan: values.plan,
         description: values.description,
       };
+      tableData.unshift(newData);
       setTableData([...tableData, newData]);
       setIsModalVisible(false);
       form.resetFields();
@@ -158,7 +159,7 @@ const MainContent = () => {
         </Col>
         <Col span={8}>
           <Card title="Performance">
-            <Progress type="circle" percent={75} /> USERS
+            <Progress type="circle" percent={75} /> 
             <div style={{ marginTop: 24 }}>
               <Progress type="circle" percent={50} status="exception" />
             </div>
@@ -179,30 +180,30 @@ const MainContent = () => {
             <Table
               columns={columns}
               dataSource={tableData}
-              pagination={{ pageSize: 5 }} // Giới hạn số lượng hàng hiển thị mỗi trang
+              pagination={{ pageSize: 5, className: 'custom-pagination' }} // Giới hạn số lượng hàng hiển thị mỗi trang và thêm class cho pagination
             />
           </Card>
         </Col>
       </Row>
 
-      <Modal title="Add Plan" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-        <Form form={form} layout="vertical" className="modal-form">
-          <Form.Item
-            name="plan"
-            label="Plan"
-            rules={[{ required: true, message: 'Please input the plan!' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="description"
-            label="Description"
-            rules={[{ required: true, message: 'Please input the description!' }]}
-          >
-            <Input />
-          </Form.Item>
-        </Form>
-      </Modal>
+      <Modal title="Add Plan" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel} className="custom-modal">
+          <Form form={form} layout="vertical" className="modal-form">
+            <Form.Item
+              name="plan"
+              label={<span><FileTextOutlined /> Plan</span>}
+              rules={[{ required: true, message: 'Please input the plan!' }]}
+            >
+              <Input className="modal-form-input" />
+            </Form.Item>
+            <Form.Item
+              name="description"
+              label={<span><InfoCircleOutlined /> Description</span>}
+              rules={[{ required: true, message: 'Please input the description!' }]}
+            >
+              <Input className="modal-form-input" />
+            </Form.Item>
+          </Form>
+        </Modal>
     </div>
   );
 };
