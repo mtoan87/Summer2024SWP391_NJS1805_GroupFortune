@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Table, Space, Typography, Button } from 'antd';
 import { UserOutlined, MailOutlined, LockOutlined, PhoneOutlined } from '@ant-design/icons';
 import api from '../../../../config/axios';
-import './tableuser.scss'
+import './tableuser.scss'; // Import SCSS file
+
 const { Text } = Typography;
 
 const TableUser = () => {
@@ -41,54 +42,59 @@ const TableUser = () => {
       dataIndex: 'accountId',
       key: 'accountId',
       align: 'center',
+      className: 'table-column',
     },
     {
       title: 'Name',
       dataIndex: 'accountName',
       key: 'accountName',
-      render: (text) => <Text strong>{text}</Text>,
+      render: (text) => <Text className="table-text" strong>{text}</Text>,
       align: 'center',
+      className: 'table-column',
     },
     {
       title: 'Email',
       dataIndex: 'accountEmail',
       key: 'accountEmail',
       render: (text) => (
-        <Space>
+        <Space className="table-space">
           <MailOutlined />
-          <Text>{text}</Text>
+          <Text className="table-text">{text}</Text>
         </Space>
       ),
       align: 'center',
+      className: 'table-column',
     },
     {
       title: 'Password',
       dataIndex: 'accountPassword',
       key: 'accountPassword',
       render: (text, record) => (
-        <Space>
+        <Space className="table-space">
           <LockOutlined />
-          <Text type={showPasswords[record.accountId] ? 'secondary' : 'danger'}>
+          <Text className={`table-text ${showPasswords[record.accountId] ? 'visible' : 'hidden'}`}>
             {showPasswords[record.accountId] ? text : 'Hidden'}
           </Text>
-          <Button onClick={() => togglePasswordVisibility(record.accountId)}>
+          <Button className="toggle-button" onClick={() => togglePasswordVisibility(record.accountId)}>
             {showPasswords[record.accountId] ? 'Hide' : 'Show'}
           </Button>
         </Space>
       ),
       align: 'center',
+      className: 'table-column',
     },
     {
       title: 'Phone',
       dataIndex: 'accountPhone',
       key: 'accountPhone',
       render: (text) => (
-        <Space>
+        <Space className="table-space">
           <PhoneOutlined />
-          <Text>{text}</Text>
+          <Text className="table-text">{text}</Text>
         </Space>
       ),
       align: 'center',
+      className: 'table-column',
     },
     {
       title: 'Role',
@@ -110,20 +116,19 @@ const TableUser = () => {
             roleLabel = 'User';
         }
         return (
-          <Space>
-            {role === 1 && <UserOutlined />}
-            {role === 2 && <UserOutlined />}
-            {role === 3 && <UserOutlined />}
-            <Text>{roleLabel}</Text>
+          <Space className="table-space">
+            <UserOutlined /> {/* Default icon */}
+            <Text className="table-text">{roleLabel}</Text>
           </Space>
         );
       },
       align: 'center',
+      className: 'table-column',
     },
   ];
 
   return (
-    <div>
+    <div className="table-container">
       <Table columns={columns} dataSource={userData} rowKey="accountId" pagination={{ pageSize: 10 }} />
     </div>
   );
