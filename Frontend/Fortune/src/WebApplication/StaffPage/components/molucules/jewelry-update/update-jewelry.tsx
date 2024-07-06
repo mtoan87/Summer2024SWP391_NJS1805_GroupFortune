@@ -21,7 +21,7 @@ function StaffViewJewelryDetails() {
     price: '',
     collection: '',
     jewelryImg: '',
-    shipment: 'Pending'
+    shipment: ''
   });
   const [errors, setErrors] = useState({});
   const { id, material } = useParams();
@@ -31,7 +31,7 @@ function StaffViewJewelryDetails() {
     const fetchJewelryDetails = async () => {
       try {
         const response = await api.get(`/api/Jewelry${material === 'Gold' ? 'Gold' : 'Silver'}/GetById/${id}`);
-        console.log("API Response:", response.data); // Log API response
+        console.log("API Response:", response.data);
         setJewelryDetails({
           ...response.data
         });
@@ -53,7 +53,7 @@ function StaffViewJewelryDetails() {
 
   const handleUpdateJewelry = async () => {
     const newErrors = {};
-    if (jewelryDetails.materials === 'silver' && !jewelryDetails.purity) {
+    if (jewelryDetails.materials === 'Silver' && !jewelryDetails.purity) {
       newErrors.purity = 'Purity is required for silver jewelry';
     }
     setErrors(newErrors);
@@ -75,7 +75,15 @@ function StaffViewJewelryDetails() {
     if (material === 'Gold') {
       formData.append('GoldAge', jewelryDetails.goldAge);
     } else {
-      formData.append('Purity', jewelryDetails.purity);
+      // Chuyển đổi giá trị purity cho bạc
+      const purityMapping = {
+        '92.5%': 'PureSilver925',
+        '99.9%': 'PureSilver999',
+        '90.0%': 'PureSilver900',
+        '95.8%': 'PureSilver958',
+      };
+      const convertedPurity = purityMapping[jewelryDetails.purity];
+      formData.append('Purity', convertedPurity);
     }
 
     try {
@@ -114,7 +122,7 @@ function StaffViewJewelryDetails() {
 
           <label htmlFor="materials">Materials</label>
           <input type="text" name="materials" value={jewelryDetails.materials} disabled />
-          {console.log("Materials:", jewelryDetails.materials)} {/* Log materials value */}
+          {console.log("Materials:", jewelryDetails.materials)}
 
           <label htmlFor="category">Category</label>
           <input type="text" name="category" value={jewelryDetails.category} disabled />
