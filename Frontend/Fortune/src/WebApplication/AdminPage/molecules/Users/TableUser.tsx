@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Space, Typography, Button } from 'antd';
-import { UserOutlined, MailOutlined, LockOutlined, PhoneOutlined } from '@ant-design/icons';
+import { Table, Space, Typography, Button,Input } from 'antd';
+import { UserOutlined, MailOutlined, LockOutlined, PhoneOutlined ,ReloadOutlined } from '@ant-design/icons';
 import api from '../../../../config/axios';
 import './tableuser.scss'; // Import SCSS file
 
 const { Text } = Typography;
-
+const { Search } = Input;
 const TableUser = () => {
   const [userData, setUserData] = useState([]);
   const [showPasswords, setShowPasswords] = useState({});
+  const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
     fetchUserData();
@@ -34,6 +35,22 @@ const TableUser = () => {
 
   const togglePasswordVisibility = (id) => {
     setShowPasswords((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+  // search function 
+  const handleSearch = (value) => {
+    setSearchText(value);
+  };
+
+  const filteredData = userData.filter(user => {
+    return (
+      user.accountName.toLowerCase().includes(searchText.toLowerCase()) ||
+      user.accountEmail.toLowerCase().includes(searchText.toLowerCase()) ||
+      user.accountPhone.toLowerCase().includes(searchText.toLowerCase())
+    );
+  });
+  const handleReload = () => {
+    fetchUserData();
+    setSearchText(''); // Reset search text
   };
 
   const columns = [
@@ -128,9 +145,14 @@ const TableUser = () => {
   ];
 
   return (
+    <>
     <div className="table-container">
-      <Table columns={columns} dataSource={userData} rowKey="accountId" pagination={{ pageSize: 10 }} />
+      <h1>Active Users</h1>
+      <Button onClick={handleReload} className="reload" icon={<ReloadOutlined />} />
+      <Search placeholder="Search users..." onSearch={handleSearch} style={{ marginBottom: 10  }} className="search-bar"/>
+      <Table columns={columns} dataSource={filteredData} rowKey="accountId" pagination={{ pageSize: 15 }} />
     </div>
+    </>
   );
 };
 
