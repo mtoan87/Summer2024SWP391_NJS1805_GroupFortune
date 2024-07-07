@@ -1,9 +1,99 @@
-import './update-wallet.scss'
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import api from '../../../../../config/axios';
+import './update-wallet.scss';
 
 function UpdateWallet() {
-  return (
-    <div>UpdateWallet</div>
-  )
+    const [formData, setFormData] = useState({
+        accountWalletId: 0, // Initialize with a default value
+        bankName: '',
+        bankNo: '',
+        budget: 0,
+    });
+    const loginedUser = JSON.parse(sessionStorage.getItem('loginedUser') || '{}');
+    const accountId = loginedUser?.accountId;
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchWallet = async () => {
+            try {
+                const response = await api.get(`/AccountWallet/GetAccountWalletByAccountId/${accountId}`);
+                setFormData({ ...response.data, accountWalletId: response.data.accountWalletId }); // Update state including accountWalletId
+            } catch (error) {
+                console.error('Error fetching wallet:', error);
+            }
+        };
+
+        if (accountId) {
+            fetchWallet();
+        }
+    }, [accountId]);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            [name]: value,
+        }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const { accountWalletId, ...dataWithoutId } = formData; 
+            const response = await api.put('/AccountWallet/UpdateAccountWallet', dataWithoutId); 
+            console.log('Wallet updated successfully:', response.data);
+            navigate('/');
+        } catch (error) {
+            console.error('Error updating wallet:', error);
+        }
+    };
+
+    return (
+        <div className="update-my-wallet">
+            {formData ? (
+                <form onSubmit={handleSubmit}>
+                    <h1>Update Wallet</h1>
+                    <div className="update-wallet-info">
+                        <div className="form-group">
+                            <label htmlFor="bankName">Bank Name</label>
+                            <input
+                                type="text"
+                                id="bankName"
+                                name="bankName"
+                                value={formData.bankName}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="bankNo">Bank Number</label>
+                            <input
+                                type="number"
+                                id="bankNo"
+                                name="bankNo"
+                                value={formData.bankNo}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="budget">Budget</label>
+                            <input
+                                type="number"
+                                id="budget"
+                                name="budget"
+                                value={formData.budget}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                    </div>
+                    <button type="submit">Update Wallet</button>
+                </form>
+            ) : (
+                <p>Loading wallet information...</p>
+            )}
+        </div>
+    );
 }
 
-export default UpdateWallet
+export default UpdateWallet;
