@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios";
 
 const config: AxiosRequestConfig = {
-    baseURL: "https://localhost:44361/",
+    baseURL: "https://localhost:7152/",
 }
 
 const api = axios.create(config);

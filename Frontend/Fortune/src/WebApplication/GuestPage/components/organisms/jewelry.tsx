@@ -7,6 +7,21 @@ function GuestJewelry() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 3;
 
+  const purity = {
+    'PureSilver925': '92.5%',
+    'PureSilver999': '99.9%',
+    'PureSilver900': '90.0%',
+    'PureSilver958': '95.8%'
+  };
+
+  const goldAge = {
+    Gold24: '24K',
+    Gold22: '22K',
+    Gold20: '20K',
+    Gold18: '18K',
+    Gold14: '14K'
+  };
+
   useEffect(() => {
     const fetchJewelry = async () => {
       try {
@@ -100,19 +115,19 @@ function GuestJewelry() {
             <p>Category: {item.category}</p>
             {item.jewelryGoldId && (
               <>
-                <p>Gold Age: {item.goldAge}</p>
+                <p>Gold Age: {goldAge[item.goldAge]}</p>
               </>
             )}
             {item.jewelrySilverId && (
               <>
-                <p>Purity: {item.purity}</p>
+                <p>Purity: {purity[item.purity]}</p>
               </>
             )}
             {item.materials.includes('Gold') && item.materials.includes('Diamond') && (
               <>
                 <p>Clarity: {item.clarity}</p>
                 <p>Carat: {item.carat}</p>
-                <p>Gold Age: {item.goldAge}</p>
+                <p>Gold Age: {goldAge[item.goldAge]}</p>
               </>
             )}
             <p>Materials: {item.materials}</p>

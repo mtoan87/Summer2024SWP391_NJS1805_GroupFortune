@@ -13,6 +13,7 @@
     "@ant-design/icons": "^5.3.7",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/react-fontawesome": "^0.2.1",
+    "@microsoft/signalr": "^8.0.0",
     "@react-oauth/google": "^0.12.1",
     "antd": "^5.18.1",
     "axios": "^1.7.2",
@@ -33,7 +34,10 @@
     "react-toastify": "^10.0.5",
     "react-use": "^17.5.0",
     "recharts": "^2.12.7",
-    "slick-carousel": "^1.8.1"
+    "reconnecting-websocket": "^4.4.0",
+    "signalr": "^2.4.3",
+    "slick-carousel": "^1.8.1",
+    "ws": "^8.18.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",

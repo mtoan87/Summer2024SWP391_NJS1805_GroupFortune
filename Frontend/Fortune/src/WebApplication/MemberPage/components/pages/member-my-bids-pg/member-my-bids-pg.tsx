@@ -8,7 +8,7 @@ function MemberMyBidsPg() {
     <header>
         <MemberHeader />
     </header>
-    <div className="body">
+    <div>
         <MemberMyBidsTemp />
     </div>
     <footer>

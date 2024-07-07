@@ -36,6 +36,13 @@ function ViewJewelryDetails() {
     '95.8%': 'PureSilver958'
   };
 
+  const goldAges = {
+    '24K': 'Gold24',
+    '22K': 'Gold22',
+    '18K': 'Gold18',
+    '14K': 'Gold14'
+  };
+
   const category = {
     'Ring': 'Ring',
     'Necklace': 'Necklace', //- Vòng cổ
@@ -67,7 +74,7 @@ function ViewJewelryDetails() {
     'Silver': 'Silver',
     'Gold, Diamond': 'GoldDiamond'
   };
-  
+
   const clarity = {
     'FL': 'FL',
     'IF': 'IF',
@@ -175,8 +182,8 @@ function ViewJewelryDetails() {
       const endpoint = jewelryDetails.materials === 'Gold'
         ? `/api/JewelryGold/UpdateJewelryGoldMember?id=${id}`
         : jewelryDetails.materials === 'Silver'
-        ? `/api/JewelrySilver/UpdateJewelrySilverMember?id=${id}`
-        : `/api/JewelryGoldDia/UpdateJewelryGoldDiamondManager?id=${id}`;
+          ? `/api/JewelrySilver/UpdateJewelrySilverMember?id=${id}`
+          : `/api/JewelryGoldDia/UpdateJewelryGoldDiamondManager?id=${id}`;
 
       await api.put(endpoint, formData);
       navigate('/userJewel', { state: { successMessage: 'Jewelry updated successfully!' } });
@@ -231,30 +238,40 @@ function ViewJewelryDetails() {
           {jewelryDetails.materials === 'Gold' && (
             <div className="input-container-renamed">
               <label htmlFor="goldAge">Gold Age</label>
-              <input type="text" name="goldAge" value={jewelryDetails.goldAge} onChange={handleInputChange} />
-              {errors.goldAge && <span className="error-renamed">{errors.goldAge}</span>}
+              <select
+                id="goldage"
+                name="goldage"
+                value={jewelryDetails.goldAge}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">Select Gold Age</option>
+                {Object.keys(goldAges).map(key => (
+                  <option key={key} value={key}>{key}</option>
+                ))}
+              </select>{errors.goldAge && <span className="error-renamed">{errors.goldAge}</span>}
               <span className="suffix-renamed">k</span>
             </div>
           )}
 
           {jewelryDetails.materials === 'Silver' && (
             <div className="input-container-renamed">
-            <label htmlFor="purity">Purity</label>
-            <select
-              id="purity"
-              name="purity"
-              value={jewelryDetails.purity}
-              onChange={handleInputChange}
-              required
-            >
-              <option value="">Select Purity</option>
-              {Object.keys(purity).map(key => (
-                <option key={key} value={key}>{key}</option>
-              ))}
-            </select>
-            {errors.purity && <span className="error-renamed">{errors.purity}</span>}
-          </div>
-          
+              <label htmlFor="purity">Purity</label>
+              <select
+                id="purity"
+                name="purity"
+                value={jewelryDetails.purity}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">Select Purity</option>
+                {Object.keys(purity).map(key => (
+                  <option key={key} value={key}>{key}</option>
+                ))}
+              </select>
+              {errors.purity && <span className="error-renamed">{errors.purity}</span>}
+            </div>
+
           )}
 
           {jewelryDetails.materials === 'diamond' && (

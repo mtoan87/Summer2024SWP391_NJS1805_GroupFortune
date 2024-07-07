@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { ClockCircleOutlined, DollarCircleOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -20,11 +20,11 @@ function BiddingForm() {
     const storedUser = sessionStorage.getItem("loginedUser");
     const user = storedUser ? JSON.parse(storedUser) : null;
     const accountId = user ? user.accountId : null;
-    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchAuctionDetails = async () => {
             try {
+                
                 const response = await api.get(`api/Auctions/GetById/${id}`);
                 const auctionData = response.data;
                 setAuction(auctionData);
@@ -53,12 +53,8 @@ function BiddingForm() {
                 const bidsResponse = await api.get('/api/Bid/GetAllBids');
                 const allBids = bidsResponse.data.$values;
                 const auctionBids = allBids.filter(bid => bid.auctionId === auctionData.auctionId);
-                const highestMaxPrice = Math.max(...auctionBids.map(bid => bid.maxprice));
-                
+                const highestMaxPrice = auctionBids.length ? Math.max(...auctionBids.map(bid => bid.maxprice)) : fetchedStartingPrice;
                 setHighestPrice(highestMaxPrice);
-
-                // Start the auction closing timeout
-                startAuctionClosingTimeout();
             } catch (err) {
                 console.error('Error fetching auction details:', err);
             }
@@ -67,25 +63,12 @@ function BiddingForm() {
         fetchAuctionDetails();
     }, [id]);
 
-    useEffect(() => {
-        if (isAuctionActive && auction) {
-            startAuctionClosingTimeout();
-        }
-    }, [highestPrice, auction]);
-
-    const startAuctionClosingTimeout = () => {
-        setTimeout(() => {
-            closeAuction();
-        }, 5000);
-    };
-
     const closeAuction = async () => {
         if (!isAuctionActive || !auction) return;
 
         setIsAuctionActive(false);
 
         try {
-            // Find the highest bid and the corresponding user
             const bidsResponse = await api.get('/api/Bid/GetAllBids');
             const allBids = bidsResponse.data.$values;
             const auctionBids = allBids.filter(bid => bid.auctionId === auction.auctionId);
@@ -101,23 +84,17 @@ function BiddingForm() {
                 };
 
                 await api.post('/api/AuctionResults/CreateAuctionResult', auctionResultData);
-
-                // Announce the winner
                 toast.success(`Auction closed. User ${highestBid.accountId} won the jewelry!`);
-                
-                // Redirect to the home page after 5 seconds
-                setTimeout(() => {
-                    navigate('/');
-                }, 5000);
             }
         } catch (err) {
             console.error('Error closing auction:', err);
+            toast.error('Error closing auction. Please try again.');
         }
     };
 
     const handleBidSubmit = async () => {
         if (!bidAmount || isNaN(bidAmount)) {
-            alert('Please enter a valid bid amount.');
+            toast.error('Please enter a valid bid amount.');
             return;
         }
 
@@ -128,17 +105,18 @@ function BiddingForm() {
                 bidStep: parseFloat(bidAmount),
             };
 
-            const response = await api.post('/api/Bid/Bidding', bidData);
-
+            await api.post('/api/Bid/Bidding', bidData);
             setHighestPrice(prevHighestPrice => prevHighestPrice + parseFloat(bidAmount));
-
             toast.success('Bid submitted successfully!');
         } catch (err) {
             console.error('Error submitting bid:', err);
+            toast.error('Error submitting bid. Please try again.');
         }
     };
 
     return (
+        <>
+        
         <div className="bidding-form">
             <h2>Auction</h2>
             <div className="infor-auction">
@@ -171,7 +149,8 @@ function BiddingForm() {
                     </li>
                 </ul>
             </div>
-        </div>
+        </div></>
+        
     );
 }
 

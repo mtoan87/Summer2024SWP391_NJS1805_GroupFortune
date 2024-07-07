@@ -16,14 +16,14 @@ function Auctions() {
                 const auctionsData = response.data.$values;
                 console.log(auctionsData);
 
-                const auctionsWithImages = await Promise.all(
+                const auctionsWithImagesAndNames = await Promise.all(
                     auctionsData.map(async (auction) => {
-                        const imageUrl = await fetchAuctionImage(auction);
-                        return { ...auction, imageUrl };
+                        const { imageUrl, jewelryName } = await fetchAuctionImage(auction);
+                        return { ...auction, imageUrl, jewelryName };
                     })
                 );
-                console.log(auctionsWithImages);
-                setAuctions(auctionsWithImages);
+                console.log(auctionsWithImagesAndNames);
+                setAuctions(auctionsWithImagesAndNames);
             } catch (err) {
                 console.error('Error fetching auctions:', err);
             }
@@ -34,19 +34,28 @@ function Auctions() {
 
     const fetchAuctionImage = async (auction) => {
         try {
-            const { jewelryGoldId, jewelrySilverId } = auction;
-            const jewelryId = jewelryGoldId || jewelrySilverId;
+            const { jewelryGoldId, jewelrySilverId, jewelryGolddiaId } = auction;
+            let apiUrl;
 
-            const apiUrl = jewelryGoldId
-                ? `/api/JewelryGold/GetById/${jewelryGoldId}`
-                : `/api/JewelrySilver/GetById/${jewelrySilverId}`;
+            if (jewelryGoldId) {
+                apiUrl = `/api/JewelryGold/GetById/${jewelryGoldId}`;
+            } else if (jewelrySilverId) {
+                apiUrl = `/api/JewelrySilver/GetById/${jewelrySilverId}`;
+            } else if (jewelryGolddiaId) {
+                apiUrl = `/api/JewelryGoldDia/GetById/${jewelryGolddiaId}`;
+            }
 
-            const response = await api.get(apiUrl);
-            const imageUrl = response.data?.jewelryImg || 'src/assets/img/jewelry_introduction.jpg';
-            return imageUrl;
+            if (apiUrl) {
+                const response = await api.get(apiUrl);
+                const imageUrl = response.data?.jewelryImg || 'src/assets/img/jewelry_introduction.jpg';
+                const jewelryName = response.data?.name || 'Unknown Jewelry';
+                return { imageUrl, jewelryName };
+            }
+
+            return { imageUrl: 'src/assets/img/jewelry_introduction.jpg', jewelryName: 'Unknown Jewelry' };
         } catch (err) {
             console.error('Error fetching auction image:', err);
-            return 'src/assets/img/jewelry_introduction.jpg';
+            return { imageUrl: 'src/assets/img/jewelry_introduction.jpg', jewelryName: 'Unknown Jewelry' };
         }
     };
 
@@ -106,6 +115,7 @@ function Auctions() {
                                 src={`https://localhost:44361/${auction.imageUrl}`}
                                 onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
                             />
+                            <label>{auction.jewelryName}</label>                            
                             <p>Date: {formatDate(auction.starttime)}</p>
                             <p>Start Time: {formatTime(auction.starttime)}</p>
                             <p>End Time: {formatTime(auction.endtime)}</p>

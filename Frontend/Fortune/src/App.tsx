@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.scss';
 /*-------------------------------AUTHENTICAL----------------------------------------------*/
 import GuestHomePg from './WebApplication/GuestPage/guest-home-page/guest-home-pg';
@@ -7,7 +7,7 @@ import { Route, Routes } from 'react-router-dom';
 import Loginpg from './WebApplication/AccountRegister/components/pages/Loginpg';
 import ForgotPass from './WebApplication/AccountRegister/components/pages/forgotPage';
 
-/*--------------------------MEMEBER----------------------------------------------*/
+/*--------------------------MEMBER----------------------------------------------*/
 import MemeberDashBoardPG from './WebApplication/MemberPage/components/pages/member-dashboard-pg/memberdashboard';
 import MemberHomePg from './WebApplication/MemberPage/components/pages/member-home-pg/member-home-pg';
 import { UserProvider, useUser } from './WebApplication/Data/UserContext';
@@ -27,18 +27,43 @@ import ProfileStaff from './WebApplication/StaffPage/components/molucules/StaffP
 import BiddingPG from './WebApplication/MemberPage/components/pages/member-bidding-pg/BiddingPG';
 import MemberMyBidsPg from './WebApplication/MemberPage/components/pages/member-my-bids-pg/member-my-bids-pg';
 import AdminPg from './WebApplication/AdminPage/page/AdminPg';
+import { Bounce, ToastContainer } from 'react-toastify';
+
+import WebSocketClient from './config/websocketClient'; // Import WebSocketClient
+
 const App: React.FC = () => {
-  const { user, setUser } = useUser(); 
+  const { user, setUser } = useUser();
+  const [wsClient, setWsClient] = useState<WebSocketClient | null>(null);
+
   useEffect(() => {
     const storedUser = sessionStorage.getItem("loginedUser");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
+    console.log(storedUser);
+    // const client = new WebSocketClient('wss://localhost:44361/ws'); // Initialize WebSocket
+    // setWsClient(client);
+
+    // return () => {
+    //   client.sendMessage('Client disconnected.');
+    // };
   }, [setUser]);
 
   return (
     <>
-    
+      <ToastContainer
+        position="top-right"
+        autoClose={1500}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable
+        pauseOnHover={false}
+        theme="light"
+        className='toast-content'
+        transition={Bounce} />
       <Routes>
         <Route path='/'>
           {user === null ? (
@@ -47,24 +72,23 @@ const App: React.FC = () => {
               <Route path='register' element={<RegisterPg />} />
               <Route path='forgotpass' element={<ForgotPass />} />
               <Route path='login' element={<Loginpg />} />
-              <Route path="/guest-auction/:id" element ={<GuestAuctionDetailsPg />} />
+              <Route path="/guest-auction/:id" element={<GuestAuctionDetailsPg />} />
             </>
           ) : (
             <>
               <Route path='/login' element={<Loginpg />} />
               {user.role === 1 && (
                 <>
-                 <Route index element={<AdminPg/>} />
+                  <Route index element={<AdminPg />} />
                 </>
               )}
               {user.role === 2 && (
                 <>
                   <Route index element={<MemberHomePg />} />
-
-                  <Route path="/mydashboard" element ={<MemeberDashBoardPG />} />
-                  <Route path="/auction/:id" element ={<MemberAucDetailsPg />} />
-                  <Route path="/mybidding/:id" element ={<BiddingPG/>} />
-                  <Route path="/jewelry/:id" element ={<MemberJewDetailsPg />} />
+                  <Route path="/mydashboard" element={<MemeberDashBoardPG />} />
+                  <Route path="/auction/:id" element={<MemberAucDetailsPg />} />
+                  <Route path="/mybidding/:id" element={<BiddingPG />} />
+                  <Route path="/jewelry/:id" element={<MemberJewDetailsPg />} />
                   <Route path='/userBid' element={<MemberMyBidsPg />} />
                   <Route path='/userAuc' element={<MemberAuctionPg />} />
                   <Route path='/userJewel/upload' element={<JewelryUploadPg />} />
@@ -73,14 +97,13 @@ const App: React.FC = () => {
                   {/* <Route path='/userJewel/:id' element={<MemberJewelryPg />} /> */}
                   <Route path="/update-jewelry/:id/:material" element={<MemberViewJewelryPg />} />
                   <Route path="/register-jewelry-auction/:id/:material" element={<MemberRegisterJewelryAuctionPg />} />
-                  
                 </>
               )}
               {user.role === 3 && (
                 <>
-                 <Route path='/' element={<StaffJewelryPg />} />
-                 <Route path="/staff/update-jewelry/:id/:material" element={<StaffViewJewelryPg />} />
-                 <Route path='/staffprofile' element ={<ProfileStaff/>}/>
+                  <Route path='/' element={<StaffJewelryPg />} />
+                  <Route path="/staff/update-jewelry/:id/:material" element={<StaffViewJewelryPg />} />
+                  <Route path='/staffprofile' element={<ProfileStaff />} />
                   {/* Add your staff routes here */}
                 </>
               )}
@@ -88,7 +111,7 @@ const App: React.FC = () => {
                 <>
                   {/* Add your manager routes here */}
                   <Route index element={<ManagerHomePg />} />
-                  <Route path='/managerA&DJew' element ={<ProfileStaff/>}/>
+                  <Route path='/managerA&DJew' element={<ProfileStaff />} />
                 </>
               )}
             </>
