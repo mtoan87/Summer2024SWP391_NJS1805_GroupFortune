@@ -17,6 +17,7 @@ interface Auction {
   accountEmail?: string;
   accountName?: string;
   jewelryDetails?: any;
+  shipment?: string;
 }
 
 function AuctionTable() {
@@ -93,30 +94,38 @@ function AuctionTable() {
 
   const handleStatusChange = async (auction: Auction) => {
     const newStatus = auction.status === 'Active' ? 'UnActive' : 'Active';
+    let apiUrl = '';
+  
+    // Check if there is already an active jewelry for this auction
+    const activeJewelryExists = auctions.some(a => a.auctionId === auction.auctionId && a.status === 'Active' && a.jewelryDetails);
+  
+    if (newStatus === 'Active' && activeJewelryExists) {
+      message.error('Only one jewelry item can be active for each auction.');
+      return;
+    }
+  
     const updateData = {
       accountId: auction.accountId,
       starttime: auction.starttime,
       endtime: auction.endtime,
       status: newStatus,
     };
-
-    let apiUrl = '';
-
+  
     if (auction.jewelryGoldId !== null) {
-      apiUrl = `/api/Auctions/UpdateGoldAuction?id=${auction.auctionId}`;
+      apiUrl = newStatus === 'Active' ? `/api/Auctions/UpdateGoldAuction?id=${auction.auctionId}` : `/api/Auctions/UpdateGoldAuction?id=${auction.auctionId}`;
       updateData['jewelryGoldId'] = auction.jewelryGoldId;
     } else if (auction.jewelryGolddiaId !== null) {
-      apiUrl = `/api/Auctions/UpdateGoldDiamondAuction?id=${auction.auctionId}`;
+      apiUrl = newStatus === 'Active' ? `/api/Auctions/UpdateGoldDiamondAuction?id=${auction.auctionId}` : `/api/Auctions/UpdateGoldDiamondAuction?id=${auction.auctionId}`;
       updateData['jewelryGolddiaId'] = auction.jewelryGolddiaId;
     } else if (auction.jewelrySilverId !== null) {
-      apiUrl = `/api/Auctions/UpdateSilverAuction?id=${auction.auctionId}`;
+      apiUrl = newStatus === 'Active' ? `/api/Auctions/UpdateSilverAuction?id=${auction.auctionId}` : `/api/Auctions/UpdateSilverAuction?id=${auction.auctionId}`;
       updateData['jewelrySilverId'] = auction.jewelrySilverId;
     }
-
+  
     try {
       const response = await api.put(apiUrl, updateData);
       console.log('Status update response:', response.data);
-
+  
       // Update the local state after successful status change
       setAuctions((prevAuctions) =>
         prevAuctions.map((a) =>
@@ -130,6 +139,7 @@ function AuctionTable() {
       message.error('Error updating auction status');
     }
   };
+  
 
   const expandedRowRender = (record: Auction) => {
     const accountColumns = [
@@ -315,7 +325,7 @@ function AuctionTable() {
       key: 'jewelryDetails',
       render: (jewelryDetails: any) => {
         let idText = '';
-    
+  
         if (jewelryDetails?.type === 'Silver') {
           idText = jewelryDetails?.jewelrySilverId || '';
         } else if (jewelryDetails?.type === 'GoldDia') {
@@ -323,7 +333,7 @@ function AuctionTable() {
         } else if (jewelryDetails?.type === 'Gold') {
           idText = jewelryDetails?.jewelryGoldId || '';
         }
-    
+  
         return `${jewelryDetails?.type || ''} ID: ${idText} `;
       },
       filters: [
@@ -333,7 +343,6 @@ function AuctionTable() {
       ],
       onFilter: (value: string, record: any) => record.jewelryDetails?.type === value,
     },
-    
     {
       title: 'Email',
       dataIndex: 'accountEmail',
@@ -347,31 +356,51 @@ function AuctionTable() {
       ...getColumnSearchProps('accountName', 'Search Name'),
     },
     {
+      title: 'Start Date',
+      dataIndex: 'starttime',
+      key: 'startdate',
+      ...getColumnDateRangeProps(),
+      render: (starttime: string) => moment(starttime).format('YYYY-MM-DD'),
+    },
+    {
       title: 'Start Time',
       dataIndex: 'starttime',
       key: 'starttime',
+      render: (starttime: string) => moment(starttime).format('HH:mm:ss'),
+    },
+    {
+      title: 'End Date',
+      dataIndex: 'endtime',
+      key: 'enddate',
       ...getColumnDateRangeProps(),
+      render: (endtime: string) => moment(endtime).format('YYYY-MM-DD'),
     },
     {
       title: 'End Time',
       dataIndex: 'endtime',
       key: 'endtime',
-      ...getColumnDateRangeProps(),
+      render: (endtime: string) => moment(endtime).format('HH:mm:ss'),
     },
     {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
-      render: (text: string, record: Auction) => (
-        <Button
-          type={text === 'Active' ? 'primary' : 'default'}
-          onClick={() => handleStatusChange(record)}
-        >
-          {text}
-        </Button>
-      ),
+      render: (text: string, record: Auction) => {
+        const isDisabled = record.jewelryDetails?.shipment !== 'Deliveried' || record.jewelryDetails?.status !== 'Verified';
+  
+        return (
+          <Button
+            type={text === 'Active' ? 'primary' : 'default'}
+            onClick={() => handleStatusChange(record)}
+            disabled={isDisabled}
+          >
+            {text}
+          </Button>
+        );
+      },
     },
   ];
+  
 
   if (error) {
     return <div>Error: {error}</div>;
