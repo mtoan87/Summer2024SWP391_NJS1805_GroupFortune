@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Tooltip, Button, message ,Input} from 'antd';
+import { Table, Tooltip, Button, message, Input, Select } from 'antd';
 import { TableProps } from 'antd/es/table';
 import api from '../../../../../../config/axios';
 
@@ -28,28 +28,29 @@ interface TableParams {
   sortOrder?: 'ascend' | 'descend' | undefined;
   filters?: Record<string, React.ReactText[]>;
 }
+
 const goldage = {
-  '14K':'Gold14',
+  '14K': 'Gold14',
   '18K': 'Gold18',
-  '20K':'Gold20',
+  '20K': 'Gold20',
   '22K': 'Gold22',
   '24K': 'Gold24',
 }
 
 const columns = (
-  toggleStatus: (record:JewelryGold) => void,
   handlePriceChange: (value: string, record: JewelryGold) => void,
-  savePrice: (record: JewelryGold) => void
+  handleStatusChange: (value: string, record: JewelryGold) => void,
+  handleUpdate: (record: JewelryGold) => void
 ) => [
   {
     title: 'Jewelry ID',
     dataIndex: 'jewelryGoldId',
-    width: '11%',
+    width: '10%',
   },
   {
     title: 'Name',
     dataIndex: 'name',
-    width: '20%',
+    width: '15%',
     render: (text: string, record: JewelryGold) => (
       <Tooltip title={<img src={`https://localhost:44361/${record.jewelryImg}`} alt={record.name} style={{ maxWidth: '200px' }} />}>
         <span>{text}</span>
@@ -59,49 +60,25 @@ const columns = (
   {
     title: 'Category',
     dataIndex: 'category',
-    width: '15%',
+    width: '10%',
     filters: [
       { text: 'Ring', value: 'Ring' },
       { text: 'Necklace', value: 'Necklace' },
-      { text: 'Bracelet', value: 'Bracelet' },
-      { text: 'Earrings', value: 'Earrings' },
-      { text: 'Pendant', value: 'Pendant' },
-      { text: 'Brooch', value: 'Brooch' },
-      { text: 'Anklet', value: 'Anklet' },
-      { text: 'Charm', value: 'Charm' },
-      { text: 'Cufflinks', value: 'Cufflinks' },
-      { text: 'Tiara', value: 'Tiara' },
-      { text: 'Diadem', value: 'Diadem' },
-      { text: 'Choker', value: 'Choker' },
-      { text: 'Bangle', value: 'Bangle' },
-      { text: 'Hairpin', value: 'Hairpin' },
-      { text: 'Barrette', value: 'Barrette' },
-      { text: 'Locket', value: 'Locket' },
-      { text: 'SignetRing', value: 'SignetRing' },
-      { text: 'StudEarrings', value: 'StudEarrings' },
-      { text: 'HoopEarrings', value: 'HoopEarrings' },
-      { text: 'Cameo', value: 'Cameo' },
-      { text: 'ClusterRing', value: 'ClusterRing' },
-      { text: 'CocktailRing', value: 'CocktailRing' },
-      { text: 'CuffBracelet', value: 'CuffBracelet' }
-    ]
-    ,
+      // Add other categories here
+    ],
     onFilter: (value, record) => record.category.includes(value as string),
   },
   {
-    title: 'Shipment',
-    dataIndex: 'shipment',
-  }
-  ,
-  {
     title: 'Materials',
     dataIndex: 'materials',
+    width: '10%',
   },
   {
     title: 'Description',
     dataIndex: 'description',
+    width: '15%',
   },
-   {
+  {
     title: 'Gold Age',
     dataIndex: 'goldAge',
     filters: [
@@ -119,36 +96,44 @@ const columns = (
     dataIndex: 'price',
     width: '10%',
     render: (price: number | null, record: JewelryGold) => (
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <Input
-          value={price !== null ? price.toString() : ''}
-          onChange={(e) => handlePriceChange(e.target.value, record)}
-          onBlur={() => savePrice(record)}
-          style={{ width: '10%' }}
-        />
-        <span>$</span>
-      </div>
+      <Input
+        value={price !== null ? price.toString() : ''}
+        onChange={(e) => handlePriceChange(e.target.value, record)}
+        style={{ width: '100%' }}
+      />
+    ),
+  },
+  {
+    title: 'Status',
+    dataIndex: 'status',
+    width: '10%',
+    filters: [
+      { text: 'Verified', value: 'Verified' },
+      { text: 'Unverified', value: 'Unverified' },
+    ],
+    onFilter: (value, record) => record.status.includes(value as string),
+    render: (status: string, record: JewelryGold) => (
+      <Select
+        value={status}
+        onChange={(value) => handleStatusChange(value, record)}
+        style={{ width: '100%' }}
+      >
+        <Select.Option value="Verified">Verified</Select.Option>
+        <Select.Option value="Unverified">Unverified</Select.Option>
+      </Select>
     ),
   },
   {
     title: 'Weight',
     dataIndex: 'weight',
+    width: '10%',
   },
   {
-    title: 'Status',
-    dataIndex: 'status',
-    filters: [
-      { text: 'Verified', value: 'Verified' },
-      { text: 'UnVerified', value: 'UnVerified' },
-    ],
-    onFilter: (value, record) => record.status.includes(value as string),
+    title: 'Actions',
+    dataIndex: 'actions',
     render: (_: string, record: JewelryGold) => (
-      <Button
-        type="primary"
-        onClick={() => toggleStatus(record)}
-        style={{ backgroundColor: record.status === 'Verified' ? 'green' : 'grey', borderColor: record.status === 'Verified' ? 'green' : 'grey' }}
-      >
-        {record.status === 'Verified' ? 'Verified' : 'Unverified'}
+      <Button type="primary" onClick={() => handleUpdate(record)}>
+        Update
       </Button>
     ),
   },
@@ -230,42 +215,7 @@ const GoldTable: React.FC = () => {
     }
   };
 
-  const toggleStatus = (record: JewelryGold) => {
-    console.log(record);
-    const newStatus = record.status === 'Verified' ? 'Unverified' : 'Verified';
-    const updatedRecord = { ...record, status: newStatus };
-  
-    const payload = {
-      accountId: record.accountId,
-      jewelryImg: record.jewelryImg,
-      name: record.name,
-      category: record.category,
-      materials: record.materials,
-      description: record.description,
-      goldAge: record.goldAge,
-      price: record.price,
-      weight: record.weight,
-      status: newStatus,
-    };
-  
-    console.log('Payload:', payload); // Log payload for debugging
-  
-    api.put(`/api/JewelryGold/UpdateJewelryGoldManager?id=${record.jewelryGoldId}`, payload)
-      .then(() => {
-        setData((prevData) =>
-          prevData.map((item) =>
-            item.jewelryGoldId === record.jewelryGoldId ? updatedRecord : item
-          )
-        );
-        message.success(`Status updated to ${newStatus}`);
-      })
-      .catch((error) => {
-        console.error('Error updating status:', error);
-        message.error('Failed to update status');
-      });
-  };
-
-  const handlePriceChange = (value: string, record: jewelryGoldId) => {
+  const handlePriceChange = (value: string, record: JewelryGold) => {
     setData((prevData) =>
       prevData.map((item) =>
         item.jewelryGoldId === record.jewelryGoldId ? { ...item, price: value ? parseFloat(value) : null } : item
@@ -273,52 +223,48 @@ const GoldTable: React.FC = () => {
     );
   };
 
-  const savePrice = (record: JewelryGold) => {
+  const handleStatusChange = (value: string, record: JewelryGold) => {
+    setData((prevData) =>
+      prevData.map((item) =>
+        item.jewelryGoldId === record.jewelryGoldId ? { ...item, status: value } : item
+      )
+    );
+  };
+
+  const handleUpdate = (record: JewelryGold) => {
     const updatedRecord = { ...record };
-
- 
-
-    const payloadPrice = {
-      accountId: record.accountId,
-      jewelryImg: record.jewelryImg,
-      name: record.name,
-      category: record.category,
-      materials: record.materials,
-      description: record.description,
-      goldAge: record.goldAge,
+    const payload = {
       price: record.price !== null ? record.price.toString() : '',
-      weight: record.weight,
       status: record.status,
     };
 
-
-
-
-    api.put(`/api/JewelryGold/UpdateJewelryGoldManager?id=${record.jewelryGoldId}`, payloadPrice)
+    api.put(`/api/JewelryGold/UpdateJewelryGoldManager?id=${record.jewelryGoldId}`, payload)
       .then(() => {
         setData((prevData) =>
           prevData.map((item) =>
             item.jewelryGoldId === record.jewelryGoldId ? updatedRecord : item
           )
         );
-        
+        message.success('Record updated successfully');
       })
       .catch((error) => {
-        console.error('Error updating price:', error);
-        message.error('Failed to update price');
+        console.error('Error updating record:', error);
+        message.error('Failed to update record');
       });
-    };  
+  };
+
   return (
     <>
-    <h1>Gold Jewelry Management</h1>
-    <Table
-    columns={columns(toggleStatus, handlePriceChange, savePrice)}
-      rowKey={(record) => record.jewelryGoldId.toString()}
-      dataSource={data}
-      pagination={tableParams.pagination}
-      loading={loading}
-      onChange={handleTableChange}
-    /></>
+      <h1>Gold Jewelry Management</h1>
+      <Table
+        columns={columns(handlePriceChange, handleStatusChange, handleUpdate)}
+        rowKey={(record) => record.jewelryGoldId.toString()}
+        dataSource={data}
+        pagination={tableParams.pagination}
+        loading={loading}
+        onChange={handleTableChange}
+      />
+    </>
   );
 };
 

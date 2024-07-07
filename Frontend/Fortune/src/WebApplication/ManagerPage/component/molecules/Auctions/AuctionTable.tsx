@@ -229,7 +229,7 @@ function AuctionTable() {
           value={selectedKeys[0]}
           onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          style={{ width: 188, marginBottom: 8, display: 'block' }}
+          style={{ marginBottom: 8, display: 'block' }}
         />
         <Space>
           <Button
@@ -247,22 +247,54 @@ function AuctionTable() {
         </Space>
       </div>
     ),
-    filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
-    onFilter: (value: any, record: any) =>
-      record[dataIndex] ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()) : '',
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
+    ),
+    onFilter: (value: string, record: any) =>
+      record[dataIndex]
+        ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
+        : '',
     render: (text: string) =>
       searchedColumn === dataIndex ? (
-        <span style={{ whiteSpace: 'nowrap' }}>
-          {text}
-        </span>
+        <span>{text}</span>
       ) : (
         text
       ),
   });
 
-  const handleDateRangeChange = (dates: any, dateStrings: [string, string]) => {
-    setFilterDateRange(dateStrings);
+  const handleDateRangeChange = (dates: [moment.Moment | null, moment.Moment | null]) => {
+    setFilterDateRange(dates);
   };
+
+  const getColumnDateRangeProps = () => ({
+    filterDropdown: ({ confirm }: any) => (
+      <div style={{ padding: 8 }}>
+        <DatePicker.RangePicker
+          value={filterDateRange}
+          onChange={handleDateRangeChange}
+          style={{ width: '100%', marginBottom: 8 }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => confirm()}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Filter
+          </Button>
+        </Space>
+      </div>
+    ),
+    onFilter: (_: any, record: any) => {
+      if (!filterDateRange[0] || !filterDateRange[1]) return true;
+      const startTime = moment(record.starttime);
+      const endTime = moment(record.endtime);
+      return (
+        startTime.isSameOrAfter(filterDateRange[0]) && endTime.isSameOrBefore(filterDateRange[1])
+      );
+    },
+  });
 
   const columns = [
     {
@@ -279,109 +311,84 @@ function AuctionTable() {
     },
     {
       title: 'Jewelry ID',
-      dataIndex: 'jewelryId',
-      key: 'jewelryId',
-      render: (_, record: Auction) =>
-        record.jewelryGoldId ?? record.jewelryGolddiaId ?? record.jewelrySilverId ?? 'N/A',
-    },
-    {
-      title: 'Start Date',
-      dataIndex: 'starttime',
-      key: 'starttime',
-      render: (text: string) => new Date(text).toLocaleDateString(),
-      sorter: (a: Auction, b: Auction) => new Date(a.starttime).getTime() - new Date(b.starttime).getTime(),
-      sortDirections: ['descend', 'ascend'],
-      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
-        <div style={{ padding: 8 }}>
-          <DatePicker.RangePicker
-            value={filterDateRange.map((date) => (date ? moment(date) : null))}
-            onChange={handleDateRangeChange}
-          />
-          <Space>
-            <Button
-              type="primary"
-              onClick={() => {
-                confirm();
-              }}
-              size="small"
-              style={{ width: 90 }}
-            >
-              OK
-            </Button>
-            <Button onClick={clearFilters} size="small" style={{ width: 90 }}>
-              Reset
-            </Button>
-          </Space>
-        </div>
-      ),
-      onFilter: (value: any, record: any) => {
-        const startDate = moment(record.starttime);
-        return startDate.isBetween(moment(filterDateRange[0]), moment(filterDateRange[1]), null, '[]');
+      dataIndex: 'jewelryDetails',
+      key: 'jewelryDetails',
+      render: (jewelryDetails: any) => {
+        let idText = '';
+    
+        if (jewelryDetails?.type === 'Silver') {
+          idText = jewelryDetails?.jewelrySilverId || '';
+        } else if (jewelryDetails?.type === 'GoldDia') {
+          idText = jewelryDetails?.jewelryGolddiaId || '';
+        } else if (jewelryDetails?.type === 'Gold') {
+          idText = jewelryDetails?.jewelryGoldId || '';
+        }
+    
+        return `${jewelryDetails?.type || ''} ID: ${idText} `;
       },
+      filters: [
+        { text: 'Gold', value: 'Gold' },
+        { text: 'GoldDia', value: 'GoldDia' },
+        { text: 'Silver', value: 'Silver' },
+      ],
+      onFilter: (value: string, record: any) => record.jewelryDetails?.type === value,
+    },
+    
+    {
+      title: 'Email',
+      dataIndex: 'accountEmail',
+      key: 'accountEmail',
+      ...getColumnSearchProps('accountEmail', 'Search Email'),
     },
     {
-      title: 'End Date',
-      dataIndex: 'endtime',
-      key: 'endtime',
-      render: (text: string) => new Date(text).toLocaleDateString(),
-      sorter: (a: Auction, b: Auction) => new Date(a.endtime).getTime() - new Date(b.endtime).getTime(),
-      sortDirections: ['descend', 'ascend'],
+      title: 'Name',
+      dataIndex: 'accountName',
+      key: 'accountName',
+      ...getColumnSearchProps('accountName', 'Search Name'),
     },
     {
       title: 'Start Time',
       dataIndex: 'starttime',
       key: 'starttime',
-      render: (text: string) => new Date(text).toLocaleTimeString(),
+      ...getColumnDateRangeProps(),
     },
     {
       title: 'End Time',
       dataIndex: 'endtime',
       key: 'endtime',
-      render: (text: string) => new Date(text).toLocaleTimeString(),
+      ...getColumnDateRangeProps(),
     },
     {
       title: 'Status',
+      dataIndex: 'status',
       key: 'status',
-      render: (_, record: Auction) => (
+      render: (text: string, record: Auction) => (
         <Button
-          type={record.status === 'Active' ? 'primary' : 'default'}
+          type={text === 'Active' ? 'primary' : 'default'}
           onClick={() => handleStatusChange(record)}
         >
-          {record.status}
+          {text}
         </Button>
       ),
     },
   ];
 
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
   return (
-    <div className="auction-table-container">
-      <h1>Auctions</h1>
-      <Space style={{ marginBottom: 16 }}>
-        <Input.Search
-          placeholder="Search Email, Name, Auction ID, Account ID"
-          allowClear
-          enterButton="Search"
-          onSearch={(value) => setSearchText(value)}
-          style={{ width: 400 }}
-        />
-        <DatePicker.RangePicker onChange={(dates, dateStrings) => setFilterDateRange([dates[0], dates[1]])} />
-      </Space>
+    <div>
+      <h1>Auction Details</h1>
       {loading ? (
-        <Spin tip="Loading..." />
-      ) : error ? (
-        <p className="error-message">{error}</p>
+        <Spin size="large" />
       ) : (
         <Table
+          className="auction-table"
           columns={columns}
-          dataSource={auctions.filter((auction) =>
-            Object.values(auction).some((val) =>
-              val ? val.toString().toLowerCase().includes(searchText.toLowerCase()) : false
-            )
-          )}
-          rowKey="auctionId"
+          dataSource={auctions}
+          rowKey={(record) => record.auctionId}
           expandable={{ expandedRowRender }}
-          loading={loading}
-          pagination={{ pageSize: 10 }}
         />
       )}
     </div>
