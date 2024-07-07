@@ -1,10 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { message } from 'antd';
 import api from '../../../../../config/axios';
 import './update-jewelry.scss';
 import { EditOutlined } from '@ant-design/icons';
 
+// Định nghĩa các tùy chọn shipment
 const shipmentOptions = ["Pending", "In Transit", "Delivered"];
+
+// Chuyển đổi giá trị shipment từ chuỗi sang enum
+const convertShipmentToEnum = (shipment) => {
+  if (shipment === "Delivered") {
+    return "Deliveried";
+  }
+  return "Delivering";
+};
+
+// Chuyển đổi giá trị shipment từ enum sang chuỗi
+const convertEnumToShipment = (enumValue) => {
+  if (enumValue === "Deliveried") {
+    return "Delivered";
+  }
+  return enumValue === "Delivering" ? "Pending" : "In Transit";
+};
 
 function StaffViewJewelryDetails() {
   const [jewelryDetails, setJewelryDetails] = useState({
@@ -33,7 +51,8 @@ function StaffViewJewelryDetails() {
         const response = await api.get(`/api/Jewelry${material === 'Gold' ? 'Gold' : 'Silver'}/GetById/${id}`);
         console.log("API Response:", response.data);
         setJewelryDetails({
-          ...response.data
+          ...response.data,
+          shipment: convertEnumToShipment(response.data.shipment)
         });
       } catch (error) {
         console.error('Error fetching jewelry details:', error);
@@ -71,11 +90,10 @@ function StaffViewJewelryDetails() {
     formData.append('Price', jewelryDetails.price);
     formData.append('WeightUnit', jewelryDetails.weightUnit);
     formData.append('jewelryImg', jewelryDetails.jewelryImg);
-    formData.append('Shipment', jewelryDetails.shipment);
+    formData.append('Shipment', convertShipmentToEnum(jewelryDetails.shipment));
     if (material === 'Gold') {
       formData.append('GoldAge', jewelryDetails.goldAge);
     } else {
-      // Chuyển đổi giá trị purity cho bạc
       const purityMapping = {
         '92.5%': 'PureSilver925',
         '99.9%': 'PureSilver999',
@@ -95,9 +113,10 @@ function StaffViewJewelryDetails() {
           'Content-Type': 'multipart/form-data'
         }
       });
-      navigate('/', { state: { successMessage: 'Jewelry updated successfully!' } });
+      message.success('Jewelry updated successfully!');
+      navigate('/');
     } catch (error) {
-      console.error('Error:', error);
+      message.error('Error updating jewelry: ' + error.message);
     }
   };
 
