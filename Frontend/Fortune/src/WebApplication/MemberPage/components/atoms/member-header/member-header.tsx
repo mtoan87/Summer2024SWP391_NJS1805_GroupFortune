@@ -34,10 +34,13 @@ const MemberHeader: React.FC = () => {
             <Menu.Item key="3" icon={<ShoppingOutlined />} onClick={() => handleNavigate("/userJewel")}>
                 My jewelries
             </Menu.Item>
-            <Menu.Item key="4" icon={<SettingOutlined />} onClick={() => handleNavigate("/mydashboard")}>
+            <Menu.Item key="4" icon={<ShoppingOutlined />} onClick={() => handleNavigate("/userWallet")}>
+                My wallet
+            </Menu.Item>
+            <Menu.Item key="5" icon={<SettingOutlined />} onClick={() => handleNavigate("/mydashboard")}>
                 My DashBoard
             </Menu.Item>
-            <Menu.Item key="5" icon={<LogoutOutlined />} onClick={handleLogout}>
+            <Menu.Item key="6" icon={<LogoutOutlined />} onClick={handleLogout}>
                 Logout
             </Menu.Item>
         </Menu>

@@ -29,10 +29,33 @@ const LoginForm: React.FC = () => {
     }
   }, [location.search]);
 
+  useEffect(() => {
+    const userString = sessionStorage.getItem("loginedUser");
+    const user = userString ? JSON.parse(userString) : null;
+    if (user) {
+      checkAccountWallet(user.accountId);
+    }
+  }, []);
+
+  const checkAccountWallet = async (accountId: number) => {
+    try {
+      const response = await api.get(`/AccountWallet/GetAccountWalletByAccountId/${accountId}`);
+      const accountWalletInfo = response.data;
+      if (accountWalletInfo) {
+        navigate('/');
+      } else {
+        navigate('/register-wallet');
+      }
+    } catch (error) {
+      console.error('Error checking account wallet:', error);
+      toast.error("Failed to check account wallet. Please try again later!");
+    }
+  };
+
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!email || !password) {
-      toast.error("Please enter your email addres and Password.");
+      toast.error("Please enter your email address and password.");
       return;
     }
 
@@ -44,10 +67,10 @@ const LoginForm: React.FC = () => {
       const data = response.data;
       setUser(data);
       sessionStorage.setItem("loginedUser", JSON.stringify(data));
-      navigate('/');
+      checkAccountWallet(data.accountId); // Check account wallet after successful login
     } catch (error) {
-      console.log(error);
-      toast.error("Login failed. Try again!");
+      console.error('Login failed:', error);
+      toast.error("Login failed. Please try again!");
     }
   };
 
@@ -58,14 +81,6 @@ const LoginForm: React.FC = () => {
   const handleForgot = () => {
     navigate("/forgotpass");
   };
-
-  useEffect(() => {
-    const userString = sessionStorage.getItem("loginedUser");
-    const user = userString ? JSON.parse(userString) : null;
-    if (user) {
-      navigate('/');
-    }
-  }, [navigate]);
 
   return (
     <div className="login-form">

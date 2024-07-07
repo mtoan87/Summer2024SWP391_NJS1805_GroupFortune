@@ -268,7 +268,7 @@ const JewelryUploadForm: React.FC = () => {
     const formData = new FormData();
     formData.append('accountId', jewelry.accountId.toString());
     formData.append('Name', jewelry.name);
-    formData.append('materials', jewelry.materials);
+    formData.append('materials', materials[jewelry.materials]);
     formData.append('description', jewelry.description);
     formData.append('weight', `${jewelry.weight} ${jewelry.weightUnit}`);
     formData.append('category', jewelry.category);

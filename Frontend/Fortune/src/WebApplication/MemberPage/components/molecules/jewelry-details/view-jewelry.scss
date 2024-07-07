@@ -62,6 +62,7 @@
       }
       &:disabled {
         background-color: #837d7d;
+        cursor: not-allowed;
       }
   
       &:not(:last-child) {

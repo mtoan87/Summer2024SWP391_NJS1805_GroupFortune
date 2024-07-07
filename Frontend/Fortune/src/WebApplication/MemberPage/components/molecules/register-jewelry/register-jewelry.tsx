@@ -22,7 +22,7 @@ function RegisterJewelryForAuction() {
     endTime: '',
     jewelryDetails: {}
   };
-  
+
 
   const [formData, setFormData] = useState(initialFormData);
 
@@ -65,7 +65,7 @@ function RegisterJewelryForAuction() {
     }));
   };
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Validate the date is at least 3 days from today
@@ -96,9 +96,13 @@ function RegisterJewelryForAuction() {
       return;
     }
 
-    // Format start and end times as ISO strings
-    const starttime = startDateTime.toISOString();
-    const endtime = endDateTime.toISOString();
+    // Create date strings without timezone offsets
+    const formatISOWithoutTimezone = (date) => {
+      return date.toISOString().split('Z')[0];
+    };
+
+    const starttime = formatISOWithoutTimezone(startDateTime);
+    const endtime = formatISOWithoutTimezone(endDateTime);
 
     try {
       const requestData = {
@@ -106,16 +110,18 @@ function RegisterJewelryForAuction() {
         starttime: starttime,
         endtime: endtime
       };
-      
+
       if (material === 'Gold') {
         requestData.jewelryGoldId = formData.jewelryGoldId;
       } else if (material === 'Silver') {
         requestData.jewelrySilverId = formData.jewelrySilverId;
-      } else {
+      } else if (material === 'GoldDiamong') {
+        requestData.jewelryGolddiaIdId = formData.jewelryGolddiaId;
+      }
+      else {
         console.error('Unsupported jewelry material type');
         return;
       }
-      
 
       const apiUrl = material === 'Gold' ? '/api/Auctions/CreateGoldJewelryAuction' : '/api/Auctions/CreateSilverJewelryAuction';
 
@@ -130,7 +136,6 @@ function RegisterJewelryForAuction() {
       setTimeout(() => {
         navigate('/userJewel');
       }, 1000);
-
     } catch (error) {
       console.error('Error creating auction:', error);
       if (error.response && error.response.data) {
@@ -139,6 +144,7 @@ function RegisterJewelryForAuction() {
       toast.error('Error creating auction. Please try again!', { position: 'top-right' });
     }
   };
+
 
   return (
     <div className="register-jewelry-form">

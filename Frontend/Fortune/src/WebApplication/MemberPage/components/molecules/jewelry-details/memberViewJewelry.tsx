@@ -179,7 +179,7 @@ function MemberViewJewelry() {
                 </button>
                 <button
                   onClick={() => handleRegisterAuction(jewelry, 'Gold')}
-                  disabled={!!jewelry.price && jewelry.status === 'UnVerified'} // Disable button if no price or status is "Unverified"
+                  disabled={jewelry.status === 'Unverified'} // Disable button if no price or status is "Unverified"
                 >
                   Register Auction
                 </button>
@@ -215,7 +215,7 @@ function MemberViewJewelry() {
                 </button>
                 <button
                   onClick={() => handleRegisterAuction(jewelry, 'Silver')}
-                  disabled={!!jewelry.price && jewelry.status === 'UnVerified'} 
+                  disabled={jewelry.status === 'Unverified'} 
                 >
                   Register Auction
                 </button>
@@ -252,7 +252,7 @@ function MemberViewJewelry() {
                 </button>
                 <button
                   onClick={() => handleRegisterAuction(jewelry, 'Gold, Diamond')}
-                  disabled={!!jewelry.price && jewelry.status === 'UnVerified'} 
+                  disabled={jewelry.status === 'Unverified'} 
                 >
                   Register Auction
                 </button>
