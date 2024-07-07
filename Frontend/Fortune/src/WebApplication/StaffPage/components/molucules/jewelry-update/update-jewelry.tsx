@@ -5,23 +5,36 @@ import api from '../../../../../config/axios';
 import './update-jewelry.scss';
 import { EditOutlined } from '@ant-design/icons';
 
-// Định nghĩa các tùy chọn shipment
-const shipmentOptions = ["Pending", "In Transit", "Delivered"];
+const shipmentOptions = ["Pending", "Delivering", "Delivered"];
 
-// Chuyển đổi giá trị shipment từ chuỗi sang enum
-const convertShipmentToEnum = (shipment) => {
-  if (shipment === "Delivered") {
-    return "Deliveried";
-  }
-  return "Delivering";
+const GoldAgeMapping = {
+  'Gold14': '14K',
+  'Gold18': '18K',
+  'Gold20': '20K',
+  'Gold22': '22K',
+  'Gold24': '24K'
 };
 
-// Chuyển đổi giá trị shipment từ enum sang chuỗi
-const convertEnumToShipment = (enumValue) => {
-  if (enumValue === "Deliveried") {
-    return "Delivered";
+const convertShipmentToEnum = (shipment) => {
+  switch (shipment) {
+    case "Delivered":
+      return "Delivered";
+    case "Delivering":
+      return "Delivering";
+    default:
+      return "Pending";
   }
-  return enumValue === "Delivering" ? "Pending" : "In Transit";
+};
+
+const convertEnumToShipment = (enumValue) => {
+  switch (enumValue) {
+    case "Delivered":
+      return "Delivered";
+    case "Delivering":
+      return "Delivering";
+    default:
+      return "Pending";
+  }
 };
 
 function StaffViewJewelryDetails() {
@@ -39,7 +52,7 @@ function StaffViewJewelryDetails() {
     price: '',
     collection: '',
     jewelryImg: '',
-    shipment: ''
+    shipment: 'Pending'
   });
   const [errors, setErrors] = useState({});
   const { id, material } = useParams();
@@ -91,6 +104,7 @@ function StaffViewJewelryDetails() {
     formData.append('WeightUnit', jewelryDetails.weightUnit);
     formData.append('jewelryImg', jewelryDetails.jewelryImg);
     formData.append('Shipment', convertShipmentToEnum(jewelryDetails.shipment));
+    
     if (material === 'Gold') {
       formData.append('GoldAge', jewelryDetails.goldAge);
     } else {
@@ -141,7 +155,6 @@ function StaffViewJewelryDetails() {
 
           <label htmlFor="materials">Materials</label>
           <input type="text" name="materials" value={jewelryDetails.materials} disabled />
-          {console.log("Materials:", jewelryDetails.materials)}
 
           <label htmlFor="category">Category</label>
           <input type="text" name="category" value={jewelryDetails.category} disabled />
@@ -149,7 +162,11 @@ function StaffViewJewelryDetails() {
           {jewelryDetails.materials === 'Gold' && (
             <>
               <label htmlFor="goldAge">Gold Age</label>
-              <input type="text" name="goldAge" value={jewelryDetails.goldAge} disabled />
+              <select name="goldAge" value={jewelryDetails.goldAge} onChange={handleInputChange} disabled>
+                {Object.keys(GoldAgeMapping).map(key => (
+                  <option key={key} value={key}>{GoldAgeMapping[key]}</option>
+                ))}
+              </select>
             </>
           )}
 

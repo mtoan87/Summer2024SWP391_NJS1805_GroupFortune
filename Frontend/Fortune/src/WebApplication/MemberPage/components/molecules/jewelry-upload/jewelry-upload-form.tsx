@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+// import { ToastContainer, toast } from 'react-toastify';
+// import 'react-toastify/dist/ReactToastify.css';
+import { message } from 'antd';
 import './jewelry-upload-form.scss';
 import api from '../../../../../config/axios';
 
@@ -305,7 +306,8 @@ const JewelryUploadForm: React.FC = () => {
       });
 
       console.log('Jewelry uploaded successfully', response.data);
-      toast.success('Jewelry uploaded successfully!');
+      // toast.success('Jewelry uploaded successfully!');
+      message.success('Jewelry uploaded successfully!');
       setJewelry({
         accountId: accountId,
         imageUrl: '',
@@ -322,7 +324,8 @@ const JewelryUploadForm: React.FC = () => {
       setErrors({});
     } catch (error) {
       console.error('Error uploading jewelry', error);
-      toast.error('Error uploading jewelry. Please try again.');
+      // toast.error('Error uploading jewelry. Please try again.');
+      message.error('Error uploading jewelry. Please try again.');
     }
   };
 
@@ -531,7 +534,7 @@ const JewelryUploadForm: React.FC = () => {
           </div>
         </div>
       </form>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
     </div>
   );
 };

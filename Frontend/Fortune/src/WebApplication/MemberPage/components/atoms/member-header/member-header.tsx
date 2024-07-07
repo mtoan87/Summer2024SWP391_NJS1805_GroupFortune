@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './member-header.scss';
 import logo from '../../../../../../src/assets/img/logo2.png';
 import { Link as ScrollLink } from 'react-scroll';
 import { FaRegUser } from "react-icons/fa";
-import Dropdown from 'react-bootstrap/Dropdown';
+import { Menu, Dropdown, Button } from 'antd';
+import { DownOutlined, HomeOutlined, AppstoreOutlined, ShoppingOutlined, SettingOutlined, LogoutOutlined, FileTextOutlined } from '@ant-design/icons';
 
 const MemberHeader: React.FC = () => {
     const [isHovered, setIsHovered] = useState(false);
@@ -17,43 +18,63 @@ const MemberHeader: React.FC = () => {
         navigate('/');
         window.location.reload();
     };
-    const hometag = () => {
-        navigate('/');
-    }
+
+    const handleNavigate = (path) => {
+        navigate(path);
+    };
+
+    const menu = (
+        <Menu>
+            <Menu.Item key="1" icon={<ShoppingOutlined />} onClick={() => handleNavigate("/userBid")}>
+                My Biddings
+            </Menu.Item>
+            <Menu.Item key="2" icon={<AppstoreOutlined />} onClick={() => handleNavigate("/userAuc")}>
+                My auctions
+            </Menu.Item>
+            <Menu.Item key="3" icon={<ShoppingOutlined />} onClick={() => handleNavigate("/userJewel")}>
+                My jewelries
+            </Menu.Item>
+            <Menu.Item key="4" icon={<SettingOutlined />} onClick={() => handleNavigate("/mydashboard")}>
+                My DashBoard
+            </Menu.Item>
+            <Menu.Item key="5" icon={<LogoutOutlined />} onClick={handleLogout}>
+                Logout
+            </Menu.Item>
+        </Menu>
+    );
+
     return (
         <div className="member-header-home">
             <nav>
                 <ul>
                     <div className="member-header-items">
                         <li className="inline-block">
-                            <img src={logo} alt="logo" className='logo' onClick={() => hometag()} />
+                            <img src={logo} alt="logo" className='logo' onClick={() => handleNavigate('/')} />
                         </li>
                     </div>
                     <div className="member-header-items">
-                        <li className="inline-block">
-                            <Link to='/'>
-                                HOME
-                            </Link>
+                        <li className="inline-block" onClick={() => handleNavigate('/')}>
+                            <HomeOutlined /> HOME
                         </li>
                     </div>
                     <div className="member-header-items">
                         <li className="inline-block">
                             <ScrollLink to='member-auctions-content' spy={true} offset={-100} duration={500}>
-                                AUCTION
+                                <AppstoreOutlined /> AUCTION
                             </ScrollLink>
                         </li>
                     </div>
                     <div className="member-header-items">
                         <li className="inline-block">
                             <ScrollLink to='member-jewel-content' spy={true} offset={-100} duration={500}>
-                                JEWELRY
+                                <ShoppingOutlined /> JEWELRY
                             </ScrollLink>
                         </li>
                     </div>
                     <div className="member-header-items">
                         <li className="inline-block">
                             <ScrollLink to='auctions-rule' spy={true} offset={-100} duration={500}>
-                                RULE
+                                <FileTextOutlined /> RULE
                             </ScrollLink>
                         </li>
                     </div>
@@ -65,18 +86,12 @@ const MemberHeader: React.FC = () => {
                                 onMouseLeave={() => setIsHovered(false)}
                                 style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
                             >
-                                <Dropdown>
-                                    <Dropdown.Toggle variant="success" id="dropdown-basic" style={{ display: 'flex', alignItems: 'center' }}>
+                                <Dropdown overlay={menu} trigger={['click']}>
+                                    <Button type="link" onClick={e => e.preventDefault()} style={{ display: 'flex', alignItems: 'center' }}>
                                         <FaRegUser className="user-icon" />
                                         <h3 className="user-name" style={{ margin: '0 0 0 5px' }}>{user.name}</h3>
-                                    </Dropdown.Toggle>
-                                    <Dropdown.Menu>
-                                        <Dropdown.Item href="/userBid">My Biddings</Dropdown.Item>
-                                        <Dropdown.Item href="/userAuc">My auctions</Dropdown.Item>
-                                        <Dropdown.Item href="/userJewel">My jewelries</Dropdown.Item>
-                                        <Dropdown.Item href="/mydashboard">My DashBoard</Dropdown.Item>
-                                        <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
-                                    </Dropdown.Menu>
+                                        <DownOutlined />
+                                    </Button>
                                 </Dropdown>
                             </li>
                         </div>

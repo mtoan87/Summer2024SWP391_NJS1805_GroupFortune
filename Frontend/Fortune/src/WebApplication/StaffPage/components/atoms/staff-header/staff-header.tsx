@@ -37,7 +37,7 @@ const StaffHeader: React.FC = () => {
                                 onMouseLeave={() => setIsHovered(false)}
                                 style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
                             >
-                                <Dropdown>
+                                <Dropdown show={isHovered} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
                                     <Dropdown.Toggle variant="success" id="dropdown-basic" style={{ display: 'flex', alignItems: 'center' }}>
                                         <FaRegUser className="user-icon" />
                                         <h3 className="user-name" style={{ margin: '0 0 0 5px' }}>{user.name}</h3>

@@ -4,7 +4,7 @@ import '../../styles/guest-header.scss';
 import logo from '../../img/logo2.png';
 import account from '../../../../../src/assets/img/person (3).png';
 import { Link } from 'react-scroll';
-
+import { HomeOutlined, AppstoreOutlined, ShoppingOutlined, FileTextOutlined } from '@ant-design/icons';
 const GuestHeader: React.FC = () => {
     return (
         <div className="guest-header-home">
@@ -17,22 +17,22 @@ const GuestHeader: React.FC = () => {
                     </div>
                     <div className="guest-header-items">
                         <li className="inline-block">
-                            <Link to='guest-introduction'>HOME</Link>
+                            <Link to='guest-introduction'> <HomeOutlined /> HOME</Link>
                         </li>
                     </div>
                     <div className="guest-header-items">
                         <li className="inline-block">
-                            <Link to='blank-space'>AUCTIONS</Link>
+                            <Link to='blank-space'> <AppstoreOutlined /> AUCTIONS</Link>
                         </li>
                     </div>
                     <div className="guest-header-items">
                         <li className="inline-block">
-                            <Link to='jewelry-content'>JEWELRY</Link>
+                            <Link to='jewelry-content'> <ShoppingOutlined /> JEWELRY</Link>
                         </li>
                     </div>
                     <div className="guest-header-items">
                         <li className="inline-block">
-                            <Link to='auctions-rule'>RULE</Link>
+                            <Link to='auctions-rule'> <FileTextOutlined /> RULE</Link>
                         </li>
                     </div>
                     <div className="guest-header-items login-container">
