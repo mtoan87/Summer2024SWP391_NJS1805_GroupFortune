@@ -71,7 +71,7 @@ const MemberHeader: React.FC = () => {
                                         <h3 className="user-name" style={{ margin: '0 0 0 5px' }}>{user.name}</h3>
                                     </Dropdown.Toggle>
                                     <Dropdown.Menu>
-                                        <Dropdown.Item href="/userBid">My bids</Dropdown.Item>
+                                        <Dropdown.Item href="/userBid">My Biddings</Dropdown.Item>
                                         <Dropdown.Item href="/userAuc">My auctions</Dropdown.Item>
                                         <Dropdown.Item href="/userJewel">My jewelries</Dropdown.Item>
                                         <Dropdown.Item href="/mydashboard">My DashBoard</Dropdown.Item>
