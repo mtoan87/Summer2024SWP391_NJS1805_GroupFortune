@@ -38,9 +38,8 @@
 
     img {
       width: 100%; /* Ensures image takes full width of its container */
-      height: 100%; /* Ensures image takes full height of its container */
-      max-width: 100%; /* Ensures image does not exceed its container's width */
-      max-height: 100%; /* Ensures image does not exceed its container's height */
+      height: 25rem; /* Ensures image takes full height of its container */
+      max-width: 100%; /* Ensures image does not exceed its container's height */
       border-radius: 8px;
       object-fit: cover;
     }

@@ -13,7 +13,7 @@ function MemberJewelry() {
   useEffect(() => {
     const fetchJewelry = async () => {
       try {
-        const response = await api.get('/api/Jewelries');
+        const response = await api.get('/api/Jewelries/GetVerified');
         console.log('API response:', response.data);
         const { jewelrySilver, jewelryGold, jewelryGoldDiamond } = response.data;
 
@@ -62,33 +62,40 @@ function MemberJewelry() {
         <h1>Jewelry</h1>
       </div>
       <div className="member-jewelry-container">
-        {displayedItems.map((item) => (
-          <div
-            key={item.jewelrySilverId || item.jewelryGoldId || item.jewelryGolddiaId}
-            className="member-jewelry-item"
-            onClick={() => handleJewelryClick(item.jewelrySilverId || item.jewelryGoldId || item.jewelryGolddiaId)}
-          >
-            <img
-              src={`https://localhost:44361/${item.jewelryImg}`}
-              alt={item.name}
-              onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
-            />
-            <h3>{item.name}</h3>
-            <p>Description: {item.description}</p>
-            {item.jewelryGoldId && <p>Gold Age: {item.goldAge}</p>}
-            {item.jewelryGolddiaId && (
-              <>
-                <p>Clarity: {item.clarity}</p>
-                <p>Carat: {item.carat}</p>
-                <p>Gold Age: {item.goldAge}</p>
-              </>
-            )}
-            {item.jewelrySilverId && <p>Purity: {item.purity}</p>}
-            <p>Materials: {item.materials}</p>
-            <p>Weight: {item.weight}</p>
-            <p className="price">{item.price}$</p>
-          </div>
-        ))}
+        {displayedItems.map((item, index) => {
+          const key = item.jewelrySilverId
+            ? `silver-${item.jewelrySilverId}`
+            : item.jewelryGoldId
+            ? `gold-${item.jewelryGoldId}`
+            : `diamond-${item.jewelryGolddiaId}`;
+          return (
+            <div
+              key={key}
+              className="member-jewelry-item"
+              onClick={() => handleJewelryClick(item.jewelrySilverId || item.jewelryGoldId || item.jewelryGolddiaId)}
+            >
+              <img
+                src={`https://localhost:44361/${item.jewelryImg}`}
+                alt={item.name}
+                onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
+              />
+              <label>{item.name}</label>
+              <p>Description: {item.description}</p>
+              {item.jewelryGoldId && <p>Gold Age: {item.goldAge}</p>}
+              {item.jewelryGolddiaId && (
+                <>
+                  <p>Clarity: {item.clarity}</p>
+                  <p>Carat: {item.carat}</p>
+                  <p>Gold Age: {item.goldAge}</p>
+                </>
+              )}
+              {item.jewelrySilverId && <p>Purity: {item.purity}</p>}
+              <p>Materials: {item.materials}</p>
+              <p>Weight: {item.weight}</p>
+              <p className="price">{item.price}$</p>
+            </div>
+          );
+        })}
       </div>
       <div className="member-navigation-buttons">
         <button onClick={prevPage} disabled={currentPage === 1}>

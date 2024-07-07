@@ -21,79 +21,78 @@ function BiddingForm() {
     const user = storedUser ? JSON.parse(storedUser) : null;
     const accountId = user ? user.accountId : null;
 
-    useEffect(() => {
-        const fetchAuctionDetails = async () => {
-            try {
-                
-                const response = await api.get(`api/Auctions/GetById/${id}`);
-                const auctionData = response.data;
-                setAuction(auctionData);
-
-                const startDate = new Date(auctionData.starttime);
-                const endDate = new Date(auctionData.endtime);
-                setDate(startDate.toLocaleDateString());
-                setStartTime(startDate.toLocaleTimeString());
-                setEndTime(endDate.toLocaleTimeString());
-
-                let fetchedStartingPrice = 0;
-                if (auctionData.jewelryGoldId) {
-                    const jewelryResponse = await api.get(`/api/JewelryGold/GetById/${auctionData.jewelryGoldId}`);
-                    fetchedStartingPrice = jewelryResponse.data.price;
-                } else if (auctionData.jewelrySilverId) {
-                    const jewelryResponse = await api.get(`/api/JewelrySilver/GetById/${auctionData.jewelrySilverId}`);
-                    fetchedStartingPrice = jewelryResponse.data.price;
-                } else {
-                    const jewelryResponse = await api.get(`/api/Auctions/GetById/${auctionData.jewelryGolddiaId}`);
-                    fetchedStartingPrice = jewelryResponse.data.price;
-                }
-
-                setStartingPrice(fetchedStartingPrice);
-
-                // Fetch bids and identify the highest maxprice
-                const bidsResponse = await api.get('/api/Bid/GetAllBids');
-                const allBids = bidsResponse.data.$values;
-                const auctionBids = allBids.filter(bid => bid.auctionId === auctionData.auctionId);
-                const highestMaxPrice = auctionBids.length ? Math.max(...auctionBids.map(bid => bid.maxprice)) : fetchedStartingPrice;
-                setHighestPrice(highestMaxPrice);
-            } catch (err) {
-                console.error('Error fetching auction details:', err);
-            }
-        };
-
-        fetchAuctionDetails();
-    }, [id]);
-
-    const closeAuction = async () => {
-        if (!isAuctionActive || !auction) return;
-
-        setIsAuctionActive(false);
-
+    const fetchAuctionDetails = async () => {
         try {
+            const response = await api.get(`api/Auctions/GetById/${id}`);
+            const auctionData = response.data;
+            setAuction(auctionData);
+
+            const startDate = new Date(auctionData.starttime);
+            const endDate = new Date(auctionData.endtime);
+            setDate(startDate.toLocaleDateString());
+            setStartTime(startDate.toLocaleTimeString());
+            setEndTime(endDate.toLocaleTimeString());
+
+            let fetchedStartingPrice = 0;
+            if (auctionData.jewelryGoldId) {
+                const jewelryResponse = await api.get(`/api/JewelryGold/GetById/${auctionData.jewelryGoldId}`);
+                fetchedStartingPrice = jewelryResponse.data.price;
+            } else if (auctionData.jewelrySilverId) {
+                const jewelryResponse = await api.get(`/api/JewelrySilver/GetById/${auctionData.jewelrySilverId}`);
+                fetchedStartingPrice = jewelryResponse.data.price;
+            } else if (auctionData.jewelryGolddiaId) {
+                const jewelryResponse = await api.get(`/api/JewelryGoldDia/GetById/${auctionData.jewelryGolddiaId}`);
+                fetchedStartingPrice = jewelryResponse.data.price;
+            }
+
+            setStartingPrice(fetchedStartingPrice);
+
             const bidsResponse = await api.get('/api/Bid/GetAllBids');
             const allBids = bidsResponse.data.$values;
-            const auctionBids = allBids.filter(bid => bid.auctionId === auction.auctionId);
-            const highestBid = auctionBids.reduce((max, bid) => (bid.maxprice > max.maxprice ? bid : max), auctionBids[0]);
-
-            if (highestBid) {
-                const auctionResultData = {
-                    joinauctionId: highestBid.bidId,
-                    date: new Date().toISOString(),
-                    status: 'Won',
-                    price: highestBid.maxprice,
-                    accountId: highestBid.accountId,
-                };
-
-                await api.post('/api/AuctionResults/CreateAuctionResult', auctionResultData);
-                toast.success(`Auction closed. User ${highestBid.accountId} won the jewelry!`);
-            }
+            const auctionBids = allBids.filter(bid => bid.auctionId === auctionData.auctionId);
+            const highestMaxPrice = auctionBids.length ? Math.max(...auctionBids.map(bid => bid.maxprice)) : fetchedStartingPrice;
+            setHighestPrice(highestMaxPrice);
         } catch (err) {
-            console.error('Error closing auction:', err);
-            toast.error('Error closing auction. Please try again.');
+            console.error('Error fetching auction details:', err);
+            toast.error('Error fetching auction details. Please try again.');
         }
     };
 
+    useEffect(() => {
+        fetchAuctionDetails();
+    }, [id]);
+
+    // const closeAuction = async () => {
+    //     if (!isAuctionActive || !auction) return;
+
+    //     setIsAuctionActive(false);
+
+    //     try {
+    //         const bidsResponse = await api.get('/api/Bid/GetAllBids');
+    //         const allBids = bidsResponse.data.$values;
+    //         const auctionBids = allBids.filter(bid => bid.auctionId === auction.auctionId);
+    //         const highestBid = auctionBids.reduce((max, bid) => (bid.maxprice > max.maxprice ? bid : max), auctionBids[0]);
+
+    //         if (highestBid) {
+    //             const auctionResultData = {
+    //                 joinauctionId: highestBid.bidId,
+    //                 date: new Date().toISOString(),
+    //                 status: 'Won',
+    //                 price: highestBid.maxprice,
+    //                 accountId: highestBid.accountId,
+    //             };
+
+    //             await api.post('/api/AuctionResults/CreateAuctionResult', auctionResultData);
+    //             toast.success(`Auction closed. User ${highestBid.accountId} won the jewelry!`);
+    //         }
+    //     } catch (err) {
+    //         console.error('Error closing auction:', err);
+    //         toast.error('Error closing auction. Please try again.');
+    //     }
+    // };
+
     const handleBidSubmit = async () => {
-        if (!bidAmount || isNaN(bidAmount)) {
+        if (!bidAmount || isNaN(bidAmount) || parseFloat(bidAmount) <= 0) {
             toast.error('Please enter a valid bid amount.');
             return;
         }
@@ -105,9 +104,14 @@ function BiddingForm() {
                 bidStep: parseFloat(bidAmount),
             };
 
-            await api.post('/api/Bid/Bidding', bidData);
-            setHighestPrice(prevHighestPrice => prevHighestPrice + parseFloat(bidAmount));
-            toast.success('Bid submitted successfully!');
+            const response = await api.post('/api/Bid/Bidding', bidData);
+
+            if (response.status === 200) {
+                setBidAmount('');
+                toast.success('Bid submitted successfully!');
+            } else {
+                toast.error('Error submitting bid. Please try again.');
+            }
         } catch (err) {
             console.error('Error submitting bid:', err);
             toast.error('Error submitting bid. Please try again.');
@@ -115,14 +119,12 @@ function BiddingForm() {
     };
 
     return (
-        <>
-        
         <div className="bidding-form">
             <h2>Auction</h2>
             <div className="infor-auction">
                 <ul>
                     <li><ClockCircleOutlined /> <strong>Date:</strong> {date}</li>
-                    <li><ClockCircleOutlined /> <strong>Start-Time:</strong> {startTime} </li>
+                    <li><ClockCircleOutlined /> <strong>Start-Time:</strong> {startTime}</li>
                     <li><ClockCircleOutlined /> <strong>End-Time:</strong> {endTime}</li>
                 </ul>
             </div>
@@ -149,8 +151,7 @@ function BiddingForm() {
                     </li>
                 </ul>
             </div>
-        </div></>
-        
+        </div>
     );
 }
 

@@ -25,23 +25,20 @@ function GuestJewelry() {
   useEffect(() => {
     const fetchJewelry = async () => {
       try {
-        const [goldResponse, silverResponse, diamondResponse] = await Promise.all([
-          api.get('/api/JewelryGold'),
-          api.get('/api/JewelrySilver'),
-          api.get('/api/JewelryGoldDia')
-        ]);
+        const response = await api.get('/api/Jewelries/GetVerified');
+        const { jewelryGold, jewelrySilver, jewelryGoldDiamond } = response.data;
 
-        const goldJewelry = goldResponse.data && goldResponse.data.$values ? goldResponse.data.$values : [];
-        const silverJewelry = silverResponse.data && silverResponse.data.$values ? silverResponse.data.$values : [];
-        const diamondJewelry = diamondResponse.data && diamondResponse.data.$values ? diamondResponse.data.$values : [];
+        const goldJewelry = jewelryGold?.$values ?? [];
+        const silverJewelry = jewelrySilver?.$values ?? [];
+        const diamondJewelry = jewelryGoldDiamond?.$values ?? [];
+
         const combinedJewelry = [...goldJewelry, ...silverJewelry, ...diamondJewelry];
 
-        const jewelryWithImages = await Promise.all(
-          combinedJewelry.map(async (item) => {
-            const imageUrl = await fetchJewelryImage(item);
-            return { ...item, imageUrl };
-          })
-        );
+        const jewelryWithImages = combinedJewelry.map(item => {
+          const imageUrl = `https://localhost:44361/${item.jewelryImg.replace(/\\/g, '/')}`;
+          return { ...item, imageUrl };
+        });
+
         console.log(jewelryWithImages);
         setJewelry(jewelryWithImages);
       } catch (err) {
@@ -51,28 +48,6 @@ function GuestJewelry() {
 
     fetchJewelry();
   }, []);
-
-  const fetchJewelryImage = async (item) => {
-    try {
-      let apiUrl;
-      if (item.jewelryGoldId) {
-        apiUrl = `/api/JewelryGold/GetById/${item.jewelryGoldId}`;
-      } else if (item.jewelrySilverId) {
-        apiUrl = `/api/JewelrySilver/GetById/${item.jewelrySilverId}`;
-      } else if (item.jewelryGolddiaId) {
-        apiUrl = `/api/JewelryGoldDia/GetById/${item.jewelryGolddiaId}`;
-      } else {
-        throw new Error("No valid jewelryId found");
-      }
-
-      const response = await api.get(apiUrl);
-      const imageUrl = response.data.jewelryImg || 'src/assets/img/jewelry_introduction.jpg';
-      return `https://localhost:44361/${imageUrl.replace(/\\/g, '/')}`;
-    } catch (err) {
-      console.error('Error fetching jewelry image:', err);
-      return 'src/assets/img/jewelry_introduction.jpg';
-    }
-  };
 
   const nextPage = () => {
     if (currentPage < totalPages) {
@@ -102,7 +77,7 @@ function GuestJewelry() {
       <div className="jewelry-container">
         {displayedItems.map((item, index) => (
           <div
-            key={`${item.jewelryId}-${index}`}
+            key={`${item.jewelryId || item.jewelryGoldId || item.jewelryGolddiaId}-${index}`}
             className="jewelry-item"
           >
             <img
@@ -114,16 +89,12 @@ function GuestJewelry() {
             <p>Description: {item.description}</p>
             <p>Category: {item.category}</p>
             {item.jewelryGoldId && (
-              <>
-                <p>Gold Age: {goldAge[item.goldAge]}</p>
-              </>
+              <p>Gold Age: {goldAge[item.goldAge]}</p>
             )}
             {item.jewelrySilverId && (
-              <>
-                <p>Purity: {purity[item.purity]}</p>
-              </>
+              <p>Purity: {purity[item.purity]}</p>
             )}
-            {item.materials.includes('Gold') && item.materials.includes('Diamond') && (
+            {item.jewelryGolddiaId && (
               <>
                 <p>Clarity: {item.clarity}</p>
                 <p>Carat: {item.carat}</p>

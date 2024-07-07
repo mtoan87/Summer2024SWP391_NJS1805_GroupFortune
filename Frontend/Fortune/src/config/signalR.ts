@@ -10,7 +10,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }).catch(err => console.error("SignalR connection error: ", err));
 
     connection.on("RefreshHighestPrice", () => {
-        
+        refreshHighestPrice();
     });
+
+    function refreshHighestPrice() {
+        
+    }
 
 });

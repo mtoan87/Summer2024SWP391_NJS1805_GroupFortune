@@ -12,17 +12,17 @@ function MemberAuctions() {
     useEffect(() => {
         const fetchAuctions = async () => {
             try {
-                const response = await api.get('/api/Auctions/GetAllActiveAuctions');
+                const response = await api.get('api/Auctions/GetAllActiveAuctions');
                 const auctionsData = response.data.$values;
-                console.log('Fetched auctions data:', auctionsData);
+                console.log(auctionsData);
 
-                const auctionsWithImages = await Promise.all(
+                const auctionsWithImagesAndNames = await Promise.all(
                     auctionsData.map(async (auction) => {
-                        const imageUrl = await fetchAuctionImage(auction);
-                        return { ...auction, imageUrl };
+                        const { imageUrl, jewelryName } = await fetchAuctionImage(auction);
+                        return { ...auction, imageUrl, jewelryName };
                     })
                 );
-                setAuctions(auctionsWithImages);
+                setAuctions(auctionsWithImagesAndNames);
             } catch (err) {
                 console.error('Error fetching auctions:', err);
             }
@@ -33,17 +33,28 @@ function MemberAuctions() {
 
     const fetchAuctionImage = async (auction) => {
         try {
-            const { jewelryGoldId, jewelrySilverId } = auction;
-            const apiUrl = jewelryGoldId
-                ? `/api/JewelryGold/GetById/${jewelryGoldId}`
-                : `/api/JewelrySilver/GetById/${jewelrySilverId}`;
+            const { jewelryGoldId, jewelrySilverId, jewelryGolddiaId } = auction;
+            let apiUrl;
 
-            const response = await api.get(apiUrl);
-            const imageUrl = response.data?.jewelryImg || 'src/assets/img/jewelry_introduction.jpg';
-            return `https://localhost:44361/${imageUrl}`;
+            if (jewelryGoldId) {
+                apiUrl = `/api/JewelryGold/GetById/${jewelryGoldId}`;
+            } else if (jewelrySilverId) {
+                apiUrl = `/api/JewelrySilver/GetById/${jewelrySilverId}`;
+            } else if (jewelryGolddiaId) {
+                apiUrl = `/api/JewelryGoldDia/GetById/${jewelryGolddiaId}`;
+            }
+
+            if (apiUrl) {
+                const response = await api.get(apiUrl);
+                const imageUrl = response.data?.jewelryImg || 'src/assets/img/jewelry_introduction.jpg';
+                const jewelryName = response.data?.name || 'Unknown Jewelry';
+                return { imageUrl, jewelryName };
+            }
+
+            return { imageUrl: 'src/assets/img/jewelry_introduction.jpg', jewelryName: 'Unknown Jewelry' };
         } catch (err) {
             console.error('Error fetching auction image:', err);
-            return 'src/assets/img/jewelry_introduction.jpg';
+            return { imageUrl: 'src/assets/img/jewelry_introduction.jpg', jewelryName: 'Unknown Jewelry' };
         }
     };
 
@@ -97,10 +108,11 @@ function MemberAuctions() {
                             onClick={() => handleAuctionClick(auction.auctionId)}
                         >
                             <img
-                                src={auction.imageUrl}
+                                src={`https://localhost:44361/${auction.imageUrl}`}
                                 onError={(e) => { e.target.src = "../../../../../../src/assets/img/jewelry_introduction.jpg"; }}
                                 alt="Jewelry"
                             />
+                            <label>{auction.jewelryName}</label>
                             <p>Date: {formatDate(auction.starttime)}</p>
                             <p>Start Time: {formatTime(auction.starttime)}</p>
                             <p>End Time: {formatTime(auction.endtime)}</p>

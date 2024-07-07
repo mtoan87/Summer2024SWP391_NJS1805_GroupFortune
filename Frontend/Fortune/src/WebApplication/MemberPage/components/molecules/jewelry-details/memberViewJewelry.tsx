@@ -18,10 +18,10 @@ function MemberViewJewelry() {
   const [goldDiamondJewelry, setGoldDiamondJewelry] = useState([]);
 
   const purity = {
-    'PureSilver925': '92.5%',
-    'PureSilver999': '99.9%',
-    'PureSilver900': '90.0%',
-    'PureSilver958': '95.8%'
+    PureSilver925: '92.5%',
+    PureSilver999: '99.9%',
+    PureSilver900: '90.0%',
+    PureSilver958: '95.8%'
   };
 
   const goldAge = {
@@ -31,7 +31,6 @@ function MemberViewJewelry() {
     Gold18: '18K',
     Gold14: '14K'
   };
-  
 
   useEffect(() => {
     const fetchGoldJewelry = async () => {
@@ -76,11 +75,10 @@ function MemberViewJewelry() {
     }
   }, [accountId]);
 
-
   useEffect(() => {
     if (successMessage) {
       toast.success(successMessage, {
-        position: "top-right"
+        position: 'top-right'
       });
     }
   }, [successMessage]);
@@ -91,8 +89,8 @@ function MemberViewJewelry() {
       const auction = response.data;
 
       if (auction) {
-        toast.warning("This jewelry has already registered for auction!", {
-          position: "top-right"
+        toast.warning('This jewelry has already registered for auction!', {
+          position: 'top-right'
         });
         return true;
       }
@@ -103,15 +101,14 @@ function MemberViewJewelry() {
   };
 
   const handleUpdateJewelry = (jewelry, material) => {
-    const id = material === 'Gold' ? jewelry.jewelryGoldId : jewelry.jewelrySilverId;
+    const id = material === 'Gold' ? jewelry.jewelryGoldId : material === 'Silver' ? jewelry.jewelrySilverId : jewelry.jewelryGoldDiaId;
     navigate(`/update-jewelry/${id}/${material}`);
   };
 
   const handleRegisterAuction = (jewelry, material) => {
-    const id = material === 'Gold' ? jewelry.jewelryGoldId : jewelry.jewelrySilverId;
+    const id = material === 'Gold' ? jewelry.jewelryGoldId : material === 'Silver' ? jewelry.jewelrySilverId : jewelry.jewelryGoldDiaId;
     navigate(`/register-jewelry-auction/${id}/${material}`, { state: { jewelryId: id } });
   };
-  
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
@@ -134,139 +131,135 @@ function MemberViewJewelry() {
       <div className="jewel-content">
         <h1>My Jewelry</h1>
       </div>
-      <div className='searchBar'>
+      <div className="searchBar">
         <div className="fui-input-label-animation">
           <input
             type="text"
             className="form-input"
-            placeholder=''
+            placeholder=""
             value={searchQuery}
             onChange={handleSearchChange}
           />
-          <label htmlFor="name" className="form-label">Search for Jewelry</label>
+          <label htmlFor="name" className="form-label">
+            Search for Jewelry
+          </label>
         </div>
       </div>
       <div className="jewelry-container">
         <div className="auction-item create-auction">
-          <img src='../../../../../../src/assets/img/Jewelry.png' alt="Create Jewelry" />
+          <img src="../../../../../../src/assets/img/Jewelry.png" alt="Create Jewelry" />
           <button onClick={() => navigate('/userJewel/upload')}>Create Jewelry</button>
         </div>
 
         {/* Display Gold Jewelry */}
-        {goldJewelry.length > 0 && (
-          <>
-            {goldJewelry.filter(filterJewelry).map((jewelry) => (
-              <div key={jewelry.jewelryGoldId} className="jewelry-item">
-                <img
-                  className='item-img'
-                  src={`https://localhost:44361/${jewelry.jewelryImg}`}
-                  alt={jewelry.name}
-                  onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
-                />
-                <h3>{jewelry.name}</h3>
-                <p>Description: {jewelry.description}</p>
-                <p>Category: {jewelry.category}</p>
-                <p>Materials: {jewelry.materials}</p>
-                <p>Gold Age: {goldAge[jewelry.goldAge]}</p>
-                <p>Weight: {jewelry.weight}</p>
-                <p>Price: {jewelry.price}$</p>
-                <div className="jewelry-item-buttons">
-                  <button
-                    onClick={() => handleUpdateJewelry(jewelry, 'Gold')}
-                    disabled={!!jewelry.price} 
-                  >
-                    Update
-                  </button>
-                  <button
-                    onClick={() => handleRegisterAuction(jewelry, 'Gold')}
-                    disabled={jewelry.status === "UnVerified"}
-                  >
-                    Register Auction
-                  </button>
-                </div>
+        {goldJewelry.length > 0 &&
+          goldJewelry.filter(filterJewelry).map((jewelry) => (
+            <div key={jewelry.jewelryGoldId} className="jewelry-item">
+              <img
+                className="item-img"
+                src={`https://localhost:44361/${jewelry.jewelryImg}`}
+                alt={jewelry.name}
+                onError={(e) => {
+                  e.target.src = 'src/assets/img/jewelry_introduction.jpg';
+                }}
+              />
+              <h3>{jewelry.name}</h3>
+              <p>Description: {jewelry.description}</p>
+              <p>Category: {jewelry.category}</p>
+              <p>Materials: {jewelry.materials}</p>
+              <p>Gold Age: {goldAge[jewelry.goldAge]}</p>
+              <p>Weight: {jewelry.weight}</p>
+              <p>Price: {jewelry.price}$</p>
+              <div className="jewelry-item-buttons">
+                <button
+                  onClick={() => handleUpdateJewelry(jewelry, 'Gold')}
+                  disabled={!!jewelry.price} // Disable button if price is present
+                >
+                  Update
+                </button>
+                <button
+                  onClick={() => handleRegisterAuction(jewelry, 'Gold')}
+                  disabled={!!jewelry.price && jewelry.status === 'UnVerified'} // Disable button if no price or status is "Unverified"
+                >
+                  Register Auction
+                </button>
               </div>
-            ))}
-          </>
-        )}
+            </div>
+          ))}
 
         {/* Display Silver Jewelry */}
-        {silverJewelry.length > 0 && (
-          <>
-            {silverJewelry.filter(filterJewelry).map((jewelry) => (
-              <div key={jewelry.jewelrySilverId} className="jewelry-item">
-                <img
-                  className='item-img'
-                  src={`https://localhost:44361/${jewelry.jewelryImg}`}
-                  alt={jewelry.name}
-                  onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
-                />
-                <h3>{jewelry.name}</h3>
-                <p>Description: {jewelry.description}</p>
-                <p>Category: {jewelry.category}</p>
-                <p>Materials: {jewelry.materials}</p>
-                <p>Purity: {purity[jewelry.purity]}</p>
-                <p>Weight: {jewelry.weight}</p>
-                <p>Price: {jewelry.price}$</p>
-                <div className="jewelry-item-buttons">
-                  <button
-                    onClick={() => handleUpdateJewelry(jewelry, 'Silver')}
-                    disabled={!!jewelry.price}  
-                  >
-                    Update
-                  </button>
-                  <button
-                    onClick={() => handleRegisterAuction(jewelry, 'Silver')}
-                    disabled={jewelry.status === "UnVerified"}  
-                  >
-                    Register Auction
-                  </button>
-                </div>
+        {silverJewelry.length > 0 &&
+          silverJewelry.filter(filterJewelry).map((jewelry) => (
+            <div key={jewelry.jewelrySilverId} className="jewelry-item">
+              <img
+                className="item-img"
+                src={`https://localhost:44361/${jewelry.jewelryImg}`}
+                alt={jewelry.name}
+                onError={(e) => {
+                  e.target.src = 'src/assets/img/jewelry_introduction.jpg';
+                }}
+              />
+              <h3>{jewelry.name}</h3>
+              <p>Description: {jewelry.description}</p>
+              <p>Category: {jewelry.category}</p>
+              <p>Materials: {jewelry.materials}</p>
+              <p>Purity: {purity[jewelry.purity]}</p>
+              <p>Weight: {jewelry.weight}</p>
+              <p>Price: {jewelry.price}$</p>
+              <div className="jewelry-item-buttons">
+                <button
+                  onClick={() => handleUpdateJewelry(jewelry, 'Silver')}
+                  disabled={!!jewelry.price}
+                >
+                  Update
+                </button>
+                <button
+                  onClick={() => handleRegisterAuction(jewelry, 'Silver')}
+                  disabled={!!jewelry.price && jewelry.status === 'UnVerified'} 
+                >
+                  Register Auction
+                </button>
               </div>
-            ))}
-          </>
-        )}
+            </div>
+          ))}
 
-        {goldDiamondJewelry.length > 0 && (
-          <>
-            {goldDiamondJewelry.filter(filterJewelry).map((jewelry) => (
-              <div key={jewelry.jewelryGoldDiaId} className="jewelry-item">
-                <img
-                  className='item-img'
-                  src={`https://localhost:44361/${jewelry.jewelryImg}`}
-                  alt={jewelry.name}
-                  onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
-                />
-                <h3>{jewelry.name}</h3>
-                <p>Description: {jewelry.description}</p>
-                <p>Category: {jewelry.category}</p>
-                <p>Materials: {jewelry.materials}</p>
-                <p>Gold Age: {goldAge[jewelry.goldAge]}</p>
-                <p>Clarity: {jewelry.clarity} </p>
-                <p>Carat: {jewelry.carat}</p>
-                <p>Weight: {jewelry.weight}</p>
-                <p>Price: {jewelry.price}$</p>
-                <div className="jewelry-item-buttons">
-                  <button
-                    onClick={() => handleUpdateJewelry(jewelry, 'GoldDiamond')}
-                    disabled={!!jewelry.price}  // Disable button if price is present
-                  >
-                    Update
-                  </button>
-                  <button
-                    onClick={() => handleRegisterAuction(jewelry, 'GoldDiamond')}
-                    disabled={jewelry.status === "UnVerified"}  // Disable button if status is "UnVerified"
-                  >
-                    Register Auction
-                  </button>
-                </div>
+        {goldDiamondJewelry.length > 0 &&
+          goldDiamondJewelry.filter(filterJewelry).map((jewelry) => (
+            <div key={jewelry.jewelryGoldDiaId} className="jewelry-item">
+              <img
+                className="item-img"
+                src={`https://localhost:44361/${jewelry.jewelryImg}`}
+                alt={jewelry.name}
+                onError={(e) => {
+                  e.target.src = 'src/assets/img/jewelry_introduction.jpg';
+                }}
+              />
+              <h3>{jewelry.name}</h3>
+              <p>Description: {jewelry.description}</p>
+              <p>Category: {jewelry.category}</p>
+              <p>Materials: {jewelry.materials}</p>
+              <p>Gold Age: {goldAge[jewelry.goldAge]}</p>
+              <p>Clarity: {jewelry.clarity}</p>
+              <p>Carat: {jewelry.carat}</p>
+              <p>Weight: {jewelry.weight}</p>
+              <p>Price: {jewelry.price}$</p>
+              <div className="jewelry-item-buttons">
+                <button
+                  onClick={() => handleUpdateJewelry(jewelry, 'Gold, Diamond')}
+                  disabled={!!jewelry.price} 
+                >
+                  Update
+                </button>
+                <button
+                  onClick={() => handleRegisterAuction(jewelry, 'Gold, Diamond')}
+                  disabled={!!jewelry.price && jewelry.status === 'UnVerified'} 
+                >
+                  Register Auction
+                </button>
               </div>
-            ))}
-          </>
-        )}
-
-
-        {/* No jewelry found message */}
-        {goldJewelry.length === 0 && silverJewelry.length === 0 && (
+            </div>
+          ))}
+        {goldJewelry.length === 0 && silverJewelry.length === 0 && goldDiamondJewelry.length === 0 && (
           <p>No jewelry items found.</p>
         )}
       </div>

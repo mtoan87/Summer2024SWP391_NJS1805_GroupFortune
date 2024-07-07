@@ -271,7 +271,7 @@ const JewelryUploadForm: React.FC = () => {
     formData.append('materials', jewelry.materials);
     formData.append('description', jewelry.description);
     formData.append('weight', `${jewelry.weight} ${jewelry.weightUnit}`);
-    formData.append('Category', jewelry.category);
+    formData.append('category', jewelry.category);
     formData.append('price', `${jewelry.price}`);
     if (jewelry.imageFile) {
       formData.append('jewelryImg', jewelry.imageFile);
@@ -283,7 +283,7 @@ const JewelryUploadForm: React.FC = () => {
       formData.append('purity', purity[jewelry.purity!]);
     } else if (jewelry.materials === 'Gold, Diamond') {
       formData.append('goldage', goldAges[jewelry.goldage!]);
-      formData.append('clarity', jewelry.clarity!);
+      formData.append('clarity', clarity[jewelry.clarity!]);
       formData.append('carat', jewelry.carat!);
     }
 
@@ -371,11 +371,9 @@ const JewelryUploadForm: React.FC = () => {
                 required
               >
                 <option value="">Select Category</option>
-                <option value="Necklace">Necklace</option>
-                <option value="Ring">Ring</option>
-                <option value="Bracelet">Bracelet</option>
-                <option value="Earrings">Earrings</option>
-                <option value="Brooch">Brooch</option>
+                {Object.values(category).map(category => (
+                  <option key={category} value={category}>{category}</option>
+                ))}
               </select>
               {errors.category && <span className="error">{errors.category}</span>}
             </div>
@@ -461,10 +459,10 @@ const JewelryUploadForm: React.FC = () => {
                     required
                   >
                     <option value="">Select Purity</option>
-                    <option value="99.9%">99.9</option>
-                    <option value="95.8%">95.8</option>
-                    <option value="92.5%">92.5</option>
-                    <option value="90.0%">90.0</option>
+                    <option value="92.5%">92.5%</option>
+                    <option value="99.9%">99.9%</option>
+                    <option value="90.0%">90.0%</option>
+                    <option value="95.8%">95.8%</option>
                   </select>
                   {errors.purity && <span className="error">{errors.purity}</span>}
                 </div>

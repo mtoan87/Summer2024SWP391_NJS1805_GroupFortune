@@ -144,7 +144,7 @@ function StaffViewJewelryDetails() {
           <label htmlFor="image">Image</label>
           <div className="upload-label-details">
             <img className='item-img'
-              // src={`https://localhost:44361/${jewelryDetails.jewelryImg}`}
+              src={`https://localhost:44361/${jewelryDetails.jewelryImg}`}
               alt={jewelryDetails.name}
               onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
             />

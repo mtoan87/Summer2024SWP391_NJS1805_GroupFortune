@@ -73,7 +73,7 @@ function AuctionDetails() {
         }
         
         try {
-            const bidResponse = await api.get(`api/Bid/GetBidByAccountId/${accountId}`);
+            const bidResponse = await api.get(`api/Bid/GetBidByAuctionId/${auction.auctionId}`);
             console.log('Bid Response:', bidResponse.data);
             const bidId = bidResponse.data.bid_id;
     
