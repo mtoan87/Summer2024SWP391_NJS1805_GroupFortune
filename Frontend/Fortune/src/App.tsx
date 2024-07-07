@@ -31,6 +31,7 @@ import { Bounce, ToastContainer } from 'react-toastify';
 
 import WebSocketClient from './config/websocketClient'; // Import WebSocketClient
 
+import TableUser from './WebApplication/AdminPage/molecules/Users/TableUser';
 const App: React.FC = () => {
   const { user, setUser } = useUser();
   const [wsClient, setWsClient] = useState<WebSocketClient | null>(null);
@@ -80,6 +81,9 @@ const App: React.FC = () => {
               {user.role === 1 && (
                 <>
                   <Route index element={<AdminPg />} />
+                 <Route index element={<AdminPg/>} />
+                 <Route path="/adminUser" element ={<TableUser/>} />
+
                 </>
               )}
               {user.role === 2 && (

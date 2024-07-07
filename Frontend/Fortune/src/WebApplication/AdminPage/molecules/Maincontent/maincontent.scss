@@ -1,9 +1,140 @@
+
 .main-content {
-    padding: 24px;
-    background: #f0f2f5;
+  padding: 24px;
+  background: #f0f2f5;
+  min-height: 100vh;
+
+  h1 {
+    font-size: 36px;
+    color: #8c2c16;
+    text-align: center;
+    margin-bottom: 24px;
   }
-  
+
   .ant-card {
-    margin-bottom: 16px;
+    border-radius: 30px;
   }
-  
+
+  .ant-statistic {
+    .ant-statistic-title {
+      font-size: 20px;
+      color: #570d0d;
+    }
+    .ant-statistic-content {
+      font-size: 24px;
+      font-weight: bold;
+    }
+  }
+
+  .ant-table {
+    .ant-table-thead > tr > th {
+      background-color: #b96f6f;
+      font-weight: bold;
+    }
+  }
+
+  .ant-progress-circle {
+    margin-bottom: 24px;
+  }
+
+  .table-plan-card {
+    .ant-card-head-title {
+      font-size: 20px;
+    }
+  }
+
+  .add-plan-button {
+    text-align: center;
+    color: #f7bbbb;
+    background-color: #560404;
+
+    &:hover {
+      color: #fff !important; // Sử dụng !important nếu cần thiết
+      background-color: #b96f6f !important; // Sử dụng !important nếu cần thiết
+      border-color: #b96f6f !important; // Sử dụng !important nếu cần thiết
+    }
+  }
+}
+//modal 
+.custom-modal {
+  .ant-modal-content {
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(159, 42, 6, 0.953);
+    margin-left: 100px;
+  }
+
+  .ant-modal-header {
+    border-bottom: none;
+    text-align: center;
+    font-size: 24px;
+    color: #333;
+    background: #f0f2f5;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .ant-modal-footer {
+    border-top: none;
+    display: flex;
+    justify-content: center;
+    background: #f0f2f5;
+    border-radius: 0 0 16px 16px;
+  }
+
+  .modal-form {
+    padding: 24px;
+
+    .ant-form-item {
+      margin-bottom: 24px;
+
+      label {
+        font-size: 25px;
+        color: #333;
+        display: flex;
+        align-items: center;
+
+        .anticon {
+          margin-right: 10px;
+        }
+      }
+
+      .ant-input {
+        font-size: 16px;
+        padding: 12px;
+        width: 100%;
+        border-radius: 8px;
+        background-color: #fff;
+        color: #333;
+        border: 1px solid #560404;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s;
+
+        &:focus {
+          border-color: #560404;
+          box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+        }
+      }
+    }
+  }
+}
+
+.ant-modal-footer {
+  display: flex;
+  justify-content: center;
+
+  .ant-btn {
+    font-size: 20px;
+    padding: 8px 32px;
+    border-radius: 8px;
+  }
+
+  .ant-btn-primary {
+    background-color: #b96f6f;
+    border-color: #560404;
+
+    &:hover {
+      background-color: #560404 !important; // Màu nền khi hover
+      border-color: #b96f6f !important; // Màu viền khi hover
+    }
+  }
+}
+

@@ -1,44 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Menu } from 'antd';
-import { UserOutlined, LogoutOutlined, UsergroupAddOutlined, DashboardOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { UserOutlined, LogoutOutlined, UsergroupAddOutlined, DashboardOutlined, InfoCircleOutlined, ProductOutlined, RubyOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import Sider from 'antd/es/layout/Sider';
 import './AdminSidebar.scss'; 
-import api from '../../../../config/axios';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../../Data/UserContext'; 
 
-type MenuItem = Required<MenuProps>['items'][number];
-
-function getItem(
-  label: React.ReactNode,
-  key: React.Key,
-  icon?: React.ReactNode,
-  children?: MenuItem[],
-): MenuItem {
-  return {
-    key,
-    icon,
-    children,
-    label,
-  } as MenuItem;
-}
-
 const Sidebar: React.FC<{ onMenuClick: (e: any) => void }> = ({ onMenuClick }) => {
   const navigate = useNavigate();
-  const { user, setUser } = useUser();
+  const { user } = useUser();
   const [collapsed, setCollapsed] = useState(false);
-
-  useEffect(() => {
-    
-    api.get('/api/user')
-      .then(response => {
-        setUser(response.data); 
-      })
-      .catch(error => {
-        console.error('Error fetching user data:', error);
-      });
-  }, [setUser]);
 
   const handleLogout = () => {
     sessionStorage.removeItem("loginedUser");
@@ -46,22 +18,27 @@ const Sidebar: React.FC<{ onMenuClick: (e: any) => void }> = ({ onMenuClick }) =
     window.location.reload();
   };
 
-  const items: MenuItem[] = [
-    getItem('Dashboard', '1', <DashboardOutlined />),
-    getItem('Users', '2', <UsergroupAddOutlined />),
-
-    getItem('Account', 'sub2', <UserOutlined />, [
-      getItem(`Hello, ${user?.name}`, '8'),
-      getItem('About', '6', <InfoCircleOutlined />),
-      getItem('Log Out', '7', <LogoutOutlined />),
-    ]),
+  const items: MenuProps['items'] = [
+    { key: 'dashboard', icon: <DashboardOutlined />, label: 'Dashboard' },
+    { key: 'users', icon: <UsergroupAddOutlined />, label: 'Users' },
+    { key: 'auctions', icon: <ProductOutlined />, label: 'Auctions' },
+    { key: 'jewelry', icon: <RubyOutlined />, label: 'Jewelry' },
+    {
+      key: 'account',
+      icon: <UserOutlined />,
+      label: `Hello, ${user?.name}`,
+      children: [
+        { key: 'about', label: 'About', icon: <InfoCircleOutlined /> },
+        { key: 'logout', label: 'Log Out', icon: <LogoutOutlined /> },
+      ],
+    },
   ];
 
   const handleMenuClick = (e: any) => {
-    if (e.key === '7') {
+    if (e.key === 'logout') {
       handleLogout();
     } else {
-      onMenuClick(e);
+      onMenuClick(e.key);
     }
   };
 
@@ -73,15 +50,15 @@ const Sidebar: React.FC<{ onMenuClick: (e: any) => void }> = ({ onMenuClick }) =
       width={250} 
       collapsedWidth={80} 
       className="sider"
-      style={{ height: '150vh' }} 
+      style={{ height: '200vh' }} 
     >
       <div className="demo-logo-vertical" />
       <Menu
         theme="dark"
-        defaultSelectedKeys={['1']}
+        defaultSelectedKeys={['dashboard']}
         mode="inline"
-        items={items}
         onClick={handleMenuClick}
+        items={items}
       />
     </Sider>
   );
