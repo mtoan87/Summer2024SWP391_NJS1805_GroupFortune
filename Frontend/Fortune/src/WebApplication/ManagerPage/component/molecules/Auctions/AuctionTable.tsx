@@ -97,12 +97,12 @@ function AuctionTable() {
     let apiUrl = '';
   
     // Check if there is already an active jewelry for this auction
-    const activeJewelryExists = auctions.some(a => a.auctionId === auction.auctionId && a.status === 'Active' && a.jewelryDetails);
+    // const activeJewelryExists = auctions.some(a => a.auctionId === auction.auctionId && a.status === 'Active' && a.jewelryDetails);
   
-    if (newStatus === 'Active' && activeJewelryExists) {
-      message.error('Only one jewelry item can be active for each auction.');
-      return;
-    }
+    // if (newStatus === 'Active' && activeJewelryExists) {
+    //   message.error('Only one jewelry item can be active for each auction.');
+    //   return;
+    // }
   
     const updateData = {
       accountId: auction.accountId,
@@ -386,13 +386,13 @@ function AuctionTable() {
       dataIndex: 'status',
       key: 'status',
       render: (text: string, record: Auction) => {
-        const isDisabled = record.jewelryDetails?.shipment !== 'Deliveried' || record.jewelryDetails?.status !== 'Verified';
+        // const isDisabled = record.jewelryDetails?.shipment == 'Deliveried' || record.jewelryDetails?.status == 'Verified';
   
         return (
           <Button
             type={text === 'Active' ? 'primary' : 'default'}
             onClick={() => handleStatusChange(record)}
-            disabled={isDisabled}
+            // disabled={isDisabled}
           >
             {text}
           </Button>

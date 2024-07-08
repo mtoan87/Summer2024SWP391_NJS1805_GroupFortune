@@ -115,14 +115,16 @@ function StaffViewJewelryDetails() {
         '95.8%': 'PureSilver958',
       };
       const convertedPurity = purityMapping[jewelryDetails.purity];
-      formData.append('Purity', convertedPurity);
+      console.log(convertedPurity);
+      console.log(jewelryDetails.price);
+      formData.append('Purity', jewelryDetails.purity);
     }
 
     try {
       const endpoint = material === 'Gold'
         ? `/api/JewelryGold/UpdateJewelryGoldStaff?id=${id}`
         : `/api/JewelrySilver/UpdateJewelrySilverStaff?id=${id}`;
-      await api.post(endpoint, formData, {
+      await api.put(endpoint, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

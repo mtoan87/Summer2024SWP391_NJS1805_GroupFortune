@@ -2,8 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './auctions-details.scss';
 import api from '../../../../../config/axios';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { message, Modal, Button } from 'antd';
 
 function AuctionDetails() {
     const { id } = useParams();
@@ -12,9 +11,10 @@ function AuctionDetails() {
     const [jewelryDetails, setJewelryDetails] = useState(null);
     const [attendeeCount, setAttendeeCount] = useState(0);
     const [accountWallet, setAccountWallet] = useState(null);
+    const [isModalVisible, setIsModalVisible] = useState(false);
     const storedUser = sessionStorage.getItem("loginedUser");
     const user = storedUser ? JSON.parse(storedUser) : null;
-    const accountId = user.accountId;
+    const accountId = user ? user.accountId : null;
 
     const fetchAuctionDetails = useCallback(async () => {
         try {
@@ -50,25 +50,24 @@ function AuctionDetails() {
             const userWallet = wallets.find(wallet => wallet.accountId === accountId);
             if (!userWallet) {
                 console.error(`No wallet found for accountId: ${accountId}`);
-                toast.error('Account wallet not found');
+                setIsModalVisible(true);
             } else {
                 setAccountWallet(userWallet);
             }
         } catch (err) {
             console.error('Error fetching account wallet:', err);
         }
-    }, [accountId]);
-    
+    }, [accountId, user]);
 
     useEffect(() => {
         fetchAuctionDetails();
         fetchAttendeeCount();
-        fetchAccountWallet();
-    }, [fetchAuctionDetails, fetchAttendeeCount, fetchAccountWallet]);
+    }, []);
 
     const handleJoinAuction = async () => {
         if (!accountWallet) {
-            toast.error('Account wallet not found');
+            
+        fetchAccountWallet();
             return;
         }
         
@@ -85,7 +84,7 @@ function AuctionDetails() {
     
             const response = await api.post('api/JoinAuction/CreateJoinAuction', joinAuctionData);
             console.log('Join Auction Response:', response.data);
-            toast.success('Successfully joined the auction', { position: "top-right" });
+            message.success('Successfully joined the auction');
     
             setTimeout(() => {
                 navigate(`/mybidding/${id}`);
@@ -93,10 +92,18 @@ function AuctionDetails() {
     
         } catch (err) {
             console.error('Error joining auction:', err);
-            toast.error('Failed to join the auction', { position: "top-right" });
+            message.error('Failed to join the auction');
         }
     };
-    
+
+    const handleModalOk = () => {
+        setIsModalVisible(false);
+        navigate('/register-wallet');
+    };
+
+    const handleModalCancel = () => {
+        setIsModalVisible(false);
+    };
 
     if (!auction || !jewelryDetails) {
         return <div>Loading...</div>;
@@ -107,15 +114,15 @@ function AuctionDetails() {
         'PureSilver999': '99.9%',
         'PureSilver900': '90.0%',
         'PureSilver958': '95.8%'
-      };
+    };
     
-      const goldAge = {
+    const goldAge = {
         Gold24: '24K',
         Gold22: '22K',
         Gold20: '20K',
         Gold18: '18K',
         Gold14: '14K'
-      };
+    };
 
     return (
         <div className="auctions-details">
@@ -160,7 +167,16 @@ function AuctionDetails() {
                 </div>
             </div>
 
-            <ToastContainer />
+            <Modal
+                title="No Wallet Found"
+                open={isModalVisible}
+                onOk={handleModalOk}
+                onCancel={handleModalCancel}
+                cancelText="No"
+                okText="Yes"
+            >
+                <p>No wallet found for your account. Would you like to create one?</p>
+            </Modal>
         </div>
     );
 }
