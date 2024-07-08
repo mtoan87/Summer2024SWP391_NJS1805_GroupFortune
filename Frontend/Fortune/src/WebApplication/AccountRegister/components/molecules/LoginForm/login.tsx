@@ -32,25 +32,26 @@ const LoginForm: React.FC = () => {
   useEffect(() => {
     const userString = sessionStorage.getItem("loginedUser");
     const user = userString ? JSON.parse(userString) : null;
-    if (user) {
-      checkAccountWallet(user.accountId);
-    }
+  
+    // if (user) {
+    //   checkAccountWallet(user.accountId);
+    // }
   }, []);
 
-  const checkAccountWallet = async (accountId: number) => {
-    try {
-      const response = await api.get(`/AccountWallet/GetAccountWalletByAccountId/${accountId}`);
-      const accountWalletInfo = response.data;
-      if (accountWalletInfo) {
-        navigate('/');
-      } else {
-        navigate('/register-wallet');
-      }
-    } catch (error) {
-      console.error('Error checking account wallet:', error);
-      toast.error("Failed to check account wallet. Please try again later!");
-    }
-  };
+  // const checkAccountWallet = async (accountId: number) => {
+  //   try {
+  //     const response = await api.get(`/AccountWallet/GetAccountWalletByAccountId/${accountId}`);
+  //     const accountWalletInfo = response.data;
+  //     if (accountWalletInfo) {
+  //       navigate('/');
+  //     } else {
+  //       navigate('/register-wallet');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error checking account wallet:', error);
+  //     toast.error("Failed to check account wallet. Please try again later!");
+  //   }
+  // };
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -67,7 +68,8 @@ const LoginForm: React.FC = () => {
       const data = response.data;
       setUser(data);
       sessionStorage.setItem("loginedUser", JSON.stringify(data));
-      checkAccountWallet(data.accountId); // Check account wallet after successful login
+      navigate('/');
+      // checkAccountWallet(data.accountId); 
     } catch (error) {
       console.error('Login failed:', error);
       toast.error("Login failed. Please try again!");

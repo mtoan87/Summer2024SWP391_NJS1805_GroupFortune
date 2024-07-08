@@ -122,7 +122,7 @@ function StaffViewJewelryDetails() {
       const endpoint = material === 'Gold'
         ? `/api/JewelryGold/UpdateJewelryGoldStaff?id=${id}`
         : `/api/JewelrySilver/UpdateJewelrySilverStaff?id=${id}`;
-      await api.put(endpoint, formData, {
+      await api.post(endpoint, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
