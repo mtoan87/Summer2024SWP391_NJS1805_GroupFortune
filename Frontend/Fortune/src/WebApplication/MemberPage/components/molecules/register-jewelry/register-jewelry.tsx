@@ -17,12 +17,12 @@ function RegisterJewelryForAuction() {
     accountId: accountId,
     jewelryGoldId: material === 'Gold' ? jewelryId : null,
     jewelrySilverId: material === 'Silver' ? jewelryId : null,
+    jewelryGoldDiaId: material === 'GoldDiamond' ? jewelryId : null,
     date: '',
     startTime: '',
     endTime: '',
     jewelryDetails: {}
   };
-
 
   const [formData, setFormData] = useState(initialFormData);
 
@@ -34,12 +34,14 @@ function RegisterJewelryForAuction() {
           response = await api.get(`/api/JewelryGold/GetById/${jewelryId}`);
         } else if (material === 'Silver') {
           response = await api.get(`/api/JewelrySilver/GetById/${jewelryId}`);
+        } else if (material === 'GoldDiamond') {
+          response = await api.get(`/api/JewelryGoldDia/GetById/${jewelryId}`);
         } else {
-          console.error('Unsupported jewelry material type');
+          console.error('Unsupported jewelry material type:', material);
           return;
         }
 
-        console.log(response.data);
+        console.log('Jewelry Details:', response.data);
         setFormData(prevState => ({
           ...prevState,
           jewelryDetails: {
@@ -57,6 +59,7 @@ function RegisterJewelryForAuction() {
     }
   }, [jewelryId, material]);
 
+
   const handleChange = e => {
     const { name, value } = e.target;
     setFormData(prevState => ({
@@ -67,71 +70,70 @@ function RegisterJewelryForAuction() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     // Validate the date is at least 3 days from today
     const chosenDate = new Date(formData.date);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const minDate = new Date(today);
     minDate.setDate(today.getDate() + 3);
-
+  
     if (chosenDate < minDate) {
       toast.error('The auction date must be at least 3 days from today.', { position: 'top-right' });
       return;
     }
-
+  
     // Validate end time is at least 30 minutes after start time
     const [startHours, startMinutes] = formData.startTime.split(':').map(Number);
     const [endHours, endMinutes] = formData.endTime.split(':').map(Number);
     const startDateTime = new Date(chosenDate);
     const endDateTime = new Date(chosenDate);
-
+  
     startDateTime.setHours(startHours, startMinutes, 0, 0);
     endDateTime.setHours(endHours, endMinutes, 0, 0);
-
-    const timeDifference = (endDateTime - startDateTime) / (1000 * 60); // Difference in minutes
-
-    if (timeDifference < 30) {
-      toast.error('The auction must take part at least 30 minutes.', { position: 'top-right' });
-      return;
-    }
-
-    // Create date strings without timezone offsets
-    const formatISOWithoutTimezone = (date) => {
-      return date.toISOString().split('Z')[0];
-    };
-
-    const starttime = formatISOWithoutTimezone(startDateTime);
-    const endtime = formatISOWithoutTimezone(endDateTime);
-
+  
+    // Adjust for timezone offset
+    const timezoneOffset = startDateTime.getTimezoneOffset() * 60000; // Convert minutes to milliseconds
+    const starttime = new Date(startDateTime - timezoneOffset).toISOString();
+    const endtime = new Date(endDateTime - timezoneOffset).toISOString();
+  
     try {
       const requestData = {
         accountId: accountId,
         starttime: starttime,
         endtime: endtime
       };
-
+  
+      // Add jewelry ID based on material type
       if (material === 'Gold') {
         requestData.jewelryGoldId = formData.jewelryGoldId;
       } else if (material === 'Silver') {
         requestData.jewelrySilverId = formData.jewelrySilverId;
-      } else if (material === 'GoldDiamong') {
-        requestData.jewelryGolddiaIdId = formData.jewelryGolddiaId;
-      }
-      else {
+      } else if (material === 'GoldDiamond') {
+        requestData.jewelryGoldDiaId = formData.jewelryGoldDiaId; // Corrected variable name
+      } else {
         console.error('Unsupported jewelry material type');
         return;
       }
-
-      const apiUrl = material === 'Gold' ? '/api/Auctions/CreateGoldJewelryAuction' : '/api/Auctions/CreateSilverJewelryAuction';
-
+  
+      // Determine API URL based on material
+      const apiUrl = material === 'Gold' ? '/api/Auctions/CreateGoldJewelryAuction' :
+        material === 'Silver' ? '/api/Auctions/CreateSilverJewelryAuction' :
+        material === 'GoldDiamond' ? '/api/Auctions/CreateGoldDiamondJewelryAuction' :
+        '';
+  
+      if (!apiUrl) {
+        console.error('Unsupported jewelry material type for auction creation');
+        return;
+      }
+  
       const response = await api.post(apiUrl, requestData);
       console.log('Auction created successfully:', response.data);
       toast.success('Auction registered successfully!', { position: 'top-right' });
-
+  
       // Clear form data
       setFormData(initialFormData);
-
+  
       // Delayed navigation after toast appears
       setTimeout(() => {
         navigate('/userJewel');
@@ -144,7 +146,9 @@ function RegisterJewelryForAuction() {
       toast.error('Error creating auction. Please try again!', { position: 'top-right' });
     }
   };
-
+  
+  
+  
 
   return (
     <div className="register-jewelry-form">
@@ -166,11 +170,18 @@ function RegisterJewelryForAuction() {
             <p>Name: {formData.jewelryDetails.name}</p>
             <p>Description: {formData.jewelryDetails.description}</p>
             <p>Category: {formData.jewelryDetails.category}</p>
-            {material === 'gold' && (
+            {material === 'Gold' && (
               <p>Gold Age: {formData.jewelryDetails.goldAge}</p>
             )}
-            {material === 'silver' && (
+            {material === 'Silver' && (
               <p>Purity: {formData.jewelryDetails.purity}</p>
+            )}
+            {material === 'GoldDiamond' && (
+              <>
+                <p>Gold Age: {formData.jewelryDetails.goldAge}</p>
+                <p>Clarity: {formData.jewelryDetails.clarity}</p>
+                <p>Carat: {formData.jewelryDetails.carat}</p>
+              </>
             )}
             <p>Materials: {formData.jewelryDetails.materials}</p>
             <p>Weight: {formData.jewelryDetails.weight}</p>

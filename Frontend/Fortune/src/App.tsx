@@ -22,14 +22,13 @@ import GuestAuctionDetailsPg from './WebApplication/GuestPage/components/guest-a
 import ProfileStaff from './WebApplication/StaffPage/components/molucules/StaffProfile/ProfileStaff';
 import BiddingPG from './WebApplication/MemberPage/components/pages/member-bidding-pg/BiddingPG';
 import MemberMyBidsPg from './WebApplication/MemberPage/components/pages/member-my-bids-pg/member-my-bids-pg';
-import { UserProvider, useUser } from './WebApplication/Data/UserContext'; // Ensure correct import
+import { useUser } from './WebApplication/Data/UserContext'; // Ensure correct import
 import MemberAccountWalletPg from './WebApplication/MemberPage/components/pages/member-account-wallet-pg/member-account-wallet-pg';
 import MyWalletPg from './WebApplication/MemberPage/components/pages/member-my-wallet-pg/my-wallet-pg';
 import UpdateWalletPg from './WebApplication/MemberPage/components/pages/member-update-wallet-pg/update-wallet-pg';
 
 const App: React.FC = () => {
   const { user, setUser } = useUser();
-  
 
   useEffect(() => {
     const storedUser = sessionStorage.getItem('loginedUser');
@@ -37,12 +36,6 @@ const App: React.FC = () => {
       setUser(JSON.parse(storedUser));
     }
   }, [setUser]);
-
-  useEffect(() => {
-    if (user) {
-      console.log(user.role);
-    }
-  }, [user]);
 
   return (
     <>
@@ -73,12 +66,12 @@ const App: React.FC = () => {
           ) : (
             <>
               <Route path='/login' element={<Loginpg />} />
-              {user.role === 1 && (
+              {user?.role === 1 && (
                 <>
-                  
+
                 </>
               )}
-              {user.role === 2 && (
+              {user?.role === 2 && (
                 <>
                   <Route index element={<MemberHomePg />} />
                   <Route path="/mydashboard" element={<MemeberDashBoardPG />} />
@@ -97,14 +90,14 @@ const App: React.FC = () => {
                   <Route path="/update-wallet" element={<UpdateWalletPg />} />
                 </>
               )}
-              {user.role === 3 && (
+              {user?.role === 3 && (
                 <>
                   <Route path='/' element={<StaffJewelryPg />} />
                   <Route path="/staff/update-jewelry/:id/:material" element={<StaffViewJewelryPg />} />
                   <Route path='/staffprofile' element={<ProfileStaff />} />
                 </>
               )}
-              {user.role === 5 && (
+              {user?.role === 5 && (
                 <>
                   <Route index element={<ManagerHomePg />} />
                   <Route path='/managerA&DJew' element={<ProfileStaff />} />
@@ -119,9 +112,7 @@ const App: React.FC = () => {
 };
 
 const AppWrapper: React.FC = () => (
-  <UserProvider>
-    <App />
-  </UserProvider>
+  <App />
 );
 
 export default AppWrapper;

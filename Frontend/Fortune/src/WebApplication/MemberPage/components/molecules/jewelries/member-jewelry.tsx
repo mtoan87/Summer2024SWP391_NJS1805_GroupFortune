@@ -59,7 +59,7 @@ function MemberJewelry() {
   return (
     <>
       <div className="member-jewel-content">
-        <h1>Jewelry</h1>
+        <h1>JEWELRY</h1>
       </div>
       <div className="member-jewelry-container">
         {displayedItems.map((item, index) => {

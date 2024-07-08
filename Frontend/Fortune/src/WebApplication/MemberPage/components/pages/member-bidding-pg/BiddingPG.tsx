@@ -1,8 +1,13 @@
 import BiddingTmp from "../../template/member-bidding/biddingtmp";
-function BiddingPG(){
-    return(
+import { Helmet } from 'react-helmet';
+
+function BiddingPG() {
+    return (
         <div>
-            <BiddingTmp/>
+            {/* <Helmet>1
+                <meta http-equiv="refresh" content="1" />
+            </Helmet> */}
+            <BiddingTmp />
         </div>
     )
 }

@@ -106,7 +106,7 @@ function MemberViewJewelry() {
   };
 
   const handleRegisterAuction = (jewelry, material) => {
-    const id = material === 'Gold' ? jewelry.jewelryGoldId : material === 'Silver' ? jewelry.jewelrySilverId : jewelry.jewelryGoldDiaId;
+    const id = material === 'Gold' ? jewelry.jewelryGoldId : material === 'Silver' ? jewelry.jewelrySilverId : jewelry.jewelryGolddiaId;
     navigate(`/register-jewelry-auction/${id}/${material}`, { state: { jewelryId: id } });
   };
 
@@ -245,13 +245,13 @@ function MemberViewJewelry() {
               <p>Price: {jewelry.price}$</p>
               <div className="jewelry-item-buttons">
                 <button
-                  onClick={() => handleUpdateJewelry(jewelry, 'Gold, Diamond')}
+                  onClick={() => handleUpdateJewelry(jewelry, 'GoldDiamond')}
                   disabled={!!jewelry.price} 
                 >
                   Update
                 </button>
                 <button
-                  onClick={() => handleRegisterAuction(jewelry, 'Gold, Diamond')}
+                  onClick={() => handleRegisterAuction(jewelry, 'GoldDiamond')}
                   disabled={jewelry.status === 'Unverified'} 
                 >
                   Register Auction
