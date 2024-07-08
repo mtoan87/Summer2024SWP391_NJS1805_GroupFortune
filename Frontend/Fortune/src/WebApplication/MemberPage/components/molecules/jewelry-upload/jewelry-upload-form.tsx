@@ -25,6 +25,7 @@ interface Jewelry {
 
 const loginedUser = JSON.parse(sessionStorage.getItem('loginedUser') || '{}');
 const accountId = loginedUser?.accountId;
+console.log(accountId);
 
 
 const goldPricesPerOunce = {
@@ -266,7 +267,7 @@ const JewelryUploadForm: React.FC = () => {
     }
 
     const formData = new FormData();
-    formData.append('accountId', jewelry.accountId.toString());
+    formData.append('accountId', String(jewelry.accountId));
     formData.append('Name', jewelry.name);
     formData.append('materials', materials[jewelry.materials]);
     formData.append('description', jewelry.description);

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import api from '../../../../../config/axios';
 import './member-auction.scss';
 
@@ -8,82 +8,136 @@ interface Auction {
     status: string;
     starttime: string;
     endtime: string;
-    jewelryId: number | null;
+    jewelrySilverId?: number | null;
+    jewelryGoldId?: number | null;
+    jewelryGolddiaId?: number | null;
+    imageUrl?: string;
+    jewelryName?: string;
+    startDate?: string;
+    startTime?: string;
+    endDate?: string;
+    endTime?: string;
+}
+
+interface Jewelry {
+    jewelryImg: string;
+    name: string;
 }
 
 function MemberViewAuctions() {
     const [auctions, setAuctions] = useState<Auction[]>([]);
     const [searchQuery, setSearchQuery] = useState<string>('');
-  const loginedUser = JSON.parse(sessionStorage.getItem('loginedUser'));
-  const accountId = loginedUser?.accountId;
+    const [error, setError] = useState<string | null>(null);
+
+    const loginedUser = JSON.parse(sessionStorage.getItem('loginedUser') || '{}');
+    const accountId = loginedUser?.accountId;
+
     useEffect(() => {
         const fetchAuctions = async () => {
             try {
-                const response = await api.get(`/api/Auctions/GetAuctionAndJewelrySilverByAccountId/${accountId}`);
-                console.log('API response:', response.data);
-                
-                if (response.data && Array.isArray(response.data.$values)) {
-                    const auctionsData = response.data.$values;
-                    const auctionsWithImages = await Promise.all(
-                        auctionsData.map(async (auction) => {
-                            const imageUrl = await fetchJewelryImage(auction.jewelryId);
-                            return { ...auction, imageUrl };
-                        })
-                    );
-                    setAuctions(auctionsWithImages);
-                } else {
-                    console.error('Invalid response data format:', response.data);
+                const [goldResponse, silverResponse, goldDiaResponse] = await Promise.all([
+                    api.get(`/api/Auctions/GetAuctionAndJewelryGoldByAccountId/${accountId}`),
+                    api.get(`/api/Auctions/GetAuctionAndJewelrySilverByAccountId/${accountId}`),
+                    api.get(`/api/Auctions/GetAuctionAndJewelryGoldDiamondByAccountId/${accountId}`)
+                ]);
+
+                const auctionsData: Auction[] = [];
+
+                if (goldResponse.data.$values.length > 0) {
+                    auctionsData.push(...goldResponse.data.$values);
                 }
+                if (silverResponse.data.$values.length > 0) {
+                    auctionsData.push(...silverResponse.data.$values);
+                }
+                if (goldDiaResponse.data.$values.length > 0) {
+                    auctionsData.push(...goldDiaResponse.data.$values);
+                }
+
+                const auctionsWithDetails = auctionsData.map(auction => {
+                    let jewelryDetails: Jewelry = { jewelryImg: 'src/assets/img/jewelry_introduction.jpg', name: 'Unknown Jewelry' };
+
+                    if (auction.jewelrySilver) {
+                        jewelryDetails = {
+                            jewelryImg: auction.jewelrySilver.jewelryImg || 'src/assets/img/jewelry_introduction.jpg',
+                            name: auction.jewelrySilver.name || 'Unknown Jewelry'
+                        };
+                    } else if (auction.jewelryGold) {
+                        jewelryDetails = {
+                            jewelryImg: auction.jewelryGold.jewelryImg || 'src/assets/img/jewelry_introduction.jpg',
+                            name: auction.jewelryGold.name || 'Unknown Jewelry'
+                        };
+                    } else if (auction.jewelryGolddia) {
+                        jewelryDetails = {
+                            jewelryImg: auction.jewelryGolddia.jewelryImg || 'src/assets/img/jewelry_introduction.jpg',
+                            name: auction.jewelryGolddia.name || 'Unknown Jewelry'
+                        };
+                    }
+
+                    const startDateTime = new Date(auction.starttime);
+                    const endDateTime = new Date(auction.endtime);
+
+                    const formattedAuction = {
+                        ...auction,
+                        imageUrl: jewelryDetails.jewelryImg,
+                        jewelryName: jewelryDetails.name,
+                        startDate: startDateTime.toLocaleDateString(),
+                        startTime: startDateTime.toLocaleTimeString(),
+                        endDate: endDateTime.toLocaleDateString(),
+                        endTime: endDateTime.toLocaleTimeString(),
+                    };
+
+                    return formattedAuction;
+                });
+
+                setAuctions(auctionsWithDetails);
             } catch (err) {
                 console.error('Error fetching auctions:', err);
+                setError('Failed to fetch auctions. Please try again later.');
             }
         };
-        
+
         fetchAuctions();
-    }, []);
-    const fetchJewelryImage = async (jewelryId) => {
-        try {
-            const response = await api.get(`api/Jewelries/GetById/${jewelryId}`);
-            return response.data.jewelryImg; // Assuming imageUrl is the property containing the image URL
-        } catch (err) {
-            console.error('Error fetching jewelry image:', err);
-            return null;
-        }
-    };
+    }, [accountId]);
+
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchQuery(event.target.value);
     };
+
+    const filteredAuctions = auctions.filter(auction =>
+        auction.jewelryName?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     return (
         <>
             <div className="auctions-content">
                 <h1>My Auctions</h1>
             </div>
-            <div className='searchBar'>
+            <div className="searchBar">
                 <div className="fui-input-label-animation">
-                    <input type="text" className="form-input" placeholder='' value={searchQuery}
-                        onChange={handleSearchChange} />
+                    <input type="text" className="form-input" placeholder="" value={searchQuery} onChange={handleSearchChange} />
                     <label htmlFor="name" className="form-label">Search for Auctions</label>
                 </div>
             </div>
             <div className="auctions-container">
-                {/* Create Auction Item */}
-                {auctions.map((auction) => {
-    console.log("Auction ID:", auction.auctionId);
-    return (
-        <div key={auction.auctionId} className="auction-item">
-              <img 
-              src={`https://localhost:44361/${auction.imageUrl}`} 
-              onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
-            />
-            <p>Start Time: {auction.starttime}</p>
-            <p>End Time: {auction.endtime}</p>
-        </div>
-    );
-})}
+                {error ? (
+                    <p>{error}</p>
+                ) : (
+                    filteredAuctions.map((auction) => (
+                        <div key={auction.auctionId} className="auction-item">
+                            <img
+                                src={`https://localhost:44361/${auction.imageUrl}`}
+                                alt={auction.jewelryName}
+                                onError={(e) => { e.currentTarget.src = 'src/assets/img/jewelry_introduction.jpg'; }}
+                            />
+                            <p>Start Date: {auction.startDate}</p>
+                            <p>Start Time: {auction.startTime}</p>
+                            <p>End Time: {auction.endTime}</p>
+                        </div>
+                    ))
+                )}
             </div>
         </>
     );
-};
+}
 
 export default MemberViewAuctions;

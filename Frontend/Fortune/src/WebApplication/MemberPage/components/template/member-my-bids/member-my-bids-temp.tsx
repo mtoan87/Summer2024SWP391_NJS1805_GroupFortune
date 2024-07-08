@@ -1,4 +1,4 @@
-import MyBids from '../../molecules/my-bids/my-bids'
+import MyBids from '../../molecules/my-bids/my-bid'
 
 function MemberMyBidsTemp() {
   return (
