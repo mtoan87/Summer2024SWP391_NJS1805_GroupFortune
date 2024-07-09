@@ -5,7 +5,7 @@ import api from '../../../../../config/axios';
 import './update-jewelry.scss';
 import { EditOutlined } from '@ant-design/icons';
 
-const shipmentOptions = ["Pending", "Delivering", "Delivered"];
+const shipmentOptions = ["Delivering", "Deliveried"];  // Chỉ định hai lựa chọn
 
 const GoldAgeMapping = {
   'Gold14': '14K',
@@ -13,28 +13,6 @@ const GoldAgeMapping = {
   'Gold20': '20K',
   'Gold22': '22K',
   'Gold24': '24K'
-};
-
-const convertShipmentToEnum = (shipment) => {
-  switch (shipment) {
-    case "Delivered":
-      return "Delivered";
-    case "Delivering":
-      return "Delivering";
-    default:
-      return "Pending";
-  }
-};
-
-const convertEnumToShipment = (enumValue) => {
-  switch (enumValue) {
-    case "Delivered":
-      return "Delivered";
-    case "Delivering":
-      return "Delivering";
-    default:
-      return "Pending";
-  }
 };
 
 function StaffViewJewelryDetails() {
@@ -63,10 +41,7 @@ function StaffViewJewelryDetails() {
       try {
         const response = await api.get(`/api/Jewelry${material === 'Gold' ? 'Gold' : 'Silver'}/GetById/${id}`);
         console.log("API Response:", response.data);
-        setJewelryDetails({
-          ...response.data,
-          shipment: convertEnumToShipment(response.data.shipment)
-        });
+        setJewelryDetails(response.data);
       } catch (error) {
         console.error('Error fetching jewelry details:', error);
       }
@@ -103,7 +78,7 @@ function StaffViewJewelryDetails() {
     formData.append('Price', jewelryDetails.price);
     formData.append('WeightUnit', jewelryDetails.weightUnit);
     formData.append('jewelryImg', jewelryDetails.jewelryImg);
-    formData.append('Shipment', convertShipmentToEnum(jewelryDetails.shipment));
+    formData.append('Shipment', jewelryDetails.shipment);
     
     if (material === 'Gold') {
       formData.append('GoldAge', jewelryDetails.goldAge);
@@ -117,24 +92,24 @@ function StaffViewJewelryDetails() {
       const convertedPurity = purityMapping[jewelryDetails.purity];
       formData.append('Purity', convertedPurity);
     }
-  
     try {
       const endpoint = material === 'Gold'
         ? `/api/JewelryGold/UpdateJewelryGoldStaff?id=${id}`
         : `/api/JewelrySilver/UpdateJewelrySilverStaff?id=${id}`;
+    
       console.log("Endpoint:", endpoint);
       console.log("FormData:", Array.from(formData.entries()));
       
-      const response = await api.post(endpoint, formData, {
+      const response = await api.put(endpoint, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
-      
       // Check response status and data
       console.log("API Response Status:", response.status);
       console.log("API Response Data:", response.data);
-      
+      console.log("Endpoint:", endpoint);
+
       if (response.status === 200) {
         message.success('Jewelry updated successfully!');
         navigate('/');

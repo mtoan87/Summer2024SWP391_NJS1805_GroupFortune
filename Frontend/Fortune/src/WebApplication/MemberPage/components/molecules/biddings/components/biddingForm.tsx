@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { ClockCircleOutlined, DollarCircleOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+//
 import '../Styles/bidding.scss';
 import api from '../../../../../../config/axios';
 
