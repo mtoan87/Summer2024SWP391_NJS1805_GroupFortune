@@ -2,9 +2,8 @@ import { useEffect, useState } from 'react';
 import './view-jewelry.scss';
 import api from '../../../../../config/axios';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { EditOutlined, FileAddOutlined, SearchOutlined } from '@ant-design/icons';
+import { message } from 'antd';
+import { EditOutlined, SearchOutlined } from '@ant-design/icons';
 
 function StaffViewJewelry() {
   const [goldJewelry, setGoldJewelry] = useState([]);
@@ -63,9 +62,7 @@ function StaffViewJewelry() {
 
   useEffect(() => {
     if (successMessage) {
-      toast.success("Success Notification !", {
-        position: "top-right"
-      });
+      message.success("Success Notification!");
     }
   }, [successMessage]);
 
@@ -126,6 +123,7 @@ function StaffViewJewelry() {
                 <p>Materials: {jewelry.materials}</p>
                 <p>Weight: {jewelry.weight}</p>
                 <p>Price: {jewelry.price}$</p>
+                <p>Shipment: {jewelry.shipment}</p>
                 <div className="jewelry-item-buttons">
                   <button onClick={() => handleUpdateJewelry(jewelry.jewelryGoldId, "Gold")}>
                     <EditOutlined /> Update
@@ -153,6 +151,7 @@ function StaffViewJewelry() {
                 <p>Materials: {jewelry.materials}</p>
                 <p>Weight: {jewelry.weight}</p>
                 <p>Price: {jewelry.price}$</p>
+                <p>Shipment: {jewelry.shipment}</p>
                 <div className="jewelry-item-buttons">
                   <button onClick={() => handleUpdateJewelry(jewelry.jewelrySilverId, "Silver")}>
                     <EditOutlined /> Update
@@ -180,6 +179,7 @@ function StaffViewJewelry() {
                 <p>Materials: {jewelry.materials}</p>
                 <p>Weight: {jewelry.weight}</p>
                 <p>Price: {jewelry.price}$</p>
+                <p>Shipment: {jewelry.shipment}</p>
                 <div className="jewelry-item-buttons">
                   <button onClick={() => handleUpdateJewelry(jewelry.jewelryGoldDiaId, "GoldDia")}>
                     <EditOutlined /> Update
@@ -194,7 +194,6 @@ function StaffViewJewelry() {
           <p>No jewelry items found.</p>
         )}
       </div>
-      <ToastContainer className="toast-position" />
     </>
   );
 }
