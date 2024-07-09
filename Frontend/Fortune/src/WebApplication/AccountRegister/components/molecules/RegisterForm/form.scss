@@ -1,110 +1,106 @@
 .form-container {
-  max-width: 70rem;
+  max-width: 40rem; /* Giảm chiều rộng tối đa để tránh cuộn ngang */
   width: 100%;
   height: auto;
-  background-color: transparent;
-  box-shadow: none;
+  background-color: #282323; /* Đổi tông màu sang đen đậm nhất */
+  box-shadow: 1px 5px 8px 8px rgba(245, 237, 237, 0.949); /* Thêm box-shadow màu đen đậm */
   text-align: left;
   padding: 2rem;
   display: flex;
-  justify-content: flex-end;
-  margin: 5rem 0 0 55rem;
+  flex-direction: column; /* Thay đổi hướng flex để các thành phần xếp theo chiều dọc */
+  justify-content: center; /* Căn giữa nội dung theo chiều dọc */
+  align-items: center; /* Căn giữa nội dung theo chiều ngang */
+  margin: 5rem 0 0 27rem; /* Căn giữa khối theo chiều ngang */
+  border-radius: 60px; /* Thêm border-radius */
+}
 
-  form {
-    padding-top: 1rem;
-    width: 100%;
-    background-color: transparent !important;
-    border: none;
-  }
+.form-container form {
+  padding-top: 1rem;
+  width: 100%;
+  background-color: transparent !important;
+  border: none;
+}
 
-  .form-label,
-  .form-check-label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #555;
-    text-align: left;
-  }
+.form-container .form-label,
+.form-container .form-check-label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #ffffff; /* Đổi màu chữ sang trắng */
+  text-align: left;
+}
 
-  .form-control {
-    width: 100%;
-    padding: 15px;
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
+.form-container .form-control {
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
 
-  .btn-primary,
-  .Summitbt.btn.btn-primary {
-    width: 100%;
-    padding: 15px;
-    background-color: bisque;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    color: #333;
-    transition: background-color 0.3s ease;
-  }
+.form-container .btn-primary,
+.form-container .Summitbt.btn.btn-primary {
+  width: 100%;
+  padding: 15px;
+  background-color: bisque;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  color: #333;
+  transition: background-color 0.3s ease;
+}
 
-  .btn-primary:hover,
-  .Summitbt.btn.btn-primary:hover {
-    background-color: rgb(228, 175, 111);
-    color: #333;
-  }
+.form-container .btn-primary:hover,
+.form-container .Summitbt.btn.btn-primary:hover {
+  background-color: rgb(228, 175, 111);
+  color: #333;
+}
 
-  .form-text {
-    font-size: 1rem;
-    color: #000000;
-    text-align: center;
-  }
+.form-container .form-text {
+  font-size: 1rem;
+  color: #ffffff; /* Đổi màu chữ sang trắng */
+  text-align: center;
+}
 
-  .form-check {
-    display: flex;
-    justify-content: center;
-  }
+.form-container .form-check {
+  display: flex;
+  justify-content: center;
+}
 
-  .mb-3 {
-    padding-bottom: -1rem;
-  }
+.form-container .re-login-link {
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+  color: #ffffff; /* Đổi màu chữ sang trắng */
+  text-decoration: none;
+}
 
-  .bt {
-    padding-top: 21rem;
-  }
+.form-container .re-login-link a:hover {
+  color: bisque;
+  cursor: pointer;
+}
 
-  .re-login-link {
-    display: block;
-    text-align: center;
-    margin-top: 20px;
-    color: #555;
-    text-decoration: none;
+.form-container .re-social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
 
-    a:hover {
-      color: bisque;
-      cursor: pointer;
-    }
-  }
+.form-container .re-social-icons a {
+  color: #ffffff; /* Đổi màu chữ sang trắng */
+  font-size: 20px;
+  text-decoration: none;
+}
 
-  .re-social-icons {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 20px;
+.form-container .re-social-icons a:hover {
+  color: rgb(228, 175, 111);
+}
 
-    a {
-      color: #555;
-      font-size: 20px;
-      text-decoration: none;
-
-      &:hover {
-        color: rgb(228, 175, 111);
-      }
-    }
-  }
-
-  .Alert {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    color: #333;
-  }
+.form-container .form-title {
+  margin-bottom: 2rem;
+  text-align: center;
+  font-size: 2rem;
+  color: #ffffff; /* Đổi màu chữ sang trắng */
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8); /* Thêm hiệu ứng bóng đổ màu đen đậm */
 }

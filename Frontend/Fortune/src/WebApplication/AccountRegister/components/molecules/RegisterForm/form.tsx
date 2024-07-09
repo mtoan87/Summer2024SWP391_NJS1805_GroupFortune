@@ -1,144 +1,86 @@
 import { useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import './form.scss';
-import api from '../../../../../config/axios';
-import { useNavigate } from "react-router-dom";
-import Alert from 'react-bootstrap/Alert';
-import 'bootstrap/dist/css/bootstrap.min.css'
+import { Form, Input, Button, message } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { UserOutlined, LockOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
 import { FaFacebookF, FaTelegram, FaWhatsapp } from 'react-icons/fa';
-import '../../../style/registerPg.scss'
+import '../../../style/registerPg.scss';
+import './form.scss'
+import api from '../../../../../config/axios';
+
 function BasicExample() {
-  // Define state for each input
-  const [accountName, setAccountName] = useState('');
-  const [accountEmail, setEmail] = useState('');
-  const [accountPassword, setPassword] = useState('');
-  const [accountPhone, setPhone] = useState('');
-  const [agree, setAgree] = useState(false);
-  const [message, setMessage] = useState('');
+  const [messageText, setMessageText] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    // Log the data before sending the request
-    const requestData = {
-      accountName,
-      accountEmail,
-      accountPassword,
-      accountPhone,
-    };
-    console.log('Request Data:', requestData);
-
+  const handleSubmit = async (values) => {
     try {
-      const response = await api.post('api/Login/register', requestData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await api.post('api/Login/register', values);
 
-      console.log('Response:', response);
-
-      if (response.status !== 200) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      if (response.status === 200) {
+        message.success('Account created successfully!');
+        navigate('/login');
+      } else {
+        message.error('Failed to create account. Please check your inputs.');
       }
 
-      // Clear form inputs
-      setAccountName('');
-      setEmail('');
-      setPassword('');
-      setPhone('');
-      setAgree(false);
-
-      // Set success message and navigate to login page with the message in URL parameters
-      setMessage('Account created successfully!');
-      navigate("/login?successMessage=Account+created+successfully!");
-      console.log('Response Data:', response.data);
+      console.log('Response:', response);
     } catch (error) {
       console.error('Error:', error);
-      setMessage('Failed to create account. Please check your inputs.');
+      message.error('Failed to create account. Please check your inputs.');
     }
   };
 
-  const handleInputChange = () => {
-    setMessage('');
-  };
-
   const handleLogin = () => {
-    navigate("/login");
+    navigate('/login');
   };
 
   return (
     <div className="form-container">
-      <div className='Alert'>
-        {message && <Alert key={'danger'} variant={'danger'}>
-          {message}
-        </Alert>}</div>
-      <Form onSubmit={handleSubmit}>
-        <Form.Group className="mb-3" controlId="formBasicAccountName">
-          <Form.Label>Account Name</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="User Name"
-            value={accountName}
-            onChange={(e) => {
-              setAccountName(e.target.value);
-              handleInputChange();
-            }}
-          />
-        </Form.Group>
+      <Form
+        name="basic"
+        onFinish={handleSubmit}
+      >
+        <h1 className="form-title">Sign Up</h1> {/* Tiêu đề của form */}
 
-        <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>Email address</Form.Label>
-          <Form.Control
-            type="email"
-            placeholder="Example@gmail.com"
-            value={accountEmail}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              handleInputChange();
-            }}
-          />
-          <Form.Text className="text-muted" />
-        </Form.Group>
+        <Form.Item
+          name="accountName"
+          rules={[{ required: true, message: 'Please input your username!' }]}
+        >
+          <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
+        </Form.Item>
 
-        <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="Password"
-            value={accountPassword}
-            onChange={(e) => {
-              setPassword(e.target.value);
-              handleInputChange();
-            }}
-          />
-        </Form.Group>
+        <Form.Item
+          name="accountEmail"
+          rules={[{ required: true, message: 'Please input your email!' }]}
+        >
+          <Input prefix={<MailOutlined className="site-form-item-icon" />} type="email" placeholder="Email" />
+        </Form.Item>
 
-        <Form.Group className="mb-3" controlId="formBasicPhone">
-          <Form.Label>Phone</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Phone Number"
-            value={accountPhone}
-            onChange={(e) => {
-              setPhone(e.target.value);
-              handleInputChange();
-            }}
-          />
-        </Form.Group>
+        <Form.Item
+          name="accountPassword"
+          rules={[{ required: true, message: 'Please input your password!' }]}
+        >
+          <Input.Password prefix={<LockOutlined className="site-form-item-icon" />} placeholder="Password" />
+        </Form.Item>
 
-        <Button className="Summitbt" variant="primary" type="submit">
-          Register
-        </Button>
-        <span className="re-login-link"><a onClick={handleLogin}> Yes, I have an account! Login</a></span>
-        <div className="re-social-icons">
-          <a href="#"><FaFacebookF /></a>
-          <a href="#"><FaWhatsapp /></a>
-          <a href="#"><FaTelegram /></a>
-        </div>
+        <Form.Item
+          name="accountPhone"
+          rules={[{ required: true, message: 'Please input your phone number!' }]}
+        >
+          <Input prefix={<PhoneOutlined className="site-form-item-icon" />} placeholder="Phone Number" />
+        </Form.Item>
+
+        <Form.Item>
+          <Button className="Summitbt" type="primary" htmlType="submit">
+            Register
+          </Button>
+          <span className="re-login-link"><a onClick={handleLogin}>Yes, I have an account! Login</a></span>
+          <div className="re-social-icons">
+            <a href="#"><FaFacebookF /></a>
+            <a href="#"><FaWhatsapp /></a>
+            <a href="#"><FaTelegram /></a>
+          </div>
+        </Form.Item>
       </Form>
-
     </div>
   );
 }
