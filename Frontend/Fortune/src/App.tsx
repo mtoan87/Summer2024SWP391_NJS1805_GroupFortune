@@ -26,6 +26,8 @@ import { useUser } from './WebApplication/Data/UserContext'; // Ensure correct i
 import MemberAccountWalletPg from './WebApplication/MemberPage/components/pages/member-account-wallet-pg/member-account-wallet-pg';
 import MyWalletPg from './WebApplication/MemberPage/components/pages/member-my-wallet-pg/my-wallet-pg';
 import UpdateWalletPg from './WebApplication/MemberPage/components/pages/member-update-wallet-pg/update-wallet-pg';
+import AdminPg from './WebApplication/AdminPage/page/AdminPg';
+import TableUser from './WebApplication/AdminPage/molecules/Users/TableUser';
 
 const App: React.FC = () => {
   const { user, setUser } = useUser();
@@ -68,7 +70,8 @@ const App: React.FC = () => {
               <Route path='/login' element={<Loginpg />} />
               {user?.role === 1 && (
                 <>
-
+                                   <Route index element={<AdminPg/>} />
+                                   <Route path="/adminUser" element ={<TableUser/>} />
                 </>
               )}
               {user?.role === 2 && (

@@ -23,28 +23,44 @@ const MemberHeader: React.FC = () => {
         navigate(path);
     };
 
-    const menu = (
-        <Menu>
-            <Menu.Item key="1" icon={<ShoppingOutlined />} onClick={() => handleNavigate("/userBid")}>
-                My Biddings
-            </Menu.Item>
-            <Menu.Item key="2" icon={<AppstoreOutlined />} onClick={() => handleNavigate("/userAuc")}>
-                My auctions
-            </Menu.Item>
-            <Menu.Item key="3" icon={<ShoppingOutlined />} onClick={() => handleNavigate("/userJewel")}>
-                My jewelries
-            </Menu.Item>
-            <Menu.Item key="4" icon={<ShoppingOutlined />} onClick={() => handleNavigate("/userWallet")}>
-                My wallet
-            </Menu.Item>
-            <Menu.Item key="5" icon={<SettingOutlined />} onClick={() => handleNavigate("/mydashboard")}>
-                My DashBoard
-            </Menu.Item>
-            <Menu.Item key="6" icon={<LogoutOutlined />} onClick={handleLogout}>
-                Logout
-            </Menu.Item>
-        </Menu>
-    );
+    const items = [
+        {
+            key: "1",
+            label: "My Biddings",
+            icon: <ShoppingOutlined />,
+            onClick: () => handleNavigate("/userBid")
+        },
+        {
+            key: "2",
+            label: "My auctions",
+            icon: <AppstoreOutlined />,
+            onClick: () => handleNavigate("/userAuc")
+        },
+        {
+            key: "3",
+            label: "My jewelries",
+            icon: <ShoppingOutlined />,
+            onClick: () => handleNavigate("/userJewel")
+        },
+        {
+            key: "4",
+            label: "My wallet",
+            icon: <ShoppingOutlined />,
+            onClick: () => handleNavigate("/userWallet")
+        },
+        {
+            key: "5",
+            label: "My DashBoard",
+            icon: <SettingOutlined />,
+            onClick: () => handleNavigate("/mydashboard")
+        },
+        {
+            key: "6",
+            label: "Logout",
+            icon: <LogoutOutlined />,
+            onClick: handleLogout
+        },
+    ];
 
     return (
         <div className="member-header-home">
@@ -89,7 +105,12 @@ const MemberHeader: React.FC = () => {
                                 onMouseLeave={() => setIsHovered(false)}
                                 style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
                             >
-                                <Dropdown overlay={menu} trigger={['click']}>
+                                <Dropdown
+                                    menu={{
+                                        items: items
+                                    }}
+                                    trigger={['click']}
+                                >
                                     <Button type="link" onClick={e => e.preventDefault()} style={{ display: 'flex', alignItems: 'center' }}>
                                         <FaRegUser className="user-icon" />
                                         <h3 className="user-name" style={{ margin: '0 0 0 5px' }}>{user.name}</h3>

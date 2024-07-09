@@ -92,7 +92,7 @@ function StaffViewJewelryDetails() {
     if (Object.keys(newErrors).length > 0) {
       return;
     }
-
+  
     const formData = new FormData();
     formData.append('AccountId', jewelryDetails.accountId);
     formData.append('Name', jewelryDetails.name);
@@ -117,22 +117,36 @@ function StaffViewJewelryDetails() {
       const convertedPurity = purityMapping[jewelryDetails.purity];
       formData.append('Purity', convertedPurity);
     }
-
+  
     try {
       const endpoint = material === 'Gold'
         ? `/api/JewelryGold/UpdateJewelryGoldStaff?id=${id}`
         : `/api/JewelrySilver/UpdateJewelrySilverStaff?id=${id}`;
-      await api.post(endpoint, formData, {
+      console.log("Endpoint:", endpoint);
+      console.log("FormData:", Array.from(formData.entries()));
+      
+      const response = await api.post(endpoint, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
-      message.success('Jewelry updated successfully!');
-      navigate('/');
+      
+      // Check response status and data
+      console.log("API Response Status:", response.status);
+      console.log("API Response Data:", response.data);
+      
+      if (response.status === 200) {
+        message.success('Jewelry updated successfully!');
+        navigate('/');
+      } else {
+        message.error('Error updating jewelry: Unexpected response status');
+      }
     } catch (error) {
+      console.error('Error updating jewelry:', error);
       message.error('Error updating jewelry: ' + error.message);
     }
   };
+  
 
   return (
     <div>

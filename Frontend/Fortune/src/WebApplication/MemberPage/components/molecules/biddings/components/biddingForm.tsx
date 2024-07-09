@@ -1,4 +1,4 @@
-import { ReactHTMLElement, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { ClockCircleOutlined, DollarCircleOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
@@ -18,6 +18,7 @@ function BiddingForm() {
     const [currentHightPrice, setCurrentHightPrice] = useState(0);
     const [highestPrice, setHighestPrice] = useState(null);
     const [isAuctionActive, setIsAuctionActive] = useState(true);
+    const [bidResponse, setBidResponse] = useState(null);
     const storedUser = sessionStorage.getItem("loginedUser");
     const user = storedUser ? JSON.parse(storedUser) : null;
     const accountId = user ? user.accountId : null;
@@ -34,7 +35,6 @@ function BiddingForm() {
             setStartTime(startDate.toLocaleTimeString());
             setEndTime(endDate.toLocaleTimeString());
 
-            // SET STARTING PRICE
             let fetchedStartingPrice = 0;
             if (auctionData.jewelryGoldId) {
                 const jewelryResponse = await api.get(`/api/JewelryGold/GetById/${auctionData.jewelryGoldId}`);
@@ -50,8 +50,8 @@ function BiddingForm() {
             setStartingPrice(fetchedStartingPrice);
 
             const bidsResponse = await api.get(`/api/Bid/GetBidByAuctionId/${auctionData.auctionId}`);
-            const auctionBids = bidsResponse.data.$values;
-
+            const auctionBids = bidsResponse.data;
+            console.log(auctionBids);
             const highPrice = auctionBids.length > 0 ? Math.max(...auctionBids.map(bid => bid.maxprice)) : fetchedStartingPrice;
             setHighestPrice(highPrice);
             setCurrentHightPrice(highPrice);
@@ -65,6 +65,18 @@ function BiddingForm() {
         fetchAuctionDetails();
     }, [id]);
 
+    useEffect(() => {
+        if (bidResponse) {
+            if (bidResponse.status === 200) {
+                setHighestPrice(currentHightPrice + bidAmount);
+                setBidAmount(0);
+                toast.success('Bid submitted successfully!');
+            } else {
+                toast.error('Error submitting bid. Please try again.');
+            }
+        }
+    }, [bidResponse]);
+
     const handleBidSubmit = async () => {
         if (!bidAmount || isNaN(bidAmount) || bidAmount <= 0) {
             toast.error('Please enter a valid bid amount.');
@@ -73,24 +85,13 @@ function BiddingForm() {
 
         try {
             const bidData = {
-                bidId: id,
+                bidId: auction.bidId,
                 auctionId: auction.auctionId,
                 bidStep: bidAmount,
             };
 
             const response = await api.post('/api/Bid/Bidding', bidData);
-
-            if (response.status === 200) {
-                setHighestPrice(currentHightPrice + bidAmount);
-                setBidAmount(0);
-                toast.success('Bid submitted successfully!');
-
-                // Update highest price after successful bid
-                // const newHighestPrice = parseFloat(bidAmount);
-                // setHighestPrice(newHighestPrice);
-            } else {
-                toast.error('Error submitting bid. Please try again.');
-            }
+            setBidResponse(response);
         } catch (err) {
             console.error('Error submitting bid:', err);
             toast.error('Error submitting bid. Please try again.');
@@ -123,7 +124,7 @@ function BiddingForm() {
                             min={0}
                             max={99999}
                             step={1}
-                            value={bidAmount == 0 ? "" : bidAmount}
+                            value={bidAmount === 0 ? "" : bidAmount}
                             onChange={(e) => setBidAmount(parseFloat(e.target.value))}
                             disabled={!isAuctionActive}
                         />
