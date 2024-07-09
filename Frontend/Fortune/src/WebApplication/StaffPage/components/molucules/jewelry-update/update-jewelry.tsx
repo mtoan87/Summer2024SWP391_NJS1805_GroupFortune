@@ -5,7 +5,7 @@ import api from '../../../../../config/axios';
 import './update-jewelry.scss';
 import { EditOutlined } from '@ant-design/icons';
 
-const shipmentOptions = ["Delivering", "Deliveried"];  // Chỉ định hai lựa chọn
+const shipmentOptions = ["Delivering", "Deliveried"];
 
 const GoldAgeMapping = {
   'Gold14': '14K',
@@ -27,6 +27,8 @@ function StaffViewJewelryDetails() {
     weightUnit: '',
     goldAge: '',
     purity: '',
+    clarity: '',
+    carat: '',
     price: '',
     collection: '',
     jewelryImg: '',
@@ -38,8 +40,22 @@ function StaffViewJewelryDetails() {
 
   useEffect(() => {
     const fetchJewelryDetails = async () => {
+      if (!id) {
+        console.error('Missing id');
+        return;
+      }
+      console.log('ID:', id);
+      console.log('Material:', material);
       try {
-        const response = await api.get(`/api/Jewelry${material === 'Gold' ? 'Gold' : 'Silver'}/GetById/${id}`);
+        let response;
+        if (material === 'Gold') {
+          response = await api.get(`/api/JewelryGold/GetById/${id}`);
+        } else if (material === 'GoldDia') {
+          response = await api.get(`/api/JewelryGoldDia/GetById/${id}`);
+          console.log("Gold Diamond: ", response.data)
+        } else {
+          response = await api.get(`/api/JewelrySilver/GetById/${id}`);
+        }
         console.log("API Response:", response.data);
         setJewelryDetails(response.data);
       } catch (error) {
@@ -67,7 +83,7 @@ function StaffViewJewelryDetails() {
     if (Object.keys(newErrors).length > 0) {
       return;
     }
-  
+
     const formData = new FormData();
     formData.append('AccountId', jewelryDetails.accountId);
     formData.append('Name', jewelryDetails.name);
@@ -79,8 +95,12 @@ function StaffViewJewelryDetails() {
     formData.append('WeightUnit', jewelryDetails.weightUnit);
     formData.append('jewelryImg', jewelryDetails.jewelryImg);
     formData.append('Shipment', jewelryDetails.shipment);
-    
+
     if (material === 'Gold') {
+      formData.append('GoldAge', jewelryDetails.goldAge);
+    } else if (material === 'GoldDia') {
+      formData.append('Clarity', jewelryDetails.clarity);
+      formData.append('Carat', jewelryDetails.carat);
       formData.append('GoldAge', jewelryDetails.goldAge);
     } else {
       const purityMapping = {
@@ -95,20 +115,21 @@ function StaffViewJewelryDetails() {
     try {
       const endpoint = material === 'Gold'
         ? `/api/JewelryGold/UpdateJewelryGoldStaff?id=${id}`
-        : `/api/JewelrySilver/UpdateJewelrySilverStaff?id=${id}`;
-    
+        : (material === 'GoldDia'
+          ? `/api/JewelryGoldDia/UpdateJewelryGoldDiamondStaff?id=${id}`
+          : `/api/JewelrySilver/UpdateJewelrySilverStaff?id=${id}`);
+
       console.log("Endpoint:", endpoint);
       console.log("FormData:", Array.from(formData.entries()));
-      
+
       const response = await api.put(endpoint, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
-      // Check response status and data
+
       console.log("API Response Status:", response.status);
       console.log("API Response Data:", response.data);
-      console.log("Endpoint:", endpoint);
 
       if (response.status === 200) {
         message.success('Jewelry updated successfully!');
@@ -121,7 +142,6 @@ function StaffViewJewelryDetails() {
       message.error('Error updating jewelry: ' + error.message);
     }
   };
-  
 
   return (
     <div>
@@ -148,7 +168,7 @@ function StaffViewJewelryDetails() {
           <label htmlFor="category">Category</label>
           <input type="text" name="category" value={jewelryDetails.category} disabled />
 
-          {jewelryDetails.materials === 'Gold' && (
+          {material === 'Gold' && (
             <>
               <label htmlFor="goldAge">Gold Age</label>
               <select name="goldAge" value={jewelryDetails.goldAge} onChange={handleInputChange} disabled>
@@ -159,11 +179,26 @@ function StaffViewJewelryDetails() {
             </>
           )}
 
-          {jewelryDetails.materials === 'Silver' && (
+          {material === 'Silver' && (
             <>
               <label htmlFor="purity">Purity</label>
               <input type="text" name="purity" value={jewelryDetails.purity} disabled onChange={handleInputChange} />
               {errors.purity && <span className="error">{errors.purity}</span>}
+            </>
+          )}
+
+          {material === 'GoldDia' && (
+            <>
+              <label htmlFor="goldAge">Gold Age</label>
+              <select name="goldAge" value={jewelryDetails.goldAge} onChange={handleInputChange} disabled>
+                {Object.keys(GoldAgeMapping).map(key => (
+                  <option key={key} value={key}>{GoldAgeMapping[key]}</option>
+                ))}
+              </select>
+              <label htmlFor="clarity">Clarity</label>
+              <input type="text" name="clarity" value={jewelryDetails.clarity} onChange={handleInputChange} />
+              <label htmlFor="carat">Carat</label>
+              <input type="text" name="carat" value={jewelryDetails.carat} onChange={handleInputChange} />
             </>
           )}
 

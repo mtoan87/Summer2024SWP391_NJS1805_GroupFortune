@@ -165,7 +165,7 @@ function StaffViewJewelry() {
         {golddiaJewelry.length > 0 && (
           <>
             {golddiaJewelry.filter(filterJewelry).map((jewelry) => (
-              <div key={jewelry.jewelryGoldDiaId} className="jewelry-item">
+              <div key={jewelry.jewelryGolddiaId} className="jewelry-item">
                 <img
                   className='item-img'
                   src={`https://localhost:44361/${jewelry.jewelryImg}`}
@@ -176,12 +176,14 @@ function StaffViewJewelry() {
                 <p>Description: {jewelry.description}</p>
                 <p>Category: {jewelry.category}</p>
                 <p>Gold Age: {jewelry.goldAge}</p>
+                <p>Clarity: {jewelry.clarity}</p>
+                <p>Carat: {jewelry.carat}</p>
                 <p>Materials: {jewelry.materials}</p>
                 <p>Weight: {jewelry.weight}</p>
                 <p>Price: {jewelry.price}$</p>
                 <p>Shipment: {jewelry.shipment}</p>
                 <div className="jewelry-item-buttons">
-                  <button onClick={() => handleUpdateJewelry(jewelry.jewelryGoldDiaId, "GoldDia")}>
+                  <button onClick={() => handleUpdateJewelry(jewelry.jewelryGolddiaId, "GoldDia")}>
                     <EditOutlined /> Update
                   </button>
                 </div>
