@@ -24,13 +24,13 @@ function StaffViewJewelryDetails() {
     description: '',
     category: '',
     weight: '',
-    weightUnit: 'grams',
+    weightUnit: '',
     goldAge: '',
     purity: '',
     price: '',
     collection: '',
     jewelryImg: '',
-    shipment: 'Pending'
+    shipment: ''
   });
   const [errors, setErrors] = useState({});
   const { id, material } = useParams();

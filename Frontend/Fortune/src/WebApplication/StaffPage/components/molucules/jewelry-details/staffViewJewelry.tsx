@@ -4,11 +4,12 @@ import api from '../../../../../config/axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { EditOutlined, FileAddOutlined,SearchOutlined  } from '@ant-design/icons';
+import { EditOutlined, FileAddOutlined, SearchOutlined } from '@ant-design/icons';
 
 function StaffViewJewelry() {
   const [goldJewelry, setGoldJewelry] = useState([]);
   const [silverJewelry, setSilverJewelry] = useState([]);
+  const [golddiaJewelry, setGoldDiaJewelry] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const loginedUser = JSON.parse(sessionStorage.getItem('loginedUser'));
   const accountId = loginedUser?.accountId;
@@ -35,14 +36,26 @@ function StaffViewJewelry() {
         console.log(response.data);
         setSilverJewelry(response.data?.$values || []); 
       } catch (err) {
-        console.error('Error fetching silver jewelry', err);
+        console.error('Error fetching Silver jewelry', err);
         setSilverJewelry([]);
+      }
+    };
+
+    const fetchGoldDiaJewelry = async () => {
+      try {
+        const response = await api.get(`/api/JewelryGoldDia`);
+        console.log(response.data);
+        setGoldDiaJewelry(response.data?.$values || []); 
+      } catch (err) {
+        console.error('Error fetching Gold Dia jewelry', err);
+        setGoldDiaJewelry([]);
       }
     };
 
     if (accountId) {
       fetchGoldJewelry();
       fetchSilverJewelry();
+      fetchGoldDiaJewelry();
     } else {
       console.error('No accountId found in loginedUser');
     }
@@ -59,8 +72,6 @@ function StaffViewJewelry() {
   const handleUpdateJewelry = (jewelryId, material) => {
     navigate(`/staff/update-jewelry/${jewelryId}/${material}`);
   };
-
-
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
@@ -97,8 +108,7 @@ function StaffViewJewelry() {
         </div>
       </div>
       <div className="jewelry-container">
-       
-      
+
         {goldJewelry.length > 0 && (
           <>
             {goldJewelry.filter(filterJewelry).map((jewelry) => (
@@ -120,14 +130,12 @@ function StaffViewJewelry() {
                   <button onClick={() => handleUpdateJewelry(jewelry.jewelryGoldId, "Gold")}>
                     <EditOutlined /> Update
                   </button>
-
                 </div>
               </div>
             ))}
           </>
         )}
 
-      
         {silverJewelry.length > 0 && (
           <>
             {silverJewelry.filter(filterJewelry).map((jewelry) => (
@@ -155,8 +163,34 @@ function StaffViewJewelry() {
           </>
         )}
 
-  
-        {goldJewelry.length === 0 && silverJewelry.length === 0 && (
+        {golddiaJewelry.length > 0 && (
+          <>
+            {golddiaJewelry.filter(filterJewelry).map((jewelry) => (
+              <div key={jewelry.jewelryGoldDiaId} className="jewelry-item">
+                <img
+                  className='item-img'
+                  src={`https://localhost:44361/${jewelry.jewelryImg}`}
+                  alt={jewelry.name}
+                  onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
+                />
+                <h3>{jewelry.name}</h3>
+                <p>Description: {jewelry.description}</p>
+                <p>Category: {jewelry.category}</p>
+                <p>Gold Age: {jewelry.goldAge}</p>
+                <p>Materials: {jewelry.materials}</p>
+                <p>Weight: {jewelry.weight}</p>
+                <p>Price: {jewelry.price}$</p>
+                <div className="jewelry-item-buttons">
+                  <button onClick={() => handleUpdateJewelry(jewelry.jewelryGoldDiaId, "GoldDia")}>
+                    <EditOutlined /> Update
+                  </button>
+                </div>
+              </div>
+            ))}
+          </>
+        )}
+
+        {goldJewelry.length === 0 && silverJewelry.length === 0 && golddiaJewelry.length === 0 && (
           <p>No jewelry items found.</p>
         )}
       </div>
