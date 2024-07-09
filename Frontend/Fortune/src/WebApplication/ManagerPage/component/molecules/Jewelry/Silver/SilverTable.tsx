@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Tooltip, Button, message, Input } from 'antd';
+import { Table, Tooltip, Button, message, Input, Select } from 'antd';
 import { TableProps } from 'antd/es/table';
 import api from '../../../../../../config/axios';
 
@@ -37,19 +37,19 @@ const Purity = {
 };
 
 const columns = (
-  toggleStatus: (record: JewelrySilver) => void,
   handlePriceChange: (value: string, record: JewelrySilver) => void,
-  savePrice: (record: JewelrySilver) => void
+  handleStatusChange: (value: string, record: JewelrySilver) => void,
+  handleUpdate: (record: JewelrySilver) => void
 ) => [
   {
     title: 'Jewelry ID',
     dataIndex: 'jewelrySilverId',
-    width: '11%',
+    width: '10%',
   },
   {
     title: 'Name',
     dataIndex: 'name',
-    width: '20%',
+    width: '15%',
     render: (text: string, record: JewelrySilver) => (
       <Tooltip title={<img src={`https://localhost:44361/${record.jewelryImg}`} alt={record.name} style={{ maxWidth: '200px' }} />}>
         <span>{text}</span>
@@ -59,45 +59,23 @@ const columns = (
   {
     title: 'Category',
     dataIndex: 'category',
-    width: '15%',
+    width: '10%',
     filters: [
       { text: 'Ring', value: 'Ring' },
       { text: 'Necklace', value: 'Necklace' },
-      { text: 'Bracelet', value: 'Bracelet' },
-      { text: 'Earrings', value: 'Earrings' },
-      { text: 'Pendant', value: 'Pendant' },
-      { text: 'Brooch', value: 'Brooch' },
-      { text: 'Anklet', value: 'Anklet' },
-      { text: 'Charm', value: 'Charm' },
-      { text: 'Cufflinks', value: 'Cufflinks' },
-      { text: 'Tiara', value: 'Tiara' },
-      { text: 'Diadem', value: 'Diadem' },
-      { text: 'Choker', value: 'Choker' },
-      { text: 'Bangle', value: 'Bangle' },
-      { text: 'Hairpin', value: 'Hairpin' },
-      { text: 'Barrette', value: 'Barrette' },
-      { text: 'Locket', value: 'Locket' },
-      { text: 'SignetRing', value: 'SignetRing' },
-      { text: 'StudEarrings', value: 'StudEarrings' },
-      { text: 'HoopEarrings', value: 'HoopEarrings' },
-      { text: 'Cameo', value: 'Cameo' },
-      { text: 'ClusterRing', value: 'ClusterRing' },
-      { text: 'CocktailRing', value: 'CocktailRing' },
-      { text: 'CuffBracelet', value: 'CuffBracelet' }
+      // Add other categories here
     ],
     onFilter: (value, record) => record.category.includes(value as string),
   },
   {
-    title: 'Shipment',
-    dataIndex: 'shipment',
-  },
-  {
     title: 'Materials',
     dataIndex: 'materials',
+    width: '10%',
   },
   {
     title: 'Description',
     dataIndex: 'description',
+    width: '15%',
   },
   {
     title: 'Purity',
@@ -116,37 +94,44 @@ const columns = (
     dataIndex: 'price',
     width: '10%',
     render: (price: number | null, record: JewelrySilver) => (
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <Input
-          value={price !== null ? price.toString() : ''}
-          onChange={(e) => handlePriceChange(e.target.value, record)}
-          onBlur={() => savePrice(record)}
-          style={{ width: '10%' }}
-        />
-        <span>$</span>
-      </div>
+      <Input
+        value={price !== null ? price.toString() : ''}
+        onChange={(e) => handlePriceChange(e.target.value, record)}
+        style={{ width: '100%' }}
+      />
     ),
-    
-  },
-  {
-    title: 'Weight',
-    dataIndex: 'weight',
   },
   {
     title: 'Status',
     dataIndex: 'status',
+    width: '10%',
     filters: [
       { text: 'Verified', value: 'Verified' },
-      { text: 'UnVerified', value: 'UnVerified' },
+      { text: 'Unverified', value: 'Unverified' },
     ],
     onFilter: (value, record) => record.status.includes(value as string),
-    render: (_: string, record: JewelrySilver) => (
-      <Button
-        type="primary"
-        onClick={() => toggleStatus(record)}
-        style={{ backgroundColor: record.status === 'Verified' ? 'green' : 'grey', borderColor: record.status === 'Verified' ? 'green' : 'grey' }}
+    render: (status: string, record: JewelrySilver) => (
+      <Select
+        value={status}
+        onChange={(value) => handleStatusChange(value, record)}
+        style={{ width: '100%' }}
       >
-        {record.status === 'Verified' ? 'Verified' : 'Unverified'}
+        <Select.Option value="Verified">Verified</Select.Option>
+        <Select.Option value="Unverified">Unverified</Select.Option>
+      </Select>
+    ),
+  },
+  {
+    title: 'Weight',
+    dataIndex: 'weight',
+    width: '10%',
+  },
+  {
+    title: 'Actions',
+    dataIndex: 'actions',
+    render: (_: string, record: JewelrySilver) => (
+      <Button type="primary" onClick={() => handleUpdate(record)}>
+        Update
       </Button>
     ),
   },
@@ -168,10 +153,10 @@ const SilverTable: React.FC = () => {
     api.get('/api/JewelrySilver', { params })
       .then((response) => {
         const jewelrySilverData = response.data.$values
-          .filter((item: any) => item.price !== undefined)
+          .filter((item: any) => item.price !== undefined) // Filter out items without price
           .map((item: any) => ({
             ...item,
-            price: item.price,
+            price: item.price, // Price is already defined here
           }));
         setData(jewelrySilverData);
         setLoading(false);
@@ -194,7 +179,7 @@ const SilverTable: React.FC = () => {
     page: params.pagination?.current,
     sortField: params.sortField,
     sortOrder: params.sortOrder,
-    ...params.filters,
+    ...params.filters, // Include filters directly in the params object
   });
 
   useEffect(() => {
@@ -219,43 +204,13 @@ const SilverTable: React.FC = () => {
       sortField: sorter.field,
     });
 
+    // Clear data when pagination settings change
     if (
       pagination.pageSize &&
       pagination.pageSize !== tableParams.pagination?.pageSize
     ) {
       setData([]);
     }
-  };
-
-  const toggleStatus = (record: JewelrySilver) => {
-    const newStatus = record.status === 'Verified' ? 'Unverified' : 'Verified';
-    const updatedRecord = { ...record, status: newStatus };
-
-    const formData = new FormData();
-    formData.append('AccountId', record.accountId.toString());
-    formData.append('JewelryImg', record.jewelryImg);
-    formData.append('Name', record.name);
-    formData.append('Materials', record.materials);
-    formData.append('Category', record.category);
-    formData.append('Description', record.description);
-    formData.append('Weight', record.weight);
-    formData.append('Purity', record.purity);
-    formData.append('Price', record.price !== null ? record.price.toString() : '');
-    formData.append('Status', newStatus);
-
-    api.put(`/api/JewelrySilver/UpdateJewelrySilverManager?id=${record.jewelrySilverId}`, formData)
-      .then(() => {
-        setData((prevData) =>
-          prevData.map((item) =>
-            item.jewelrySilverId === record.jewelrySilverId ? updatedRecord : item
-          )
-        );
-        message.success(`Status updated to ${newStatus}`);
-      })
-      .catch((error) => {
-        console.error('Error updating status:', error);
-        message.error('Failed to update status');
-      });
   };
 
   const handlePriceChange = (value: string, record: JewelrySilver) => {
@@ -266,21 +221,19 @@ const SilverTable: React.FC = () => {
     );
   };
 
-  const savePrice = (record: JewelrySilver) => {
-    const updatedRecord = { ...record };
+  const handleStatusChange = (value: string, record: JewelrySilver) => {
+    setData((prevData) =>
+      prevData.map((item) =>
+        item.jewelrySilverId === record.jewelrySilverId ? { ...item, status: value } : item
+      )
+    );
+  };
 
+  const handleUpdate = (record: JewelrySilver) => {
+    const updatedRecord = { ...record };
     const formData = new FormData();
-    formData.append('AccountId', record.accountId.toString());
-    formData.append('JewelryImg', record.jewelryImg);
-    formData.append('Name', record.name);
-    formData.append('Materials', record.materials);
-    formData.append('Category', record.category);
-    formData.append('Description', record.description);
-    formData.append('Weight', record.weight);
-    formData.append('Purity', record.purity);
     formData.append('Price', record.price !== null ? record.price.toString() : '');
     formData.append('Status', record.status);
-
     api.put(`/api/JewelrySilver/UpdateJewelrySilverManager?id=${record.jewelrySilverId}`, formData)
       .then(() => {
         setData((prevData) =>
@@ -288,24 +241,26 @@ const SilverTable: React.FC = () => {
             item.jewelrySilverId === record.jewelrySilverId ? updatedRecord : item
           )
         );
-        
+        message.success('Record updated successfully');
       })
       .catch((error) => {
-        console.error('Error updating price:', error);
-        message.error('Failed to update price');
+        console.error('Error updating record:', error);
+        message.error('Failed to update record');
       });
   };
 
-  return (<>
-    <h1>Silver Jewelry Management</h1>
-    <Table
-      columns={columns(toggleStatus, handlePriceChange, savePrice)}
-      rowKey={(record) => record.jewelrySilverId.toString()}
-      dataSource={data}
-      pagination={tableParams.pagination}
-      loading={loading}
-      onChange={handleTableChange}
-    /></>
+  return (
+    <>
+      <h1>Silver Jewelry Management</h1>
+      <Table
+        columns={columns(handlePriceChange, handleStatusChange, handleUpdate)}
+        rowKey={(record) => record.jewelrySilverId.toString()}
+        dataSource={data}
+        pagination={tableParams.pagination}
+        loading={loading}
+        onChange={handleTableChange}
+      />
+    </>
   );
 };
 

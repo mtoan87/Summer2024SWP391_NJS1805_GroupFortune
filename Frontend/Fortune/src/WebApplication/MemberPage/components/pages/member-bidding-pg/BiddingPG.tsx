@@ -4,9 +4,9 @@ import { Helmet } from 'react-helmet';
 function BiddingPG() {
     return (
         <div>
-            {/* <Helmet>1
-                <meta http-equiv="refresh" content="1" />
-            </Helmet> */}
+            <Helmet>
+                <meta http-equiv="refresh" content="10" />
+            </Helmet>
             <BiddingTmp />
         </div>
     )

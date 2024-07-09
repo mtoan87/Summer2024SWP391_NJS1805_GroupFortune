@@ -233,12 +233,10 @@ const GoldTable: React.FC = () => {
 
   const handleUpdate = (record: JewelryGold) => {
     const updatedRecord = { ...record };
-    const payload = {
-      price: record.price !== null ? record.price.toString() : '',
-      status: record.status,
-    };
-
-    api.put(`/api/JewelryGold/UpdateJewelryGoldManager?id=${record.jewelryGoldId}`, payload)
+    const formData = new FormData();
+    formData.append('Price', record.price !== null ? record.price.toString() : '');
+    formData.append('Status', record.status);
+    api.put(`/api/JewelryGold/UpdateJewelryGoldManager?id=${record.jewelryGoldId}`, formData)
       .then(() => {
         setData((prevData) =>
           prevData.map((item) =>

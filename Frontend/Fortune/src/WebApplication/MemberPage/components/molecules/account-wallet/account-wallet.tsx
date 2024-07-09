@@ -41,7 +41,7 @@ function AccountWallet() {
         <>
 
             <form onSubmit={handleSubmit} className="wallet-form">
-                <h1>My Wallet</h1>
+                {/* <h1>My Wallet</h1> */}
                 <div className="form-group">
                     <label htmlFor="bankName">Bank Name</label>
                     <input

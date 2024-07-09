@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { message } from 'antd';
 import api from '../../../../../config/axios';
@@ -92,7 +92,6 @@ function StaffViewJewelryDetails() {
     formData.append('Category', jewelryDetails.category);
     formData.append('Weight', jewelryDetails.weight);
     formData.append('Price', jewelryDetails.price);
-    formData.append('WeightUnit', jewelryDetails.weightUnit);
     formData.append('jewelryImg', jewelryDetails.jewelryImg);
     formData.append('Shipment', jewelryDetails.shipment);
 
@@ -167,6 +166,9 @@ function StaffViewJewelryDetails() {
 
           <label htmlFor="category">Category</label>
           <input type="text" name="category" value={jewelryDetails.category} disabled />
+          
+          <label htmlFor="weight">Weight</label>
+          <input type="text" name="weight" value={jewelryDetails.weight} disabled />
 
           {material === 'Gold' && (
             <>
@@ -182,7 +184,7 @@ function StaffViewJewelryDetails() {
           {material === 'Silver' && (
             <>
               <label htmlFor="purity">Purity</label>
-              <input type="text" name="purity" value={jewelryDetails.purity} disabled onChange={handleInputChange} />
+              <input type="text" name="purity" value={jewelryDetails.purity} disabled />
               {errors.purity && <span className="error">{errors.purity}</span>}
             </>
           )}

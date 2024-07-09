@@ -49,8 +49,7 @@ function AuctionDetails() {
             const wallets = response.data.$values;
             const userWallet = wallets.find(wallet => wallet.accountId === accountId);
             if (!userWallet) {
-                console.error(`No wallet found for accountId: ${accountId}`);
-                setIsModalVisible(true);
+                navigate('/register-wallet');
             } else {
                 setAccountWallet(userWallet);
             }
@@ -65,10 +64,8 @@ function AuctionDetails() {
     }, []);
 
     const handleJoinAuction = async () => {
-        if (!accountWallet) {
-            
+        if (!accountWallet) {       
         fetchAccountWallet();
-            return;
         }
         
         try {
