@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import './register-jewelry.scss';
 import api from '../../../../../config/axios';

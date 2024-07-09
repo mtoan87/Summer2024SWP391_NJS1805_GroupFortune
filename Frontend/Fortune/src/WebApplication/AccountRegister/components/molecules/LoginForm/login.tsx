@@ -3,11 +3,11 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import api from "../../../../../../src/config/axios";
-import './login.scss';
-import { useUser } from '../../../../../WebApplication/Data/UserContext';
-import Alert from 'react-bootstrap/Alert';
+import "./login.scss";
+import { useUser } from "../../../../../WebApplication/Data/UserContext";
+import Alert from "react-bootstrap/Alert";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { FaFacebookF, FaWhatsapp, FaTelegram } from 'react-icons/fa';
+import { FaFacebookF, FaWhatsapp, FaTelegram } from "react-icons/fa";
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -19,7 +19,7 @@ const LoginForm: React.FC = () => {
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const message = params.get('successMessage');
+    const message = params.get("successMessage");
     if (message) {
       setSuccessMessage(message);
       const timer = setTimeout(() => {
@@ -32,27 +32,10 @@ const LoginForm: React.FC = () => {
   useEffect(() => {
     const userString = sessionStorage.getItem("loginedUser");
     const user = userString ? JSON.parse(userString) : null;
-  
-    // if (user) {
+    // if (user && user.role_id === 2) {
     //   checkAccountWallet(user.accountId);
     // }
   }, []);
-
-  // const checkAccountWallet = async (accountId: number) => {
-  //   try {
-  //     const response = await api.get(`/AccountWallet/GetAccountWalletByAccountId/${accountId}`);
-  //     const accountWalletInfo = response.data;
-  //     if (accountWalletInfo) {
-  //       navigate('/');
-  //     } else {
-  //       navigate('/register-wallet');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error checking account wallet:', error);
-  //     toast.error("Failed to check account wallet. Please try again later!");
-  //   }
-  // };
-
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!email || !password) {
@@ -63,15 +46,14 @@ const LoginForm: React.FC = () => {
     try {
       const response = await api.post("api/Login/login", {
         accountEmail: email,
-        accountPassword: password
+        accountPassword: password,
       });
       const data = response.data;
       setUser(data);
       sessionStorage.setItem("loginedUser", JSON.stringify(data));
-      navigate('/');
-      // checkAccountWallet(data.accountId); 
+      navigate("/");
     } catch (error) {
-      console.error('Login failed:', error);
+      console.error("Login failed:", error);
       toast.error("Login failed. Please try again!");
     }
   };
@@ -88,14 +70,16 @@ const LoginForm: React.FC = () => {
     <div className="login-form">
       <div className="LoadedMessage">
         {successMessage && (
-          <Alert key={'success'} variant={'success'} className="Alert">
+          <Alert key={"success"} variant={"success"} className="Alert">
             {successMessage}
           </Alert>
         )}
       </div>
       <form className="login-form" onSubmit={handleLogin}>
         <div className="mb-3">
-          <label htmlFor="email" className="form-label">Email</label>
+          <label htmlFor="email" className="form-label">
+            Email
+          </label>
           <input
             type="email"
             id="email"
@@ -107,7 +91,9 @@ const LoginForm: React.FC = () => {
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="password" className="form-label">Password</label>
+          <label htmlFor="password" className="form-label">
+            Password
+          </label>
           <input
             type="password"
             id="password"
@@ -118,13 +104,25 @@ const LoginForm: React.FC = () => {
             autoComplete="on"
           />
         </div>
-        <button type="submit">Login</button>
-        <span className="register-link"><a onClick={handleRegister}>Don't have an account? Register</a></span>
-        <span className="forgot-link"><a onClick={handleForgot}> Forgot your password? Reset Password</a></span>
+        <button type="submit" className="btn btn-primary">
+          Login
+        </button>
+        <span className="register-link">
+          <a onClick={handleRegister}>Don't have an account? Register</a>
+        </span>
+        <span className="forgot-link">
+          <a onClick={handleForgot}> Forgot your password? Reset Password</a>
+        </span>
         <div className="social-icons">
-          <a href="#"><FaFacebookF /></a>
-          <a href="#"><FaWhatsapp /></a>
-          <a href="#"><FaTelegram /></a>
+          <a href="#">
+            <FaFacebookF />
+          </a>
+          <a href="#">
+            <FaWhatsapp />
+          </a>
+          <a href="#">
+            <FaTelegram />
+          </a>
         </div>
       </form>
     </div>
