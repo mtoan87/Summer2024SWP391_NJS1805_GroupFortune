@@ -6,7 +6,6 @@ function Loginpg() {
   return (
     <>
     <div className="login-body">
-      <h1>WELCOME</h1>
       <LoginForm />
     </div>
     </>
