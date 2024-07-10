@@ -15,7 +15,7 @@ import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import PaymentForm from './payment';
 import PaymentHistory from './PaymentHistory';
-
+import BidHistory from './myBids';
 const { Header, Content, Sider } = Layout;
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -41,9 +41,10 @@ const items: MenuItem[] = [
     getItem('500', '4', <PayCircleOutlined/>),
     getItem('Payment History', '5', <PayCircleOutlined/>),
   ]),
-  getItem('My Auction', '6', <ProductOutlined/>),
+  getItem('My Auction', '6', <ProductOutlined/>, [
+  getItem('Bid history', '7', <PayCircleOutlined/>),
+]),
 ];
-
 const MyDashboard: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [currentPage, setCurrentPage] = useState('1');
@@ -99,6 +100,7 @@ const MyDashboard: React.FC = () => {
             {currentPage === '4' && <div><PaymentForm/></div>}
             {currentPage === '5' && <div><PaymentHistory/></div>}
 
+            {currentPage === '7' && <div><BidHistory/></div>}
 
             {/* Add similar conditions for other pages if needed */}
           </div>

@@ -19,7 +19,10 @@ function MyBids() {
 
         const joinAuctions = joinAuctionsResponse.data?.$values || [];
         
-        const userJoinAuctions = joinAuctions.filter(auction => auction.accountId === accountId);
+        const userJoinAuctions = joinAuctions.filter(
+          auction => auction.accountId === accountId && auction.bidId
+        );
+        
 console.log(userJoinAuctions);
         // Fetch auction details for each joined auction
         const auctionDetailsPromises = userJoinAuctions.map(async (auction) => {
