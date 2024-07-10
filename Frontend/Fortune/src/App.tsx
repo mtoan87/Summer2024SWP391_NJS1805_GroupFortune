@@ -60,9 +60,9 @@ const App: React.FC = () => {
           {user === null ? (
             <>
               <Route index element={<GuestHomePg />} />
-              <Route path='register' element={<RegisterPg />} />
-              <Route path='forgotpass' element={<ForgotPass />} />
-              <Route path='login' element={<Loginpg />} />
+              <Route path='/register' element={<RegisterPg />} />
+              <Route path='/forgotpass' element={<ForgotPass />} />
+              <Route path='/login' element={<Loginpg />} />
               <Route path="/guest-auction/:id" element={<GuestAuctionDetailsPg />} />
             </>
           ) : (

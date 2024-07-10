@@ -1,31 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { message, Input, Button } from "antd";
 import api from "../../../../../../src/config/axios";
 import "./login.scss";
 import { useUser } from "../../../../../WebApplication/Data/UserContext";
-import Alert from "react-bootstrap/Alert";
-import "bootstrap/dist/css/bootstrap.min.css";
-import { FaFacebookF, FaWhatsapp, FaTelegram } from "react-icons/fa";
+import { MailOutlined, LockOutlined, FacebookOutlined, WhatsAppOutlined, SendOutlined } from "@ant-design/icons";
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
   const { setUser } = useUser();
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const message = params.get("successMessage");
-    if (message) {
-      setSuccessMessage(message);
-      const timer = setTimeout(() => {
-        setSuccessMessage(null);
-      }, 5000);
-      return () => clearTimeout(timer);
+    const successMessage = params.get("successMessage");
+    if (successMessage) {
+      message.success(successMessage);
     }
   }, [location.search]);
 
@@ -36,10 +28,11 @@ const LoginForm: React.FC = () => {
     //   checkAccountWallet(user.accountId);
     // }
   }, []);
+
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!email || !password) {
-      toast.error("Please enter your email address and password.");
+      message.error("Please enter your email address and password.");
       return;
     }
 
@@ -54,7 +47,7 @@ const LoginForm: React.FC = () => {
       navigate("/");
     } catch (error) {
       console.error("Login failed:", error);
-      toast.error("Login failed. Please try again!");
+      message.error("Login failed. Please try again!");
     }
   };
 
@@ -67,20 +60,14 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="login-form">
-      <div className="LoadedMessage">
-        {successMessage && (
-          <Alert key={"success"} variant={"success"} className="Alert">
-            {successMessage}
-          </Alert>
-        )}
-      </div>
       <form className="login-form" onSubmit={handleLogin}>
         <div className="mb-3">
+        <h1>Welcome</h1>
+
           <label htmlFor="email" className="form-label">
-            Email
+          <MailOutlined /> Email
           </label>
-          <input
+          <Input
             type="email"
             id="email"
             className="form-control"
@@ -92,9 +79,9 @@ const LoginForm: React.FC = () => {
         </div>
         <div className="mb-3">
           <label htmlFor="password" className="form-label">
-            Password
+          <LockOutlined /> Password
           </label>
-          <input
+          <Input
             type="password"
             id="password"
             className="form-control"
@@ -104,9 +91,9 @@ const LoginForm: React.FC = () => {
             autoComplete="on"
           />
         </div>
-        <button type="submit" className="btn btn-primary">
+        <Button type="primary" htmlType="submit" className="btn btn-primary">
           Login
-        </button>
+        </Button>
         <span className="register-link">
           <a onClick={handleRegister}>Don't have an account? Register</a>
         </span>
@@ -115,17 +102,17 @@ const LoginForm: React.FC = () => {
         </span>
         <div className="social-icons">
           <a href="#">
-            <FaFacebookF />
+            <FacebookOutlined />
           </a>
           <a href="#">
-            <FaWhatsapp />
+            <WhatsAppOutlined />
           </a>
           <a href="#">
-            <FaTelegram />
+            <SendOutlined />
           </a>
         </div>
       </form>
-    </div>
+    
   );
 };
 
