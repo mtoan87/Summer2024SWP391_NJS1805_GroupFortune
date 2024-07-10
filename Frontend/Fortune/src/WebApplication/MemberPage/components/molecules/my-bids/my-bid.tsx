@@ -76,7 +76,7 @@ console.log(userJoinAuctions);
           <p>No auctions found for this account.</p>
         ) : (
           auctionsData.map(auction => (
-            <div key={auction.id} className="auction-item">
+            <div key={auction.id} className="auction-item-bids">
               <p>Join Date: {new Date(auction.joindate).toLocaleString()}</p>
               <div className="auction-details">
                 <p>Name: {auction.jewelryDetails.name}</p>
