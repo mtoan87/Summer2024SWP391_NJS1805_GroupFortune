@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../../../../config/axios';
 import './update-wallet.scss';
+import { message } from 'antd';
 
 function UpdateWallet() {
     const [formData, setFormData] = useState({
-        accountWalletId: 0, // Initialize with a default value
+        accountwalletId: 0,
         bankName: '',
         bankNo: '',
         budget: 0,
@@ -18,7 +19,7 @@ function UpdateWallet() {
         const fetchWallet = async () => {
             try {
                 const response = await api.get(`/AccountWallet/GetAccountWalletByAccountId/${accountId}`);
-                setFormData({ ...response.data, accountWalletId: response.data.accountWalletId }); // Update state including accountWalletId
+                setFormData({ ...response.data});
             } catch (error) {
                 console.error('Error fetching wallet:', error);
             }
@@ -40,10 +41,11 @@ function UpdateWallet() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const { accountWalletId, ...dataWithoutId } = formData; 
-            const response = await api.put('/AccountWallet/UpdateAccountWallet', dataWithoutId); 
+            console.log(formData);
+            const response = await api.put(`/AccountWallet/UpdateAccountWallet?id=${formData.accountwalletId}`, formData); 
             console.log('Wallet updated successfully:', response.data);
-            navigate('/');
+            message.success('Update budget successfully');
+            navigate('/userWallet');
         } catch (error) {
             console.error('Error updating wallet:', error);
         }

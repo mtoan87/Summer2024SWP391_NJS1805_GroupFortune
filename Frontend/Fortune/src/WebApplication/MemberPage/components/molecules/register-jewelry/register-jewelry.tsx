@@ -4,6 +4,7 @@ import './register-jewelry.scss';
 import api from '../../../../../config/axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { message } from 'antd';
 
 function RegisterJewelryForAuction() {
   const navigate = useNavigate();
@@ -71,19 +72,23 @@ function RegisterJewelryForAuction() {
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    // Validate the date is at least 3 days from today
+    // set chosenDate by Date(formData.date)
     const chosenDate = new Date(formData.date);
+
+    // Set today
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+
+    // Set min date by assign today + 3
     const minDate = new Date(today);
     minDate.setDate(today.getDate() + 3);
   
+    // Check if chosenDate < minDate
     if (chosenDate < minDate) {
-      toast.error('The auction date must be at least 3 days from today.', { position: 'top-right' });
+      message.error('The auction date must be at least 3 days from today.');
       return;
     }
   
-    // Validate end time is at least 30 minutes after start time
     const [startHours, startMinutes] = formData.startTime.split(':').map(Number);
     const [endHours, endMinutes] = formData.endTime.split(':').map(Number);
     const startDateTime = new Date(chosenDate);
@@ -92,8 +97,7 @@ function RegisterJewelryForAuction() {
     startDateTime.setHours(startHours, startMinutes, 0, 0);
     endDateTime.setHours(endHours, endMinutes, 0, 0);
   
-    // Adjust for timezone offset
-    const timezoneOffset = startDateTime.getTimezoneOffset() * 60000; // Convert minutes to milliseconds
+    const timezoneOffset = startDateTime.getTimezoneOffset() * 60000; 
     const starttime = new Date(startDateTime - timezoneOffset).toISOString();
     const endtime = new Date(endDateTime - timezoneOffset).toISOString();
   
@@ -104,19 +108,17 @@ function RegisterJewelryForAuction() {
         endtime: endtime
       };
   
-      // Add jewelry ID based on material type
       if (material === 'Gold') {
         requestData.jewelryGoldId = formData.jewelryGoldId;
       } else if (material === 'Silver') {
         requestData.jewelrySilverId = formData.jewelrySilverId;
       } else if (material === 'GoldDiamond') {
-        requestData.jewelryGoldDiaId = formData.jewelryGoldDiaId; // Corrected variable name
+        requestData.jewelryGoldDiaId = formData.jewelryGoldDiaId;
       } else {
         console.error('Unsupported jewelry material type');
         return;
       }
   
-      // Determine API URL based on material
       const apiUrl = material === 'Gold' ? '/api/Auctions/CreateGoldJewelryAuction' :
         material === 'Silver' ? '/api/Auctions/CreateSilverJewelryAuction' :
         material === 'GoldDiamond' ? '/api/Auctions/CreateGoldDiamondJewelryAuction' :
@@ -129,9 +131,8 @@ function RegisterJewelryForAuction() {
   
       const response = await api.post(apiUrl, requestData);
       console.log('Auction created successfully:', response.data);
-      toast.success('Auction registered successfully!', { position: 'top-right' });
+      message.success('Auction registered successfully!');
   
-      // Clear form data
       setFormData(initialFormData);
   
       // Delayed navigation after toast appears
@@ -143,7 +144,7 @@ function RegisterJewelryForAuction() {
       if (error.response && error.response.data) {
         console.error('Response Data:', error.response.data);
       }
-      toast.error('Error creating auction. Please try again!', { position: 'top-right' });
+      message.error('Error creating auction. Please try again!');
     }
   };
   
@@ -187,7 +188,9 @@ function RegisterJewelryForAuction() {
             <p>Weight: {formData.jewelryDetails.weight}</p>
             <p>Price: {formData.jewelryDetails.price}$</p>
           </div>
-          <form onSubmit={handleSubmit}>
+
+          {/* DATE FORM */}
+          <form onSubmit={handleSubmit} className='date-form-container'>
             <div className="form-group">
               <label htmlFor="date">Date</label>
               <input

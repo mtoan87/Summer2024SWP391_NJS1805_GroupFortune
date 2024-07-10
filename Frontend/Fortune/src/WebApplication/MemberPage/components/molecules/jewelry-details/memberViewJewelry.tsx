@@ -4,6 +4,7 @@ import api from '../../../../../config/axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Tooltip } from 'antd';
 
 function MemberViewJewelry() {
   const [goldJewelry, setGoldJewelry] = useState([]);
@@ -167,19 +168,45 @@ function MemberViewJewelry() {
               <p>Gold Age: {goldAge[jewelry.goldAge]}</p>
               <p>Weight: {jewelry.weight}</p>
               <p>Price: {jewelry.price}$</p>
-              <div className="jewelry-item-buttons">
-                <button
-                  onClick={() => handleUpdateJewelry(jewelry, 'Gold')}
-                  disabled={!!jewelry.price} // Disable button if price is present
-                >
-                  Update
-                </button>
-                <button
-                  onClick={() => handleRegisterAuction(jewelry, 'Gold')}
-                  disabled={jewelry.status === 'Unverified'} // Disable button if no price or status is "Unverified"
-                >
-                  Register Auction
-                </button>
+              <div className="jewelry-item-buttons-container">
+                {
+                  !!jewelry.price ? (
+                    <Tooltip title="This jewelry is being verified">
+                      <button
+                        onClick={() => handleUpdateJewelry(jewelry, 'Gold')}
+                        disabled
+                      >
+                        Update
+                      </button>
+                    </Tooltip>
+                  ) : (
+                    <button
+                      onClick={() => handleUpdateJewelry(jewelry, 'Gold')}
+                    >
+                      Update
+                    </button>
+                  )
+
+                }
+                {
+                  jewelry.status === 'Unverified' ? (
+                    <Tooltip title="This jewelry is not verified!">
+                      <button
+                        onClick={() => handleRegisterAuction(jewelry, 'Gold')}
+                        disabled
+                      >
+                        Register Auction
+                      </button>
+                    </Tooltip>
+                  ) : (
+
+                    <button
+                      onClick={() => handleRegisterAuction(jewelry, 'Gold')}
+                    >
+                      Register Auction
+                    </button>
+                  )
+                }
               </div>
             </div>
           ))}
@@ -203,19 +230,45 @@ function MemberViewJewelry() {
               <p>Purity: {purity[jewelry.purity]}</p>
               <p>Weight: {jewelry.weight}</p>
               <p>Price: {jewelry.price}$</p>
-              <div className="jewelry-item-buttons">
-                <button
-                  onClick={() => handleUpdateJewelry(jewelry, 'Silver')}
-                  disabled={!!jewelry.price}
-                >
-                  Update
-                </button>
-                <button
-                  onClick={() => handleRegisterAuction(jewelry, 'Silver')}
-                  disabled={jewelry.status === 'Unverified'} 
-                >
-                  Register Auction
-                </button>
+              <div className="jewelry-item-buttons-container">
+              {
+                  !!jewelry.price ? (
+                    <Tooltip title="This jewelry is being verified">
+                      <button
+                        onClick={() => handleUpdateJewelry(jewelry, 'Silver')}
+                        disabled
+                      >
+                        Update
+                      </button>
+                    </Tooltip>
+                  ) : (
+                    <button
+                      onClick={() => handleUpdateJewelry(jewelry, 'Silver')}
+                    >
+                      Update
+                    </button>
+                  )
+
+                }
+                {
+                  jewelry.status === 'Unverified' ? (
+                    <Tooltip title="This jewelry is not verified!">
+                      <button
+                        onClick={() => handleRegisterAuction(jewelry, 'Silver')}
+                        disabled={jewelry.status === 'Unverified'} // Disable button if no price or status is "Unverified"
+                      >
+                        Register Auction
+                      </button>
+                    </Tooltip>
+                  ) : (
+
+                    <button
+                      onClick={() => handleRegisterAuction(jewelry, 'Silver')}
+                    >
+                      Register Auction
+                    </button>
+                  )
+                }
               </div>
             </div>
           ))}
@@ -240,26 +293,52 @@ function MemberViewJewelry() {
               <p>Carat: {jewelry.carat}</p>
               <p>Weight: {jewelry.weight}</p>
               <p>Price: {jewelry.price}$</p>
-              <div className="jewelry-item-buttons">
-                <button
-                  onClick={() => handleUpdateJewelry(jewelry, 'GoldDiamond')}
-                  disabled={!!jewelry.price} 
-                >
-                  Update
-                </button>
-                <button
-                  onClick={() => handleRegisterAuction(jewelry, 'GoldDiamond')}
-                  disabled={jewelry.status === 'Unverified'} 
-                >
-                  Register Auction
-                </button>
+              <div className="jewelry-item-buttons-container">
+              {
+                  !!jewelry.price ? (
+                    <Tooltip title="This jewelry is being verified">
+                      <button
+                        onClick={() => handleUpdateJewelry(jewelry, 'GoldDiamond')}
+                        disabled
+                      >
+                        Update
+                      </button>
+                    </Tooltip>
+                  ) : (
+                    <button
+                      onClick={() => handleUpdateJewelry(jewelry, 'GoldDiamond')}
+                    >
+                      Update
+                    </button>
+                  )
+
+                }
+                {
+                  jewelry.status === 'Unverified' ? (
+                    <Tooltip title="This jewelry is not verified!">
+                      <button
+                        onClick={() => handleRegisterAuction(jewelry, 'GoldDiamond')}
+                        disabled={jewelry.status === 'Unverified'} // Disable button if no price or status is "Unverified"
+                      >
+                        Register Auction
+                      </button>
+                    </Tooltip>
+                  ) : (
+
+                    <button
+                      onClick={() => handleRegisterAuction(jewelry, 'GoldDiamond')}
+                    >
+                      Register Auction
+                    </button>
+                  )
+                }
               </div>
             </div>
           ))}
         {goldJewelry.length === 0 && silverJewelry.length === 0 && goldDiamondJewelry.length === 0 && (
           <p>No jewelry items found.</p>
         )}
-      </div>
+      </div >
       <ToastContainer className="toast-position" />
     </>
   );

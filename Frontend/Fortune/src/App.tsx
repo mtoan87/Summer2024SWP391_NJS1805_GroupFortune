@@ -41,20 +41,6 @@ const App: React.FC = () => {
 
   return (
     <>
-      <ToastContainer
-        position="top-right"
-        autoClose={1500}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss={false}
-        draggable
-        pauseOnHover={false}
-        theme="light"
-        className='toast-content'
-        transition={Bounce}
-      />
       <Routes>
         <Route path='/'>
           {user === null ? (

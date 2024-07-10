@@ -1,5 +1,6 @@
 .register-jewelry-form {
-  margin: 10rem auto 2rem; /* Added 2rem margin at the bottom */
+  margin: 10rem auto 2rem;
+  /* Added 2rem margin at the bottom */
   max-width: 600px;
   padding: 2rem;
   background-color: transparent !important;
@@ -10,18 +11,22 @@
   h2 {
     text-align: center;
     margin-bottom: 1rem;
-    margin-top: 0; /* Remove default margin from the top of h2 */
+    margin-top: 0;
+    /* Remove default margin from the top of h2 */
   }
 
   .jewelry-details {
     margin-bottom: 2rem;
-    width: 100%; /* Ensure jewelry details take full width */
+    width: 100%;
+    /* Ensure jewelry details take full width */
 
     img {
       max-width: 100%;
       height: auto;
-      display: block; /* Ensure image displays properly */
-      margin: 0 auto; /* Center image */
+      display: block;
+      /* Ensure image displays properly */
+      margin: 0 auto;
+      /* Center image */
     }
 
     p {
@@ -31,7 +36,8 @@
 
   .form-group {
     margin-bottom: 1.5rem;
-    width: 100%; /* Ensure form groups take full width */
+    width: 100%;
+    /* Ensure form groups take full width */
 
     label {
       display: block;
@@ -63,5 +69,15 @@
     &:hover {
       background-color: #0056b3;
     }
+  }
+
+  .date-form-container {
+    /* Added 2rem margin at the bottom */
+    max-width: 600px;
+    padding: 2rem;
+    background-color: transparent !important;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 }

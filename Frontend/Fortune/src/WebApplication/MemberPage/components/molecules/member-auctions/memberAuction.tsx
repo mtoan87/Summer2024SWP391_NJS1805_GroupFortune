@@ -90,6 +90,8 @@ function MemberViewAuctions() {
                 });
 
                 setAuctions(auctionsWithDetails);
+                console.log(auctionsWithDetails);
+                
             } catch (err) {
                 console.error('Error fetching auctions:', err);
                 setError('Failed to fetch auctions. Please try again later.');
