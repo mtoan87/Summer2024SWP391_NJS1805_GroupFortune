@@ -39,7 +39,6 @@ function GuestJewelry() {
           return { ...item, imageUrl };
         });
 
-        console.log(jewelryWithImages);
         setJewelry(jewelryWithImages);
       } catch (err) {
         console.error('Error fetching jewelry', err);

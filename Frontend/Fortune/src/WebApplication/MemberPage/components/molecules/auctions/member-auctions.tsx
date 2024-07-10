@@ -14,8 +14,6 @@ function MemberAuctions() {
             try {
                 const response = await api.get('api/Auctions/GetAllActiveAuctions');
                 const auctionsData = response.data.$values;
-                console.log(auctionsData);
-
                 const auctionsWithImagesAndNames = await Promise.all(
                     auctionsData.map(async (auction) => {
                         const { imageUrl, jewelryName } = await fetchAuctionImage(auction);
@@ -104,7 +102,7 @@ function MemberAuctions() {
                     displayedAuctions.map((auction) => (
                         <div
                             key={auction.auctionId}
-                            className="member-auction-item"
+                            className="member-auctions-item"
                             onClick={() => handleAuctionClick(auction.auctionId)}
                         >
                             <img

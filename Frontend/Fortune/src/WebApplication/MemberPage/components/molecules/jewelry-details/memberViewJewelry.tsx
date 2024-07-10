@@ -36,7 +36,6 @@ function MemberViewJewelry() {
     const fetchGoldJewelry = async () => {
       try {
         const response = await api.get(`api/JewelryGold/GetAuctionAndJewelryGoldByAccountId/${accountId}`);
-        console.log(response.data);
         setGoldJewelry(response.data?.$values || []);
       } catch (err) {
         console.error('Error fetching gold jewelry', err);
@@ -47,7 +46,6 @@ function MemberViewJewelry() {
     const fetchSilverJewelry = async () => {
       try {
         const response = await api.get(`api/JewelrySilver/GetAuctionAndJewelrySilverByAccountId/${accountId}`);
-        console.log(response.data);
         setSilverJewelry(response.data?.$values || []);
       } catch (err) {
         console.error('Error fetching silver jewelry', err);
@@ -58,7 +56,6 @@ function MemberViewJewelry() {
     const fetchGoldDiamondJewelry = async () => {
       try {
         const response = await api.get(`api/JewelryGoldDia/GetAuctionAndJewelryGoldDiamondByAccountId/${accountId}`);
-        console.log(response.data);
         setGoldDiamondJewelry(response.data?.$values || []);
       } catch (err) {
         console.error('Error fetching gold diamond jewelry', err);

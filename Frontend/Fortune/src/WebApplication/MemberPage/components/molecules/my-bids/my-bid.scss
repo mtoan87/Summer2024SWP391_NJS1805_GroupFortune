@@ -6,6 +6,15 @@
     background-color: #f8f9fa;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    .auction-item {
+      flex: 1 1 calc(33.333% - 20px);
+      background-color: #ffffff;
+      padding: 15px;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s ease-in-out;
+    }
   }
   
   .my-bids-container h2 {

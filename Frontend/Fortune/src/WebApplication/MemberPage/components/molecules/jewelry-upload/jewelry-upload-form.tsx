@@ -1,6 +1,4 @@
 import React, { useRef, useState, useEffect } from 'react';
-// import { ToastContainer, toast } from 'react-toastify';
-// import 'react-toastify/dist/ReactToastify.css';
 import { message } from 'antd';
 import './jewelry-upload-form.scss';
 import api from '../../../../../config/axios';
@@ -23,19 +21,6 @@ interface Jewelry {
   carat?: string;
 }
 
-const loginedUserString = sessionStorage.getItem('loginedUser');
-let accountId: number | null = null;
-
-if (loginedUserString) {
-  try {
-    const loginedUser = JSON.parse(loginedUserString);
-    accountId = loginedUser?.accountId || null;
-  } catch (error) {
-    console.error("Error parsing loginedUser from session storage", error);
-  }
-}
-
-console.log("Account ID:", accountId);
 const goldPricesPerOunce = {
   '24K': 1950,
   '22K': 1800,
@@ -60,28 +45,28 @@ const purity = {
 
 const category = {
   'Ring': 'Ring',
-  'Necklace': 'Necklace', //- Vòng cổ
-  'Bracelet': 'Bracelet', //- Vòng tay
-  'Earrings': 'Earrings', //- Bông tai
-  'Pendant': 'Pendant', //- Mặt dây chuyền
-  'Brooch': 'Brooch', //- Trâm cài áo
-  'Anklet': 'Anklet', //- Lắc chân
-  'Charm': 'Charm', //- Mặt dây chuyền nhỏ (thường đeo trên vòng tay)
-  'Clufflinks': 'Cufflinks', //- Khuy măng sét
-  'Tiara': 'Tiara', //- Vương miện nhỏ
-  'Diadem': 'Diadem', //- Vương miện
-  'Choker': 'Choker', //- Vòng cổ sát cổ
-  'Bangle': 'Bangle', //- Vòng tay cứng
-  'Hairpin': 'Hairpin', // - Kẹp tóc
-  'Barrette': 'Barrette', //- Kẹp tóc trang trí
-  'Locket': 'Locket', //- Mặt dây chuyền có thể mở ra
-  'Signet Ring': 'SignetRing', //- Nhẫn có dấu hiệu hoặc biểu tượng
-  'Stud Earrings': 'StudEarrings', //- Bông tai đinh
-  'Hoop Earrings': 'HoopEarrings', //- Bông tai vòng
-  'Cameo': 'Cameo', //- Trang sức điêu khắc nổi
-  'Cluster Ring': 'ClusterRing', //- Nhẫn đính nhiều viên đá quý nhỏ
-  'Cocktail Ring': 'CocktailRing', //- Nhẫn to, thường có một viên đá quý lớn
-  'Cuff Bracelet': 'CuffBracelet' //- Vòng tay bản lớn
+  'Necklace': 'Necklace', 
+  'Bracelet': 'Bracelet', 
+  'Earrings': 'Earrings', 
+  'Pendant': 'Pendant', 
+  'Brooch': 'Brooch', 
+  'Anklet': 'Anklet', 
+  'Charm': 'Charm', 
+  'Clufflinks': 'Cufflinks', 
+  'Tiara': 'Tiara', 
+  'Diadem': 'Diadem', 
+  'Choker': 'Choker', 
+  'Bangle': 'Bangle', 
+  'Hairpin': 'Hairpin', 
+  'Barrette': 'Barrette', 
+  'Locket': 'Locket', 
+  'Signet Ring': 'SignetRing', 
+  'Stud Earrings': 'StudEarrings', 
+  'Hoop Earrings': 'HoopEarrings', 
+  'Cameo': 'Cameo', 
+  'Cluster Ring': 'ClusterRing', 
+  'Cocktail Ring': 'CocktailRing', 
+  'Cuff Bracelet': 'CuffBracelet' 
 }
 
 const materials = {
@@ -104,6 +89,19 @@ const clarity = {
   'I3': 'I3'
 };
 
+const diamondPricesPerCarat = {
+  FL: 8000,
+  IF: 7000,
+  VVS1: 6000,
+  VVS2: 5000,
+  VS1: 4000,
+  VS2: 3000,
+  SI1: 2000,
+  SI2: 1000,
+  I1: 500,
+  I2: 300,
+  I3: 100,
+};
 
 const silverPricesPerOunce = {
   '99.99': { buying: 1950, selling: 2000 },
@@ -123,8 +121,20 @@ const convertToOunces = (weight: number, unit: string) => {
 };
 
 const JewelryUploadForm: React.FC = () => {
+  const loginedUserString = sessionStorage.getItem('loginedUser');
+  const [accountId, setAccountId] = useState<number>(0);
+
+  // if (loginedUserString) {
+  //   try {
+  //     const loginedUser = JSON.parse(loginedUserString);
+  //     accountId = loginedUser?.accountId || null;
+  //   } catch (error) {
+  //     console.error("Error parsing loginedUser from session storage", error);
+  //   }
+  // }
+
   const [jewelry, setJewelry] = useState<Jewelry>({
-    accountId: accountId,
+    accountId: 0,
     imageUrl: '',
     imageFile: null,
     name: '',
@@ -137,12 +147,25 @@ const JewelryUploadForm: React.FC = () => {
     calculatedPrice: ''
   });
 
+  // GET ACCOUNT ID FROM SESSION
+  useEffect(() => {
+    const loginedUser = JSON.parse(loginedUserString);
+    setAccountId(loginedUser?.accountId || null);
+
+    setJewelry({
+      ...jewelry,
+      accountId: accountId
+    })
+  }, [])
+
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  useEffect(() => {
-    calculatePrice();
-  }, [jewelry.weight, jewelry.weightUnit, jewelry.goldage, jewelry.purity, jewelry.carat]);
+  /*
+  1. quản lý state
+  2. quản lý function
+  3. quản lý useEffect
+  */
 
   const validate = () => {
     const newErrors: { [key: string]: string } = {};
@@ -226,19 +249,6 @@ const JewelryUploadForm: React.FC = () => {
     });
   };
 
-  const diamondPricesPerCarat = {
-    FL: 8000,
-    IF: 7000,
-    VVS1: 6000,
-    VVS2: 5000,
-    VS1: 4000,
-    VS2: 3000,
-    SI1: 2000,
-    SI2: 1000,
-    I1: 500,
-    I2: 300,
-    I3: 100,
-  };
 
   const calculatePrice = () => {
     const weight = parseFloat(jewelry.weight);
@@ -275,7 +285,7 @@ const JewelryUploadForm: React.FC = () => {
     }
 
     const formData = new FormData();
-    formData.append('accountId',String(jewelry.accountId));
+    formData.append('accountId', String(accountId));
     formData.append('Name', jewelry.name);
     formData.append('materials', materials[jewelry.materials]);
     formData.append('description', jewelry.description);
@@ -308,14 +318,12 @@ const JewelryUploadForm: React.FC = () => {
         apiEndpoint = '/api/JewelryGoldDia/CreateJewelryGoldDiamond';
       }
 
-      const response = await api.post(apiEndpoint, formData, {
+      await api.post(apiEndpoint, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
 
-      console.log('Jewelry uploaded successfully', response.data);
-      // toast.success('Jewelry uploaded successfully!');
       message.success('Jewelry uploaded successfully!');
       setJewelry({
         accountId: accountId,
@@ -333,12 +341,13 @@ const JewelryUploadForm: React.FC = () => {
       setErrors({});
     } catch (error) {
       console.error('Error uploading jewelry', error);
-      // toast.error('Error uploading jewelry. Please try again.');
       message.error('Error uploading jewelry. Please try again.');
     }
   };
 
-
+  useEffect(() => {
+    calculatePrice();
+  }, [jewelry.weight, jewelry.weightUnit, jewelry.goldage, jewelry.purity, jewelry.carat]);
   return (
     <div className="jewelry-upload-container">
       <form onSubmit={handleSubmit}>
@@ -355,7 +364,7 @@ const JewelryUploadForm: React.FC = () => {
               <div className="upload-text-details">Upload Image</div>
               <input ref={fileInputRef} type="file" id="image" name="image" onChange={handleImageUpload} accept="image/*" style={{ display: 'none' }} />
             </div>
-            {errors.imageFile && <span className="error">{errors.imageFile}</span>}
+            {errors.imageFile && <span className="error text-danger">{errors.imageFile}</span>}
           </div>
           <div className="form-fields-section">
             <div>
@@ -541,7 +550,6 @@ const JewelryUploadForm: React.FC = () => {
           </div>
         </div>
       </form>
-      {/* <ToastContainer /> */}
     </div>
   );
 };
