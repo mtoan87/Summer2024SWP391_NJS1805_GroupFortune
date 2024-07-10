@@ -12,6 +12,23 @@
   align-items: center; /* Căn giữa nội dung theo chiều ngang */
   margin: 5rem 0 0 27rem; /* Căn giữa khối theo chiều ngang */
   border-radius: 60px; /* Thêm border-radius */
+  .ant-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: rgb(35, 20, 14);
+    border: none;
+    border-radius: 5px;
+    color: #ffffff;
+    box-shadow: 0 0 15px rgb(249, 249, 249); /* Box shadow */
+
+    transition: background-color 0.3s ease;
+  }
+  
+  .ant-btn:hover {
+    background-color: rgba(68, 10, 10, 0.586) !important;
+    box-shadow: 0 0 15px rgb(253, 250, 176); /* Box shadow */
+
+  }
 }
 
 .form-container form {
@@ -38,23 +55,7 @@
   border-radius: 5px;
 }
 
-.form-container .btn-primary,
-.form-container .Summitbt.btn.btn-primary {
-  width: 100%;
-  padding: 15px;
-  background-color: bisque;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  color: #333;
-  transition: background-color 0.3s ease;
-}
 
-.form-container .btn-primary:hover,
-.form-container .Summitbt.btn.btn-primary:hover {
-  background-color: rgb(228, 175, 111);
-  color: #333;
-}
 
 .form-container .form-text {
   font-size: 1rem;
@@ -89,8 +90,9 @@
 
 .form-container .re-social-icons a {
   color: #ffffff; /* Đổi màu chữ sang trắng */
-  font-size: 20px;
+  font-size: 25px;
   text-decoration: none;
+  margin : 10px;
 }
 
 .form-container .re-social-icons a:hover {

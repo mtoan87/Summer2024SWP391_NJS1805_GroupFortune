@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Form, Input, Button, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { UserOutlined, LockOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
+import { UserOutlined, LockOutlined, MailOutlined, PhoneOutlined, SendOutlined } from '@ant-design/icons';
 import { FaFacebookF, FaTelegram, FaWhatsapp } from 'react-icons/fa';
 import '../../../style/registerPg.scss';
 import './form.scss'
@@ -39,7 +39,7 @@ function BasicExample() {
         name="basic"
         onFinish={handleSubmit}
       >
-        <h1 className="form-title">Sign Up</h1> {/* Tiêu đề của form */}
+        <h1 className="form-title">Sign Up</h1>
 
         <Form.Item
           name="accountName"
@@ -70,8 +70,8 @@ function BasicExample() {
         </Form.Item>
 
         <Form.Item>
-          <Button className="Summitbt" type="primary" htmlType="submit">
-            Register
+          <Button className="ant-btn" type="primary" htmlType="submit">
+            <SendOutlined style={{ fontSize: '20px', transform: 'rotate(-50deg)' }} /> Register
           </Button>
           <span className="re-login-link"><a onClick={handleLogin}>Yes, I have an account! Login</a></span>
           <div className="re-social-icons">
