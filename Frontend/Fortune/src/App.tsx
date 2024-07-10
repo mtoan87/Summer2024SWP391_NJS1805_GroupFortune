@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.scss';
 import { Route, Routes } from 'react-router-dom';
 import { Bounce, ToastContainer } from 'react-toastify';
@@ -70,8 +70,8 @@ const App: React.FC = () => {
               <Route path='/login' element={<Loginpg />} />
               {user?.role === 1 && (
                 <>
-                                   <Route index element={<AdminPg/>} />
-                                   <Route path="/adminUser" element ={<TableUser/>} />
+                  <Route index element={<AdminPg />} />
+                  <Route path="/adminUser" element={<TableUser />} />
                 </>
               )}
               {user?.role === 2 && (

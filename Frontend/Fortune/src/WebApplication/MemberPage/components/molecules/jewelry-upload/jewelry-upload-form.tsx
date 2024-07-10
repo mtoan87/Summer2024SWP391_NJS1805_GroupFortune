@@ -23,11 +23,19 @@ interface Jewelry {
   carat?: string;
 }
 
-const loginedUser = JSON.parse(sessionStorage.getItem('loginedUser') || '{}');
-const accountId = loginedUser?.accountId;
-console.log("Account: ",accountId);
+const loginedUserString = sessionStorage.getItem('loginedUser');
+let accountId: number | null = null;
 
+if (loginedUserString) {
+  try {
+    const loginedUser = JSON.parse(loginedUserString);
+    accountId = loginedUser?.accountId || null;
+  } catch (error) {
+    console.error("Error parsing loginedUser from session storage", error);
+  }
+}
 
+console.log("Account ID:", accountId);
 const goldPricesPerOunce = {
   '24K': 1950,
   '22K': 1800,

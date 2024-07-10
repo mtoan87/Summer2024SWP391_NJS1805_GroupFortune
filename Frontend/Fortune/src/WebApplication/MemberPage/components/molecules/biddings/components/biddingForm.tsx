@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { ClockCircleOutlined, DollarCircleOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import * as signalR from '@microsoft/signalr';
 import '../Styles/bidding.scss';
 import api from '../../../../../../config/axios';
 
@@ -63,6 +63,41 @@ function BiddingForm() {
 
     useEffect(() => {
         fetchAuctionDetails();
+
+        const connection = new signalR.HubConnectionBuilder()
+            .configureLogging(signalR.LogLevel.Debug)
+            .withUrl("https://localhost:44361/bidding-hub",{
+                skipNegotiation: true,
+                transport: signalR.HttpTransportType.WebSockets
+                })
+            .build();
+
+            
+
+        connection.on("HighestPrice", (price) => {
+            console.log("HighestPrice", price);
+            toast.info(`Highest Price: ${price}`);
+            setHighestPrice(price);
+        })
+
+        connection.on("ReceiveNotification", (title, content) => {
+            toast.info(content, title)
+        })
+
+
+        connection.start()
+        .then(() => {
+            connection.invoke("JoinRoom", id)
+                .then(() => {
+                    console.log("Connected to auction room: " + id)
+                    toast.info("Connected to auction room: " + id)
+                    }
+                )
+        })
+        .catch((err) => document.write(err));
+
+        
+
     }, [id]);
 
     const handleBidSubmit = async () => {
@@ -81,9 +116,10 @@ function BiddingForm() {
             const response = await api.post('/api/Bid/Bidding', bidData);
 
             if (response.status === 200) {
-                setHighestPrice(currentHightPrice + bidAmount);
+                // setHighestPrice(currentHightPrice + bidAmount);
+
                 setBidAmount(0);
-                toast.success('Bid submitted successfully!');
+                // toast.success('Bid submitted successfully!');
 
                 // Update highest price after successful bid
                 // const newHighestPrice = parseFloat(bidAmount);

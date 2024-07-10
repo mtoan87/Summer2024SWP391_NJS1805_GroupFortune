@@ -77,20 +77,14 @@ console.log(userJoinAuctions);
         ) : (
           auctionsData.map(auction => (
             <div key={auction.id} className="auction-item">
-              <p>Auction ID: {auction.auctionId}</p>
               <p>Join Date: {new Date(auction.joindate).toLocaleString()}</p>
               <div className="auction-details">
-                <h3>Auction Details</h3>
+                <p>Name: {auction.jewelryDetails.name}</p>
                 <p>Status: {auction.details.status}</p>
                 <p>Start Time: {new Date(auction.details.starttime).toLocaleString()}</p>
                 <p>End Time: {new Date(auction.details.endtime).toLocaleString()}</p>
-              </div>
-              <div className="jewelry-details">
-                <h3>Jewelry Details</h3>
-                <p>Name: {auction.jewelryDetails.name}</p>
                 <p>Materials: {auction.jewelryDetails.materials}</p>
                 <p>Description: {auction.jewelryDetails.description}</p>
-                <p>Shipment: {auction.jewelryDetails.shipment}</p>
                 <p>Status: {auction.jewelryDetails.status}</p>
                 <p>Price: {auction.jewelryDetails.price}</p>
                 {auction.jewelryDetails.goldAge && <p>Gold Age: {auction.jewelryDetails.goldAge}</p>}
