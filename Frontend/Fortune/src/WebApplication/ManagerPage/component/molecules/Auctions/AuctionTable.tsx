@@ -3,7 +3,7 @@ import { Table, Button, Spin, message, Input, Space, DatePicker } from 'antd';
 import api from '../../../../../config/axios';
 import './AuctionsTable.scss';
 import { SearchOutlined } from '@ant-design/icons';
-import moment from 'moment'; 
+import moment from 'moment';
 
 interface Auction {
   auctionId: number;
@@ -76,6 +76,7 @@ function AuctionTable() {
               return auction;
             })
           );
+          console.log("All Auctions:",auctionsWithDetails);
           setAuctions(auctionsWithDetails);
         } else {
           console.error('Invalid response data format:', response.data);
@@ -95,37 +96,29 @@ function AuctionTable() {
   const handleStatusChange = async (auction: Auction) => {
     const newStatus = auction.status === 'Active' ? 'UnActive' : 'Active';
     let apiUrl = '';
-  
-    // Check if there is already an active jewelry for this auction
-    // const activeJewelryExists = auctions.some(a => a.auctionId === auction.auctionId && a.status === 'Active' && a.jewelryDetails);
-  
-    // if (newStatus === 'Active' && activeJewelryExists) {
-    //   message.error('Only one jewelry item can be active for each auction.');
-    //   return;
-    // }
-  
+
     const updateData = {
       accountId: auction.accountId,
       starttime: auction.starttime,
       endtime: auction.endtime,
       status: newStatus,
     };
-  
+
     if (auction.jewelryGoldId !== null) {
-      apiUrl = newStatus === 'Active' ? `/api/Auctions/UpdateGoldAuction?id=${auction.auctionId}` : `/api/Auctions/UpdateGoldAuction?id=${auction.auctionId}`;
+      apiUrl = `/api/Auctions/UpdateGoldAuction?id=${auction.auctionId}`;
       updateData['jewelryGoldId'] = auction.jewelryGoldId;
     } else if (auction.jewelryGolddiaId !== null) {
-      apiUrl = newStatus === 'Active' ? `/api/Auctions/UpdateGoldDiamondAuction?id=${auction.auctionId}` : `/api/Auctions/UpdateGoldDiamondAuction?id=${auction.auctionId}`;
+      apiUrl = `/api/Auctions/UpdateGoldDiamondAuction?id=${auction.auctionId}`;
       updateData['jewelryGolddiaId'] = auction.jewelryGolddiaId;
     } else if (auction.jewelrySilverId !== null) {
-      apiUrl = newStatus === 'Active' ? `/api/Auctions/UpdateSilverAuction?id=${auction.auctionId}` : `/api/Auctions/UpdateSilverAuction?id=${auction.auctionId}`;
+      apiUrl = `/api/Auctions/UpdateSilverAuction?id=${auction.auctionId}`;
       updateData['jewelrySilverId'] = auction.jewelrySilverId;
     }
-  
+
     try {
       const response = await api.put(apiUrl, updateData);
       console.log('Status update response:', response.data);
-  
+
       // Update the local state after successful status change
       setAuctions((prevAuctions) =>
         prevAuctions.map((a) =>
@@ -139,23 +132,27 @@ function AuctionTable() {
       message.error('Error updating auction status');
     }
   };
-  
 
   const expandedRowRender = (record: Auction) => {
     const accountColumns = [
       { title: 'Email', dataIndex: 'accountEmail', key: 'accountEmail' },
       { title: 'Name', dataIndex: 'accountName', key: 'accountName' },
     ];
-  
+
     const jewelryColumns = [
-      { title: 'Name', dataIndex: 'name', key: 'name',
+      {
+        title: 'Name',
+        dataIndex: 'name',
+        key: 'name',
         render: (text: string, item: any) => (
           <span>
             <span>{text}</span>
             <img
               src={`https://localhost:44361/${item.jewelryImg}`}
               alt={text}
-              onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
+              onError={(e) => {
+                e.target.src = 'src/assets/img/jewelry_introduction.jpg';
+              }}
               style={{ display: 'none', position: 'absolute', zIndex: 999 }}
             />
           </span>
@@ -169,7 +166,7 @@ function AuctionTable() {
             const img = event.currentTarget.querySelector('img');
             if (img) img.style.display = 'none';
           },
-        })
+        }),
       },
       { title: 'Materials', dataIndex: 'materials', key: 'materials' },
       { title: 'Description', dataIndex: 'description', key: 'description' },
@@ -177,7 +174,7 @@ function AuctionTable() {
       { title: 'Status', dataIndex: 'status', key: 'status' },
       { title: 'Price', dataIndex: 'price', key: 'price' },
     ];
-  
+
     if (record.jewelryDetails?.type === 'Gold') {
       jewelryColumns.push({ title: 'Gold Age', dataIndex: 'goldAge', key: 'goldAge' });
     } else if (record.jewelryDetails?.type === 'Silver') {
@@ -189,7 +186,7 @@ function AuctionTable() {
         { title: 'Clarity', dataIndex: 'clarity', key: 'clarity' }
       );
     }
-  
+
     const accountData = [
       {
         key: 1,
@@ -197,9 +194,9 @@ function AuctionTable() {
         accountName: record.accountName,
       },
     ];
-  
+
     const jewelryData = [record.jewelryDetails];
-  
+
     return (
       <div>
         <Table
@@ -218,7 +215,6 @@ function AuctionTable() {
       </div>
     );
   };
-  
 
   const handleSearch = (selectedKeys: React.Key[], confirm: () => void, dataIndex: string) => {
     confirm();
@@ -231,12 +227,22 @@ function AuctionTable() {
     setSearchText('');
   };
 
-  const getColumnSearchProps = (dataIndex: string, placeholder: string) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
+  const getColumnSearchProps = (dataIndex: string) => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+    }: {
+      setSelectedKeys: (keys: React.Key[]) => void;
+      selectedKeys: React.Key[];
+      confirm: () => void;
+      clearFilters: () => void;
+    }) => (
       <div style={{ padding: 8 }}>
         <Input
-          placeholder={placeholder}
-          value={selectedKeys[0]}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0] as string}
           onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
           style={{ marginBottom: 8, display: 'block' }}
@@ -257,16 +263,17 @@ function AuctionTable() {
         </Space>
       </div>
     ),
-    filterIcon: (filtered: boolean) => (
-      <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
-    ),
-    onFilter: (value: string, record: any) =>
+    filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+    onFilter: (value: string, record: Auction) =>
       record[dataIndex]
-        ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
+        ? record[dataIndex]
+            .toString()
+            .toLowerCase()
+            .includes(value.toLowerCase())
         : '',
     render: (text: string) =>
       searchedColumn === dataIndex ? (
-        <span>{text}</span>
+        <span style={{ backgroundColor: '#ffc069', padding: 0 }}>{text}</span>
       ) : (
         text
       ),
@@ -276,148 +283,92 @@ function AuctionTable() {
     setFilterDateRange(dates);
   };
 
-  const getColumnDateRangeProps = () => ({
-    filterDropdown: ({ confirm }: any) => (
-      <div style={{ padding: 8 }}>
-        <DatePicker.RangePicker
-          value={filterDateRange}
-          onChange={handleDateRangeChange}
-          style={{ width: '100%', marginBottom: 8 }}
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() => confirm()}
-            size="small"
-            style={{ width: 90 }}
-          >
-            Filter
-          </Button>
-        </Space>
-      </div>
-    ),
-    onFilter: (_: any, record: any) => {
-      if (!filterDateRange[0] || !filterDateRange[1]) return true;
-      const startTime = moment(record.starttime);
-      const endTime = moment(record.endtime);
-      return (
-        startTime.isSameOrAfter(filterDateRange[0]) && endTime.isSameOrBefore(filterDateRange[1])
-      );
-    },
-  });
-
   const columns = [
     {
       title: 'Auction ID',
       dataIndex: 'auctionId',
       key: 'auctionId',
-      ...getColumnSearchProps('auctionId', 'Search Auction ID'),
+      sorter: (a: Auction, b: Auction) => a.auctionId - b.auctionId,
+      ...getColumnSearchProps('auctionId'),
     },
     {
       title: 'Account ID',
       dataIndex: 'accountId',
       key: 'accountId',
-      ...getColumnSearchProps('accountId', 'Search Account ID'),
+      sorter: (a: Auction, b: Auction) => (a.accountId || 0) - (b.accountId || 0),
+      ...getColumnSearchProps('accountId'),
     },
     {
       title: 'Jewelry ID',
-      dataIndex: 'jewelryDetails',
-      key: 'jewelryDetails',
-      render: (jewelryDetails: any) => {
-        let idText = '';
-  
-        if (jewelryDetails?.type === 'Silver') {
-          idText = jewelryDetails?.jewelrySilverId || '';
-        } else if (jewelryDetails?.type === 'GoldDia') {
-          idText = jewelryDetails?.jewelryGolddiaId || '';
-        } else if (jewelryDetails?.type === 'Gold') {
-          idText = jewelryDetails?.jewelryGoldId || '';
-        }
-  
-        return `${jewelryDetails?.type || ''} ID: ${idText} `;
-      },
-      filters: [
-        { text: 'Gold', value: 'Gold' },
-        { text: 'GoldDia', value: 'GoldDia' },
-        { text: 'Silver', value: 'Silver' },
-      ],
-      onFilter: (value: string, record: any) => record.jewelryDetails?.type === value,
-    },
-    {
-      title: 'Email',
-      dataIndex: 'accountEmail',
-      key: 'accountEmail',
-      ...getColumnSearchProps('accountEmail', 'Search Email'),
-    },
-    {
-      title: 'Name',
-      dataIndex: 'accountName',
-      key: 'accountName',
-      ...getColumnSearchProps('accountName', 'Search Name'),
-    },
-    {
-      title: 'Start Date',
-      dataIndex: 'starttime',
-      key: 'startdate',
-      ...getColumnDateRangeProps(),
-      render: (starttime: string) => moment(starttime).format('YYYY-MM-DD'),
+      dataIndex: 'jewelryGoldId',
+      key: 'jewelryGoldId',
+      render: (text: any, record: Auction) =>
+        (record.jewelryGoldId ?? record.jewelryGolddiaId ?? record.jewelrySilverId),
+      sorter: (a: Auction, b: Auction) =>
+        ((a.jewelryGoldId ?? a.jewelryGolddiaId ?? a.jewelrySilverId) || 0) -
+        ((b.jewelryGoldId ?? b.jewelryGolddiaId ?? b.jewelrySilverId) || 0),
+      ...getColumnSearchProps('jewelryGoldId'),
     },
     {
       title: 'Start Time',
       dataIndex: 'starttime',
       key: 'starttime',
-      render: (starttime: string) => moment(starttime).format('HH:mm:ss'),
-    },
-    {
-      title: 'End Date',
-      dataIndex: 'endtime',
-      key: 'enddate',
-      ...getColumnDateRangeProps(),
-      render: (endtime: string) => moment(endtime).format('YYYY-MM-DD'),
+      render: (text: string) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
+      sorter: (a: Auction, b: Auction) => moment(a.starttime).diff(moment(b.starttime)),
     },
     {
       title: 'End Time',
       dataIndex: 'endtime',
       key: 'endtime',
-      render: (endtime: string) => moment(endtime).format('HH:mm:ss'),
+      render: (text: string) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
+      sorter: (a: Auction, b: Auction) => moment(a.endtime).diff(moment(b.endtime)),
     },
     {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
-      render: (text: string, record: Auction) => {
-        // const isDisabled = record.jewelryDetails?.shipment == 'Deliveried' || record.jewelryDetails?.status == 'Verified';
-  
-        return (
-          <Button
-            type={text === 'Active' ? 'primary' : 'default'}
-            onClick={() => handleStatusChange(record)}
-            // disabled={isDisabled}
-          >
-            {text}
-          </Button>
-        );
-      },
+      filters: [
+        { text: 'Active', value: 'Active' },
+        { text: 'UnActive', value: 'UnActive' },
+      ],
+      onFilter: (value: string, record: Auction) => record.status.indexOf(value) === 0,
+      render: (text: string, record: Auction) => (
+        <Button
+          type="primary"
+          onClick={() => handleStatusChange(record)}
+          disabled={isJewelryIdActive(record)}
+        >
+          {text === 'Active' ? 'Set UnActive' : 'Set Active'}
+        </Button>
+      ),
     },
   ];
-  
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+  const isJewelryIdActive = (auction: Auction) => {
+    const jewelryId = auction.jewelryGoldId ?? auction.jewelryGolddiaId ?? auction.jewelrySilverId;
+    return auctions.some(
+      (a) =>
+        ((a.jewelryGoldId === jewelryId ||
+          a.jewelryGolddiaId === jewelryId ||
+          a.jewelrySilverId === jewelryId) &&
+        a.status === 'Active' &&
+        a.auctionId !== auction.auctionId)
+    );
+  };
 
   return (
     <div>
-      <h1>Auction Details</h1>
+      {error && <p>Error: {error}</p>}
       {loading ? (
         <Spin size="large" />
       ) : (
         <Table
-          className="auction-table"
           columns={columns}
           dataSource={auctions}
-          rowKey={(record) => record.auctionId}
-          expandable={{ expandedRowRender }}
+          rowKey="auctionId"
+          expandedRowRender={expandedRowRender}
+          pagination={{ pageSize: 10 }}
+          className="auction-table"
         />
       )}
     </div>

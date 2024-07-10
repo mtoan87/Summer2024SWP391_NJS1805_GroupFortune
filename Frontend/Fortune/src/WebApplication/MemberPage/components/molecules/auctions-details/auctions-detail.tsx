@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import './auctions-details.scss';
 import api from '../../../../../config/axios';
 import { message, Modal, Button } from 'antd';
@@ -7,6 +7,8 @@ import { message, Modal, Button } from 'antd';
 function AuctionDetails() {
     const { id } = useParams();
     const navigate = useNavigate();
+
+    const location = useLocation();
     const [auction, setAuction] = useState(null);
     const [jewelryDetails, setJewelryDetails] = useState(null);
     const [attendeeCount, setAttendeeCount] = useState(0);
@@ -15,6 +17,22 @@ function AuctionDetails() {
     const storedUser = sessionStorage.getItem("loginedUser");
     const user = storedUser ? JSON.parse(storedUser) : null;
     const accountId = user ? user.accountId : null;
+// Get the current page URL
+const currentUrl = window.location.href; // Example: 'http://localhost:5173/auction/5'
+
+// Parse the URL to get the pathname
+const parsedUrl = new URL(currentUrl);
+const pathName = parsedUrl.pathname; // This will give you '/auction/5'
+
+// Split the pathName into parts based on '/'
+const parts = pathName.split('/');
+
+// Extract 'auction' and '5'
+const endpoint = parts[1]; // This will give you 'auction'
+const UrlID = parts[2]; // This will give you '5'
+
+console.log('Endpoint:', endpoint); // Output: 'auction'
+console.log('ID:', UrlID); // Output: '5'
 
     const fetchAuctionDetails = useCallback(async () => {
         try {
@@ -49,7 +67,7 @@ function AuctionDetails() {
             const wallets = response.data.$values;
             const userWallet = wallets.find(wallet => wallet.accountId === accountId);
             if (!userWallet) {
-                navigate('/register-wallet');
+                setIsModalVisible(true);
             } else {
                 setAccountWallet(userWallet);
             }
@@ -60,12 +78,18 @@ function AuctionDetails() {
 
     useEffect(() => {
         fetchAuctionDetails();
-        fetchAttendeeCount();
+        fetchAttendeeCount();   
     }, []);
-
+    useEffect(() => {
+        if (location.state && location.state.message) {
+            // Display success message using Ant Design's message component
+            message.success(location.state.message);
+        }
+    }, [location.state]);
     const handleJoinAuction = async () => {
         if (!accountWallet) {       
         fetchAccountWallet();
+     
         }
         
         try {
@@ -95,7 +119,7 @@ function AuctionDetails() {
 
     const handleModalOk = () => {
         setIsModalVisible(false);
-        navigate('/register-wallet');
+        navigate(`/register-wallet/${endpoint}/${UrlID}`);
     };
 
     const handleModalCancel = () => {

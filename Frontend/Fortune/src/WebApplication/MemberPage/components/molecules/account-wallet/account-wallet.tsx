@@ -3,11 +3,17 @@ import api from '../../../../../config/axios';
 import './account-wallet.scss';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
+import { useNavigate } from 'react-router-dom';
 
 function AccountWallet() {
     const loginedUser = JSON.parse(sessionStorage.getItem('loginedUser'));
-    const navigate = useNavigate(); // Initialize useNavigate hook
+    const navigate = useNavigate();
+
+    const currentUrl = window.location.href;
+    const parsedUrl = new URL(currentUrl);
+    const pathName = parsedUrl.pathname;
+    const endpointAndId = pathName.substring(pathName.indexOf('/', 1));
+
     const [formData, setFormData] = useState({
         accountId: loginedUser?.accountId || 0,
         bankName: '',
@@ -30,7 +36,7 @@ function AccountWallet() {
             console.log('Account wallet created successfully:', response.data);
             toast.success('Account wallet created successfully!', { position: 'top-right' });
 
-            navigate('/');
+            navigate(`${endpointAndId}`,{ state: { message: 'Account wallet created successfully!' } });
         } catch (error) {
             console.error('Error creating account wallet:', error);
             toast.error('Error creating account wallet. Please try again!', { position: 'top-right' });
@@ -39,9 +45,7 @@ function AccountWallet() {
 
     return (
         <>
-
             <form onSubmit={handleSubmit} className="wallet-form">
-                {/* <h1>My Wallet</h1> */}
                 <div className="form-group">
                     <label htmlFor="bankName">Bank Name</label>
                     <input

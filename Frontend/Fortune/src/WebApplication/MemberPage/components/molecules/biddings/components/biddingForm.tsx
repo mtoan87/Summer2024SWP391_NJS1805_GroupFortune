@@ -1,5 +1,5 @@
-import { ReactHTMLElement, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { ClockCircleOutlined, DollarCircleOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -9,6 +9,7 @@ import api from '../../../../../../config/axios';
 
 function BiddingForm() {
     const { id } = useParams();
+    const navigate = useNavigate(); // Initialize useNavigate hook
     const [auction, setAuction] = useState(null);
     const [startTime, setStartTime] = useState(null);
     const [endTime, setEndTime] = useState(null);
@@ -18,9 +19,25 @@ function BiddingForm() {
     const [currentHightPrice, setCurrentHightPrice] = useState(0);
     const [highestPrice, setHighestPrice] = useState(null);
     const [isAuctionActive, setIsAuctionActive] = useState(true);
+    const [remainingTime, setRemainingTime] = useState(null);
     const storedUser = sessionStorage.getItem("loginedUser");
     const user = storedUser ? JSON.parse(storedUser) : null;
     const accountId = user ? user.accountId : null;
+    const [accountWallet, setAccountWallet] = useState(null);
+    const [budget, setBudget] = useState(null);
+
+    const fetchAccountWallet = async () => {
+        try {
+            const response = await api.get(`/AccountWallet/GetAccountWalletByAccountId/${accountId}`);
+            const walletData = response.data;
+            console.log('Account Wallet:', walletData);
+            setAccountWallet(walletData);
+            setBudget(walletData.budget); // Assuming the budget is a property of the wallet data
+        } catch (error) {
+            console.error('Error fetching account wallet:', error);
+            toast.error('Error fetching account wallet. Please try again.');
+        }
+    }
 
     const fetchAuctionDetails = async () => {
         try {
@@ -33,6 +50,10 @@ function BiddingForm() {
             setDate(startDate.toLocaleDateString());
             setStartTime(startDate.toLocaleTimeString());
             setEndTime(endDate.toLocaleTimeString());
+
+            // Calculate remaining time
+            const totalTime = endDate.getTime() - startDate.getTime();
+            setRemainingTime(totalTime);
 
             // SET STARTING PRICE
             let fetchedStartingPrice = 0;
@@ -62,20 +83,23 @@ function BiddingForm() {
     };
 
     useEffect(() => {
+        if (accountId) {
+            fetchAccountWallet();
+        } else {
+            console.error('No accountId found');
+        }
+
         fetchAuctionDetails();
 
         const connection = new signalR.HubConnectionBuilder()
             .configureLogging(signalR.LogLevel.Debug)
-            .withUrl("https://localhost:44361/bidding-hub",{
+            .withUrl("https://localhost:44361/bidding-hub", {
                 skipNegotiation: true,
                 transport: signalR.HttpTransportType.WebSockets
-                })
+            })
             .build();
 
-            
-
         connection.on("HighestPrice", (price) => {
-            console.log("HighestPrice", price);
             toast.info(`Highest Price: ${price}`);
             setHighestPrice(price);
         })
@@ -84,25 +108,48 @@ function BiddingForm() {
             toast.info(content, title)
         })
 
-
         connection.start()
-        .then(() => {
-            connection.invoke("JoinRoom", id)
-                .then(() => {
-                    console.log("Connected to auction room: " + id)
-                    toast.info("Connected to auction room: " + id)
-                    }
-                )
-        })
-        .catch((err) => document.write(err));
+            .then(() => {
+                connection.invoke("JoinRoom", id)
+                    .then(() => {
+                        console.log("Connected to auction room: " + id)
+                        toast.info("Connected to auction room: " + id)
+                    })
+            })
+            .catch((err) => document.write(err));
 
-        
+        // Countdown timer
+        const intervalId = setInterval(() => {
+            setRemainingTime(prevTime => {
+                if (prevTime <= 1000) {
+                    clearInterval(intervalId);
+                    setIsAuctionActive(false);
+                    toast.info("Auction has ended!");
+                    navigate(`/auction/${id}`); // Navigate to auction-details page
+                    return 0;
+                }
+                return prevTime - 1000;
+            });
+        }, 1000);
 
-    }, [id]);
+        return () => clearInterval(intervalId);
+    }, [id, accountId]);
+
+    const formatRemainingTime = (milliseconds) => {
+        const totalSeconds = Math.floor(milliseconds / 1000);
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+        return `${hours}h ${minutes}m ${seconds}s`;
+    };
 
     const handleBidSubmit = async () => {
         if (!bidAmount || isNaN(bidAmount) || bidAmount <= 0) {
             toast.error('Please enter a valid bid amount.');
+            return;
+        }
+        if (budget <= highestPrice) {
+            toast.error('Your budget is insufficient to place a bid.');
             return;
         }
 
@@ -116,14 +163,8 @@ function BiddingForm() {
             const response = await api.post('/api/Bid/Bidding', bidData);
 
             if (response.status === 200) {
-                // setHighestPrice(currentHightPrice + bidAmount);
-
                 setBidAmount(0);
                 // toast.success('Bid submitted successfully!');
-
-                // Update highest price after successful bid
-                // const newHighestPrice = parseFloat(bidAmount);
-                // setHighestPrice(newHighestPrice);
             } else {
                 toast.error('Error submitting bid. Please try again.');
             }
@@ -131,6 +172,10 @@ function BiddingForm() {
             console.error('Error submitting bid:', err);
             toast.error('Error submitting bid. Please try again.');
         }
+    };
+
+    const handleDisabledClick = () => {
+        toast.error('Your budget is insufficient to place a bid.');
     };
 
     return (
@@ -141,6 +186,7 @@ function BiddingForm() {
                     <li><ClockCircleOutlined /> <strong>Date:</strong> {date}</li>
                     <li><ClockCircleOutlined /> <strong>Start-Time:</strong> {startTime}</li>
                     <li><ClockCircleOutlined /> <strong>End-Time:</strong> {endTime}</li>
+                    <li><ClockCircleOutlined /> <strong>Time remaining:</strong> {formatRemainingTime(remainingTime)}</li>
                 </ul>
             </div>
             <div className="infor-price">
@@ -159,13 +205,18 @@ function BiddingForm() {
                             min={0}
                             max={99999}
                             step={1}
-                            value={bidAmount == 0 ? "" : bidAmount}
+                            value={bidAmount === 0 ? "" : bidAmount}
                             onChange={(e) => setBidAmount(parseFloat(e.target.value))}
-                            disabled={!isAuctionActive}
+                            disabled={!isAuctionActive || budget <= highestPrice}
                         />
                     </li>
                     <li>
-                        <button onClick={handleBidSubmit} disabled={!isAuctionActive}>Send</button>
+                        <button 
+                            onClick={isAuctionActive && budget > highestPrice ? handleBidSubmit : handleDisabledClick} 
+                            disabled={!isAuctionActive || budget <= highestPrice}
+                        >
+                            Send
+                        </button>
                     </li>
                 </ul>
             </div>
