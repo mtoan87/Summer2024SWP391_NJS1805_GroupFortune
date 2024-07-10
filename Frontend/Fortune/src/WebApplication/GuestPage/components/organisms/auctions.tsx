@@ -14,7 +14,6 @@ function Auctions() {
             try {
                 const response = await api.get('api/Auctions/GetAllActiveAuctions');
                 const auctionsData = response.data.$values;
-                console.log(auctionsData);
 
                 const auctionsWithImagesAndNames = await Promise.all(
                     auctionsData.map(async (auction) => {
@@ -94,34 +93,31 @@ function Auctions() {
 
     return (
         <>
-            <div className="blank-space">
-                <h1>hello</h1>
-            </div>
             <div className="auction-content">
                 <h1>AUCTIONS</h1>
             </div>
             <div className="auctions-container">
-  {auctions.length === 0 ? (
-    <p>There are no available auctions</p>
-  ) : (
-    displayedAuctions.map((auction) => (
-      <div
-        key={auction.auctionId}
-        className="auction-item"
-        onClick={() => handleAuctionClick(auction.auctionId)} // Pass auctionId here
-      >
-        <img
-          src={`https://localhost:44361/${auction.imageUrl}`}
-          onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
-        />
-        <label>{auction.jewelryName}</label>
-        <p>Date: {formatDate(auction.starttime)}</p>
-        <p>Start Time: {formatTime(auction.starttime)}</p>
-        <p>End Time: {formatTime(auction.endtime)}</p>
-      </div>
-    ))
-  )}
-</div>
+                {auctions.length === 0 ? (
+                    <p>There are no available auctions</p>
+                ) : (
+                    displayedAuctions.map((auction) => (
+                        <div
+                            key={auction.auctionId}
+                            className="auction-item"
+                            onClick={() => handleAuctionClick(auction.auctionId)} // Pass auctionId here
+                        >
+                            <img
+                                src={`https://localhost:44361/${auction.imageUrl}`}
+                                onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
+                            />
+                            <label>{auction.jewelryName}</label>
+                            <p>Date: {formatDate(auction.starttime)}</p>
+                            <p>Start Time: {formatTime(auction.starttime)}</p>
+                            <p>End Time: {formatTime(auction.endtime)}</p>
+                        </div>
+                    ))
+                )}
+            </div>
 
             {auctions.length > 0 && (
                 <div className="navigation-buttons">

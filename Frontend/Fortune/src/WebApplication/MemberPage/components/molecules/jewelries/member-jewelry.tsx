@@ -14,7 +14,6 @@ function MemberJewelry() {
     const fetchJewelry = async () => {
       try {
         const response = await api.get('/api/Jewelries/GetVerified');
-        console.log('API response:', response.data);
         const { jewelrySilver, jewelryGold, jewelryGoldDiamond } = response.data;
 
         const combinedJewelry = [
