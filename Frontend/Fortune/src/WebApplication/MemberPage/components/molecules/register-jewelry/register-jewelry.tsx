@@ -141,10 +141,10 @@ function RegisterJewelryForAuction() {
       }, 1000);
     } catch (error) {
       console.error('Error creating auction:', error);
+      message.error('Error register auction. This jewelry is already in an auction!');
       if (error.response && error.response.data) {
         console.error('Response Data:', error.response.data);
       }
-      message.error('Error creating auction. Please try again!');
     }
   };
   

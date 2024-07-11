@@ -28,33 +28,6 @@ function JewelryDetails() {
         fetchJewelryDetails();
     }, [id]);
 
-    const handleJoinAuction = async () => {
-        if (!user) {
-            console.error('User not logged in');
-            toast.error('You need to log in to join the auction', { position: "top-right" });
-            return;
-        }
-
-        try {
-            const bidResponse = await api.get(`api/Bid/GetBidByAccountId/${user.accountId}`);
-            console.log('Bid Response:', bidResponse.data);
-            const bidId = bidResponse.data.bid_id;
-
-            const joinAuctionData = {
-                accountId: user.accountId,
-                auctionId: id,
-                bidId: bidId,
-            };
-
-            const response = await api.post('api/JoinAuction/CreateJoinAuction', joinAuctionData);
-            console.log('Join Auction Response:', response.data);
-            toast.success('Successfully joined the auction', { position: "top-right" });
-        } catch (err) {
-            console.error('Error joining auction:', err);
-            toast.error('Failed to join the auction', { position: "top-right" });
-        }
-    };
-
     if (!jewelry) {
         return <div>Loading...</div>;
     }
@@ -85,7 +58,6 @@ function JewelryDetails() {
                     <p><strong>Price:</strong> ${jewelry.price}</p>
                 </div>
             </div>
-            <ToastContainer />
         </div>
     );
 }

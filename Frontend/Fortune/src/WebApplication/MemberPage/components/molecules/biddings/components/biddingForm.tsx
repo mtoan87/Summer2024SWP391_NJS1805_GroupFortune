@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import * as signalR from '@microsoft/signalr';
 import '../Styles/bidding.scss';
 import api from '../../../../../../config/axios';
+import { message } from 'antd';
 
 function BiddingForm() {
     const { id } = useParams();
@@ -32,10 +33,10 @@ function BiddingForm() {
             const walletData = response.data;
             console.log('Account Wallet:', walletData);
             setAccountWallet(walletData);
-            setBudget(walletData.budget); // Assuming the budget is a property of the wallet data
+            setBudget(walletData.budget);
         } catch (error) {
             console.error('Error fetching account wallet:', error);
-            toast.error('Error fetching account wallet. Please try again.');
+            message.error('Error fetching account wallet. Please try again.');
         }
     }
 
@@ -100,7 +101,7 @@ function BiddingForm() {
             .build();
 
         connection.on("HighestPrice", (price) => {
-            toast.info(`Highest Price: ${price}`);
+            message.info(`Highest Price: ${price}`);
             setHighestPrice(price);
         })
 
@@ -113,7 +114,7 @@ function BiddingForm() {
                 connection.invoke("JoinRoom", id)
                     .then(() => {
                         console.log("Connected to auction room: " + id)
-                        toast.info("Connected to auction room: " + id)
+                        message.info("Connected to auction room: " + id)
                     })
             })
             .catch((err) => document.write(err));
@@ -145,7 +146,7 @@ function BiddingForm() {
 
     const handleBidSubmit = async () => {
         if (!bidAmount || isNaN(bidAmount) || bidAmount <= 0) {
-            toast.error('Please enter a valid bid amount.');
+            message.error('Please enter a valid bid amount.');
             return;
         }
         if (budget <= highestPrice) {
@@ -164,9 +165,8 @@ function BiddingForm() {
 
             if (response.status === 200) {
                 setBidAmount(0);
-                // toast.success('Bid submitted successfully!');
             } else {
-                toast.error('Error submitting bid. Please try again.');
+                message.error('Error submitting bid. Please try again.');
             }
         } catch (err) {
             console.error('Error submitting bid:', err);

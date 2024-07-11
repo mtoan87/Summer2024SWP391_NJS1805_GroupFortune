@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { message } from 'antd';
 import './jewelry-upload-form.scss';
 import api from '../../../../../config/axios';
+import { useNavigate } from 'react-router-dom';
 
 interface Jewelry {
   accountId: number;
@@ -45,28 +46,28 @@ const purity = {
 
 const category = {
   'Ring': 'Ring',
-  'Necklace': 'Necklace', 
-  'Bracelet': 'Bracelet', 
-  'Earrings': 'Earrings', 
-  'Pendant': 'Pendant', 
-  'Brooch': 'Brooch', 
-  'Anklet': 'Anklet', 
-  'Charm': 'Charm', 
-  'Clufflinks': 'Cufflinks', 
-  'Tiara': 'Tiara', 
-  'Diadem': 'Diadem', 
-  'Choker': 'Choker', 
-  'Bangle': 'Bangle', 
-  'Hairpin': 'Hairpin', 
-  'Barrette': 'Barrette', 
-  'Locket': 'Locket', 
-  'Signet Ring': 'SignetRing', 
-  'Stud Earrings': 'StudEarrings', 
-  'Hoop Earrings': 'HoopEarrings', 
-  'Cameo': 'Cameo', 
-  'Cluster Ring': 'ClusterRing', 
-  'Cocktail Ring': 'CocktailRing', 
-  'Cuff Bracelet': 'CuffBracelet' 
+  'Necklace': 'Necklace',
+  'Bracelet': 'Bracelet',
+  'Earrings': 'Earrings',
+  'Pendant': 'Pendant',
+  'Brooch': 'Brooch',
+  'Anklet': 'Anklet',
+  'Charm': 'Charm',
+  'Clufflinks': 'Cufflinks',
+  'Tiara': 'Tiara',
+  'Diadem': 'Diadem',
+  'Choker': 'Choker',
+  'Bangle': 'Bangle',
+  'Hairpin': 'Hairpin',
+  'Barrette': 'Barrette',
+  'Locket': 'Locket',
+  'Signet Ring': 'SignetRing',
+  'Stud Earrings': 'StudEarrings',
+  'Hoop Earrings': 'HoopEarrings',
+  'Cameo': 'Cameo',
+  'Cluster Ring': 'ClusterRing',
+  'Cocktail Ring': 'CocktailRing',
+  'Cuff Bracelet': 'CuffBracelet'
 }
 
 const materials = {
@@ -102,7 +103,6 @@ const diamondPricesPerCarat = {
   I2: 300,
   I3: 100,
 };
-
 const silverPricesPerOunce = {
   '99.99': { buying: 1950, selling: 2000 },
   '99.9': { buying: 1910, selling: 1950 },
@@ -123,15 +123,8 @@ const convertToOunces = (weight: number, unit: string) => {
 const JewelryUploadForm: React.FC = () => {
   const loginedUserString = sessionStorage.getItem('loginedUser');
   const [accountId, setAccountId] = useState<number>(0);
+  const navigate = useNavigate();
 
-  // if (loginedUserString) {
-  //   try {
-  //     const loginedUser = JSON.parse(loginedUserString);
-  //     accountId = loginedUser?.accountId || null;
-  //   } catch (error) {
-  //     console.error("Error parsing loginedUser from session storage", error);
-  //   }
-  // }
 
   const [jewelry, setJewelry] = useState<Jewelry>({
     accountId: 0,
@@ -160,12 +153,6 @@ const JewelryUploadForm: React.FC = () => {
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-
-  /*
-  1. quản lý state
-  2. quản lý function
-  3. quản lý useEffect
-  */
 
   const validate = () => {
     const newErrors: { [key: string]: string } = {};
@@ -338,6 +325,7 @@ const JewelryUploadForm: React.FC = () => {
         price: '',
         calculatedPrice: ''
       });
+      navigate('/userJewel')
       setErrors({});
     } catch (error) {
       console.error('Error uploading jewelry', error);

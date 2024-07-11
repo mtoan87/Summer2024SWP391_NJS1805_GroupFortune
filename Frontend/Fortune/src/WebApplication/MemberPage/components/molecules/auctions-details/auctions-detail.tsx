@@ -2,38 +2,24 @@ import { useEffect, useState, useCallback } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import './auctions-details.scss';
 import api from '../../../../../config/axios';
-import { message, Modal, Button } from 'antd';
+import { message, Modal } from 'antd';
 
 function AuctionDetails() {
     const { id } = useParams();
     const navigate = useNavigate();
-
     const location = useLocation();
+
     const [auction, setAuction] = useState(null);
     const [jewelryDetails, setJewelryDetails] = useState(null);
     const [attendeeCount, setAttendeeCount] = useState(0);
     const [accountWallet, setAccountWallet] = useState(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
+
     const storedUser = sessionStorage.getItem("loginedUser");
     const user = storedUser ? JSON.parse(storedUser) : null;
     const accountId = user ? user.accountId : null;
-// Get the current page URL
-const currentUrl = window.location.href; // Example: 'http://localhost:5173/auction/5'
 
-// Parse the URL to get the pathname
-const parsedUrl = new URL(currentUrl);
-const pathName = parsedUrl.pathname; // This will give you '/auction/5'
-
-// Split the pathName into parts based on '/'
-const parts = pathName.split('/');
-
-// Extract 'auction' and '5'
-const endpoint = parts[1]; // This will give you 'auction'
-const UrlID = parts[2]; // This will give you '5'
-
-console.log('Endpoint:', endpoint); // Output: 'auction'
-console.log('ID:', UrlID); // Output: '5'
-
+    // Fetch auction details
     const fetchAuctionDetails = useCallback(async () => {
         try {
             const response = await api.get(`api/Auctions/GetById/${id}`);
@@ -49,6 +35,7 @@ console.log('ID:', UrlID); // Output: '5'
         }
     }, [id]);
 
+    // Fetch attendee count
     const fetchAttendeeCount = useCallback(async () => {
         try {
             const response = await api.get(`api/Auctions/${id}/account-count`);
@@ -59,6 +46,7 @@ console.log('ID:', UrlID); // Output: '5'
         }
     }, [id]);
 
+    // Fetch account wallet
     const fetchAccountWallet = useCallback(async () => {
         if (!user) return;
         try {
@@ -76,47 +64,80 @@ console.log('ID:', UrlID); // Output: '5'
         }
     }, [accountId, user]);
 
+    // Fetch auction details and attendee count on component mount
     useEffect(() => {
         fetchAuctionDetails();
-        fetchAttendeeCount();   
-    }, []);
+        fetchAttendeeCount();
+    }, [fetchAuctionDetails, fetchAttendeeCount]);
+
+    // Display success message if any
     useEffect(() => {
         if (location.state && location.state.message) {
-            // Display success message using Ant Design's message component
             message.success(location.state.message);
         }
     }, [location.state]);
-    const handleJoinAuction = async () => {
-        if (!accountWallet) {       
-        fetchAccountWallet();
-     
-        }
-        
-        try {
-            const bidResponse = await api.get(`api/Bid/GetBidByAuctionId/${auction.auctionId}`);
-            console.log('Bid Response:', bidResponse.data);
-            const bidId = bidResponse.data.bid_id;
-    
-            const joinAuctionData = {
-                accountId: accountId,
-                auctionId: id,
-                bidId: bidId,
+
+    // Fetch bid by auction ID
+    useEffect(() => {
+        if (auction && auction.auctionId) {
+            const fetchBidByAuction = async () => {
+                try {
+                    const bidResponse = await api.get(`api/Bid/GetBidByAuctionId/${auction.auctionId}`);
+                    console.log('Bid Response:', bidResponse.data);
+                    const bidValues = bidResponse.data.$values;
+                    if (bidValues && bidValues.length > 0) {
+                        const bidId = bidValues[0].bidId;
+                        console.log('Bid ID:', bidId);
+                    } else {
+                        console.log('No bid data found');
+                    }
+                } catch (error) {
+                    console.error('Error fetching bid by auction:', error);
+                }
             };
-    
-            const response = await api.post('api/JoinAuction/CreateJoinAuction', joinAuctionData);
-            console.log('Join Auction Response:', response.data);
-            message.success('Successfully joined the auction');
-    
-            setTimeout(() => {
-                navigate(`/mybidding/${id}`);
-            }, 1000);
-    
-        } catch (err) {
-            console.error('Error joining auction:', err);
-            message.error('Failed to join the auction');
+
+            fetchBidByAuction();
+        }
+    }, [auction]);
+
+    // Handle join auction
+    const handleJoinAuction = async () => {
+        if (!accountWallet) {
+            await fetchAccountWallet();
+        }
+
+        if (auction && auction.auctionId) {
+            try {
+                const bidResponse = await api.get(`api/Bid/GetBidByAuctionId/${auction.auctionId}`);
+                console.log('Bid Response:', bidResponse.data);
+                const bidValues = bidResponse.data.$values;
+                if (bidValues && bidValues.length > 0) {
+                    const bidId = bidValues[0].bidId;
+
+                    const joinAuctionData = {
+                        accountId: accountId,
+                        auctionId: auction.auctionId,
+                        bidId: bidId,
+                    };
+
+                    const response = await api.post('api/JoinAuction/CreateJoinAuction', joinAuctionData);
+                    console.log('Join Auction Response:', response.data);
+                    message.success('Successfully joined the auction');
+
+                    setTimeout(() => {
+                        navigate(`/mybidding/${id}`);
+                    }, 1000);
+                } else {
+                    message.error('No bid data found for this auction');
+                }
+            } catch (err) {
+                console.error('Error joining auction:', err);
+                message.error('Failed to join the auction');
+            }
         }
     };
 
+    // Handle modal actions
     const handleModalOk = () => {
         setIsModalVisible(false);
         navigate(`/register-wallet/${endpoint}/${UrlID}`);
@@ -136,7 +157,7 @@ console.log('ID:', UrlID); // Output: '5'
         'PureSilver900': '90.0%',
         'PureSilver958': '95.8%'
     };
-    
+
     const goldAge = {
         Gold24: '24K',
         Gold22: '22K',

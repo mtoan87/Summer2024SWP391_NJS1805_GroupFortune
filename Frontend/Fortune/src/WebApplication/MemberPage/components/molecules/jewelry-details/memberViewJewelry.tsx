@@ -168,6 +168,7 @@ function MemberViewJewelry() {
               <p>Gold Age: {goldAge[jewelry.goldAge]}</p>
               <p>Weight: {jewelry.weight}</p>
               <p>Price: {jewelry.price}$</p>
+              <p>Status: {jewelry.status}</p>
               <div className="jewelry-item-buttons-container">
                 {
                   !!jewelry.price ? (
@@ -230,6 +231,7 @@ function MemberViewJewelry() {
               <p>Purity: {purity[jewelry.purity]}</p>
               <p>Weight: {jewelry.weight}</p>
               <p>Price: {jewelry.price}$</p>
+              <p>Status: {jewelry.status}</p>
               <div className="jewelry-item-buttons-container">
               {
                   !!jewelry.price ? (
@@ -255,8 +257,7 @@ function MemberViewJewelry() {
                     <Tooltip title="This jewelry is not verified!">
                       <button
                         onClick={() => handleRegisterAuction(jewelry, 'Silver')}
-                        disabled={jewelry.status === 'Unverified'} // Disable button if no price or status is "Unverified"
-                      >
+                        disabled>
                         Register Auction
                       </button>
                     </Tooltip>
@@ -293,6 +294,7 @@ function MemberViewJewelry() {
               <p>Carat: {jewelry.carat}</p>
               <p>Weight: {jewelry.weight}</p>
               <p>Price: {jewelry.price}$</p>
+              <p>Status: {jewelry.status}</p>
               <div className="jewelry-item-buttons-container">
               {
                   !!jewelry.price ? (
@@ -318,8 +320,7 @@ function MemberViewJewelry() {
                     <Tooltip title="This jewelry is not verified!">
                       <button
                         onClick={() => handleRegisterAuction(jewelry, 'GoldDiamond')}
-                        disabled={jewelry.status === 'Unverified'} // Disable button if no price or status is "Unverified"
-                      >
+                        disabled>
                         Register Auction
                       </button>
                     </Tooltip>
