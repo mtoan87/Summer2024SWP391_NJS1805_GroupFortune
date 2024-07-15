@@ -8,6 +8,7 @@ import JewelryManageScreen from '../template/JewelryManageScreen';
 import GoldManageScreen from '../template/GoldManageScreen';
 import SilverManageScreen from '../template/SilverManageScreen';
 import GoldDiaManageScreen from '../template/GoldDIaManageScreen';
+import ManagerProfileScreen from '../template/ManagerProfileScreen';
 
 const { Header, Content } = Layout;
 
@@ -39,6 +40,7 @@ const ManagerHomePg: React.FC = () => {
             {currentPage === '3' && <GoldManageScreen />}
             {currentPage === '4' && <SilverManageScreen />}
             {currentPage === '5' && <GoldDiaManageScreen />}
+            {currentPage === '6' && <ManagerProfileScreen />}
             {/* Add conditions for other pages if needed */}
           </div>
         </Content>
