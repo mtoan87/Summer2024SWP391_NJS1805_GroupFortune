@@ -4,6 +4,7 @@ import AdminFooter from '../../atoms/Admin-footer/admin-footer';
 import MainContent from '../Maincontent/Maincontent';
 import TableUser from '../Users/TableUser';
 import './Admins.scss';
+import ProfileAdmin from '../Admin-Profile/AdminProfile';
 
 function Admins() {
   const [currentPage, setCurrentPage] = useState('dashboard'); 
@@ -19,6 +20,7 @@ function Admins() {
         <div className="main-content">
           {currentPage === 'dashboard' && <MainContent />}
           {currentPage === 'users' && <TableUser />}
+          {currentPage === 'about' && <ProfileAdmin />}
         </div>
       </div>
       <footer className='footer-page'>
