@@ -35,7 +35,7 @@ function GuestJewelry() {
         const combinedJewelry = [...goldJewelry, ...silverJewelry, ...diamondJewelry];
 
         const jewelryWithImages = combinedJewelry.map(item => {
-          const imageUrl = `https://localhost:44361/${item.jewelryImg.replace(/\\/g, '/')}`;
+          const imageUrl = `https://localhost:44361/${item.jewelryImg}`;
           return { ...item, imageUrl };
         });
 
