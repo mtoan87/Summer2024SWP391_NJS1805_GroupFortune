@@ -18,6 +18,12 @@ function AuctionDetails() {
     const storedUser = sessionStorage.getItem("loginedUser");
     const user = storedUser ? JSON.parse(storedUser) : null;
     const accountId = user ? user.accountId : null;
+    const currentUrl = window.location.href;
+    const parsedUrl = new URL(currentUrl);
+    const pathName = parsedUrl.pathname;
+    const parts = pathName.split('/');
+    const endpoint = parts[1];
+    const UrlID = parts[2];
 
     // Fetch auction details
     const fetchAuctionDetails = useCallback(async () => {
@@ -105,7 +111,10 @@ function AuctionDetails() {
         if (!accountWallet) {
             await fetchAccountWallet();
         }
-
+        if (auction && auction.accountId === accountId) {
+            message.error('You cannot join your auction');
+            return;
+        }
         if (auction && auction.auctionId) {
             try {
                 const bidResponse = await api.get(`api/Bid/GetBidByAuctionId/${auction.auctionId}`);
@@ -127,7 +136,8 @@ function AuctionDetails() {
                     setTimeout(() => {
                         navigate(`/mybidding/${id}`);
                     }, 1000);
-                } else {
+                }
+                else {
                     message.error('No bid data found for this auction');
                 }
             } catch (err) {
@@ -176,7 +186,7 @@ function AuctionDetails() {
                             <img className='item-img'
                                 src={`https://localhost:44361/${jewelry.jewelryImg}`}
                                 alt={jewelry.name}
-                                onError={(e) => { e.target.src = "../../../../../../src/assets/img/"; }} // Provide a default image path
+                                onError={(e) => { e.target.src = "../../../../../../src/assets/img/"; }}
                             />
                             <p><strong>Name:</strong> {jewelry.name}</p>
                             <p><strong>Materials:</strong> {jewelry.materials}</p>
