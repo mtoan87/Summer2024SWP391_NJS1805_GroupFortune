@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import './view-jewelry.scss'; // Assuming you have SCSS for styling
 import api from '../../../../../config/axios';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { message, Select, InputNumber, Button } from 'antd';
+import { message, Select, InputNumber, Button, Checkbox } from 'antd';
 import { EditOutlined, SearchOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
@@ -31,7 +31,7 @@ function StaffViewJewelry() {
     const fetchGoldJewelry = async () => {
       try {
         const response = await api.get(`api/JewelryGold`);
-        setGoldJewelry(response.data?.$values || []); 
+        setGoldJewelry(response.data?.$values || []);
       } catch (err) {
         console.error('Error fetching Gold jewelry', err);
         setGoldJewelry([]);
@@ -41,7 +41,7 @@ function StaffViewJewelry() {
     const fetchSilverJewelry = async () => {
       try {
         const response = await api.get(`api/JewelrySilver`);
-        setSilverJewelry(response.data?.$values || []); 
+        setSilverJewelry(response.data?.$values || []);
       } catch (err) {
         console.error('Error fetching Silver jewelry', err);
         setSilverJewelry([]);
@@ -51,7 +51,7 @@ function StaffViewJewelry() {
     const fetchGoldDiaJewelry = async () => {
       try {
         const response = await api.get(`/api/JewelryGoldDia`);
-        setGoldDiaJewelry(response.data?.$values || []); 
+        setGoldDiaJewelry(response.data?.$values || []);
       } catch (err) {
         console.error('Error fetching Gold Dia jewelry', err);
         setGoldDiaJewelry([]);
@@ -141,6 +141,87 @@ function StaffViewJewelry() {
     ) && isGoldAgeMatch && isPurityMatch && isCategoryMatch && isMaterialMatch && isWeightMatch && isClarityMatch && isCaratMatch;
   };
 
+
+
+  // const handleDeliveryStatusChange = async (jewelryId, material, isChecked) => {
+  //   const endpoint = material === 'Gold'
+  //     ? `/api/JewelryGold/UpdateJewelryGoldStaff?id=${jewelryId}`
+  //     : (material === 'GoldDia'
+  //       ? `/api/JewelryGoldDia/UpdateJewelryGoldDiamondStaff?id=${jewelryId}`
+  //       : `/api/JewelrySilver/UpdateJewelrySilverStaff?id=${jewelryId}`);
+
+  //   try {
+  //     const response = await api.put(endpoint, formData, {
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data'
+  //       }
+  //     });
+  //     message.success('Delivery status updated successfully');
+  //   } catch (error) {
+  //     console.error('Error updating delivery status', error);
+  //     message.error('Failed to update delivery status');
+  //   }
+  // };
+  const purityMapping = {
+    '92.5%': 'PureSilver925',
+    '99.9%': 'PureSilver999',
+    '90.0%': 'PureSilver900',
+    '95.8%': 'PureSilver958',
+  };
+  const handleFormSubmit = async (jewelryId, name, description, category, clarity, purity, carat, goldAge, material, weight, price, isChecked) => {
+    const formData = new FormData();
+    const convertedPurity = purityMapping[purity] || purity;
+    formData.append('jewelryId', jewelryId);
+    formData.append('name', name);
+    formData.append('description', description);
+    formData.append('category', category);
+    formData.append('goldAge', goldAge);
+    formData.append('clarity', clarity);
+    formData.append('carat', carat);
+    formData.append('materials', material);
+    formData.append('weight', weight);
+    formData.append('price', price);
+    formData.append('purity', convertedPurity);
+    console.log(isChecked, convertedPurity);
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`);
+    }
+    if (isChecked) {
+      formData.append('shipment', 'Deliveried');
+    } else {
+
+      formData.append('shipment', 'Delivering');
+    }
+    try {
+      const endpoint = material === 'Gold'
+        ? `/api/JewelryGold/UpdateJewelryGoldStaff?id=${jewelryId}`
+        : (material === 'GoldDiamond'
+          ? `/api/JewelryGoldDia/UpdateJewelryGoldDiamondStaff?id=${jewelryId}`
+          : `/api/JewelrySilver/UpdateJewelrySilverStaff?id=${jewelryId}`);
+
+      console.log("Endpoint:", endpoint);
+      console.log("FormData:", Array.from(formData.entries()));
+
+      const response = await api.put(endpoint, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      console.log("API Response Status:", response.status);
+      console.log("API Response Data:", response.data);
+
+      if (response.status === 200) {
+        message.success('Jewelry updated successfully!');
+        navigate('/');
+      } else {
+        message.error('Error updating jewelry: Unexpected response status');
+      }
+    } catch (error) {
+      console.error('Error updating jewelry:', error);
+      message.error('Error updating jewelry: ' + error.message);
+    }
+  };
   return (
     <>
       <div className="jewel-content">
@@ -149,17 +230,17 @@ function StaffViewJewelry() {
       <div className='searchBar'>
         <div className="fui-input-label-animation">
           <SearchOutlined className="search-icon" />
-          <input 
-            type="text" 
-            className="form-input" 
-            placeholder='Search for Jewelry' 
+          <input
+            type="text"
+            className="form-input"
+            placeholder='Search for Jewelry'
             value={searchQuery}
-            onChange={handleSearchChange} 
+            onChange={handleSearchChange}
           />
         </div>
       </div>
       <div className="filters">
-      <Select
+        <Select
           placeholder="Select Clarity"
           onChange={handleClarityChange}
           allowClear
@@ -272,9 +353,26 @@ function StaffViewJewelry() {
               <p>Price: {jewelry.price}$</p>
               <p>Shipment: {jewelry.shipment}</p>
               <div className="jewelry-item-buttons">
-                <button onClick={() => handleUpdateJewelry(jewelry.jewelryGoldId, "Gold")}>
-                  <EditOutlined /> Update
+                <button onClick={() => handleUpdateJewelry(jewelry.jewelryGoldId, "Gold")}
+                    disabled={jewelry.shipment === 'Deliveried'}
+                    className={jewelry.shipment === 'Deliveried' ? 'button-disabled' : ''}>
+                  <EditOutlined /> Appraise
                 </button>
+                <Checkbox onChange={(e) => handleFormSubmit(
+                  jewelry.jewelryGoldId,
+                  jewelry.name,
+                  jewelry.description,
+                  jewelry.category,
+                  null,
+                  null,
+                  null,
+                  jewelry.goldAge,
+                  `Gold`,
+                  jewelry.weight,
+                  jewelry.price,
+                  e.target.checked)}>
+                  Delivered
+                </Checkbox>
               </div>
             </div>
           ))
@@ -298,9 +396,28 @@ function StaffViewJewelry() {
               <p>Price: {jewelry.price}$</p>
               <p>Shipment: {jewelry.shipment}</p>
               <div className="jewelry-item-buttons">
-                <button onClick={() => handleUpdateJewelry(jewelry.jewelrySilverId, "Silver")}>
-                  <EditOutlined /> Update
+                <button onClick={() => handleUpdateJewelry(jewelry.jewelrySilverId, "Silver")}
+                      disabled={jewelry.shipment === 'Deliveried'}
+                      className={jewelry.shipment === 'Deliveried' ? 'button-disabled' : ''}>
+                  <EditOutlined /> Appraise
                 </button>
+                <Checkbox onChange={(e) => handleFormSubmit(
+                  jewelry.jewelrySilverId,
+                  jewelry.name,
+                  jewelry.description,
+                  jewelry.category,
+                  null,
+                  jewelry.purity,
+                  null,
+                  null,
+                  `Silver`,
+                  jewelry.weight,
+                  jewelry.price,
+                  e.target.checked)}
+
+                >
+                  Delivered
+                </Checkbox>
               </div>
             </div>
           ))
@@ -326,9 +443,35 @@ function StaffViewJewelry() {
               <p>Price: {jewelry.price}$</p>
               <p>Shipment: {jewelry.shipment}</p>
               <div className="jewelry-item-buttons">
-                <button onClick={() => handleUpdateJewelry(jewelry.jewelryGolddiaId, "GoldDia")}>
-                  <EditOutlined /> Update
+                <button onClick={() => handleUpdateJewelry(jewelry.jewelryGolddiaId, "GoldDia")}
+                  disabled={jewelry.shipment === 'Deliveried'}
+                  className={jewelry.shipment === 'Deliveried' ? 'button-disabled' : ''}>
+                  <EditOutlined /> Appraise
                 </button>
+                {/* <Checkbox
+              checked={jewelry.delivered}
+              onChange={(e) => handleDeliveryStatusChange(jewelry.jewelryGoldDiaId, 'GoldDia', e.target.checked)}
+            >
+              Delivered
+            </Checkbox> */}
+                <Checkbox onChange={(e) => handleFormSubmit(
+                  jewelry.jewelryGolddiaId,
+                  jewelry.name,
+                  jewelry.description,
+                  jewelry.category,
+                  jewelry.clarity,
+                  jewelry.carat,
+                  null,
+                  jewelry.goldAge,
+                  `GoldDiamond`,
+                  jewelry.weight,
+                  jewelry.price,
+                  e.target.checked)
+                }
+
+                >
+                  Delivered
+                </Checkbox>
               </div>
             </div>
           ))
