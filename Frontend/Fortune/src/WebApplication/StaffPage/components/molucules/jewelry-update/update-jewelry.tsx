@@ -72,6 +72,36 @@ function StaffViewJewelryDetails() {
       ...prevState,
       [name]: value
     }));
+
+    // Call calculate price function when relevant fields change
+    calculatePrice();
+  };
+
+  const calculatePrice = async () => {
+    const { accountId, materials, weight, goldAge, purity, price, carat, clarity } = jewelryDetails;
+
+    try {
+      const response = await api.post('/api/Jewelries/CalculatePrice', {
+        accountId,
+        materials,
+        weight: parseFloat(weight),
+        weightUnit: 'grams',  // Assuming weight is in grams
+        goldAge,
+        purity,
+        price: parseFloat(price),
+        carat: parseFloat(carat),
+        clarity
+      });
+
+      console.log("Price Calculation Response:", response.data);
+      setJewelryDetails(prevState => ({
+        ...prevState,
+        price: response.data.calculatedPrice.toFixed(2)  // Assuming calculatedPrice is returned from API
+      }));
+    } catch (error) {
+      console.error('Error calculating price:', error);
+      // Handle error
+    }
   };
 
   const handleUpdateJewelry = async () => {
@@ -168,7 +198,7 @@ function StaffViewJewelryDetails() {
           <input type="text" name="category" value={jewelryDetails.category} disabled />
           
           <label htmlFor="weight">Weight</label>
-          <input type="text" name="weight" value={jewelryDetails.weight} disabled />
+          <input type="text" name="weight" value={jewelryDetails.weight} onChange={handleInputChange} />
 
           {material === 'Gold' && (
             <>
@@ -184,7 +214,7 @@ function StaffViewJewelryDetails() {
           {material === 'Silver' && (
             <>
               <label htmlFor="purity">Purity</label>
-              <input type="text" name="purity" value={jewelryDetails.purity} disabled />
+              <input type="text" name="purity" value={jewelryDetails.purity} onChange={handleInputChange} />
               {errors.purity && <span className="error">{errors.purity}</span>}
             </>
           )}
@@ -204,7 +234,12 @@ function StaffViewJewelryDetails() {
             </>
           )}
 
-          <label htmlFor="price">Price</label>
+          <label htmlFor="price">Calculated Price</label>
+          <div className="input-container">
+            <input type="text" name="price" value={jewelryDetails.price} onChange={handleInputChange} />
+            <button onClick={calculatePrice}>Calculate Price</button>
+          </div>
+           <label htmlFor="price">Price</label>
           <div className="input-container">
             <input type="text" name="price" value={jewelryDetails.price} onChange={handleInputChange} />
           </div>
@@ -225,3 +260,4 @@ function StaffViewJewelryDetails() {
 }
 
 export default StaffViewJewelryDetails;
+
