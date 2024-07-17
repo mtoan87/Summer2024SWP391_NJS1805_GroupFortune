@@ -7,6 +7,12 @@ function MyWallet() {
     const [walletInfo, setWalletInfo] = useState(null);
     const accountId = JSON.parse(sessionStorage.getItem('loginedUser'))?.accountId;
     const navigate = useNavigate();
+    const currentUrl = window.location.href;
+    const parsedUrl = new URL(currentUrl);
+    const pathName = parsedUrl.pathname;
+    const parts = pathName.split('/');
+    const endpoint = parts[1];
+    const UrlID = parts[2];
 
     useEffect(() => {
         const fetchWallet = async () => {
@@ -26,6 +32,9 @@ function MyWallet() {
     const handleUpdateWallet = () => {
         navigate('/update-wallet')
     };
+    const handleRegisterWallet = () => {
+        navigate(`/register-wallet/${endpoint}/${UrlID}`)
+    };
 
     return (
         <div className="my-wallet">
@@ -40,7 +49,10 @@ function MyWallet() {
                     <button onClick={handleUpdateWallet}>Update Wallet</button>
                 </>
             ) : (
-                <p>Loading wallet information...</p>
+                <>
+                    <p>You have not register wallet yet</p>
+                    <button onClick={handleRegisterWallet}>Register Wallet</button>
+                </>
             )}
         </div>
     );

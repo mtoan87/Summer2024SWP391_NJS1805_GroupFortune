@@ -14,10 +14,17 @@ function AuctionDetails() {
     const [attendeeCount, setAttendeeCount] = useState(0);
     const [accountWallet, setAccountWallet] = useState(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isAuctionOpen, setIsAuctionOpen] = useState(false); // State to track if auction is open for joining
 
     const storedUser = sessionStorage.getItem("loginedUser");
     const user = storedUser ? JSON.parse(storedUser) : null;
     const accountId = user ? user.accountId : null;
+    const currentUrl = window.location.href;
+    const parsedUrl = new URL(currentUrl);
+    const pathName = parsedUrl.pathname;
+    const parts = pathName.split('/');
+    const endpoint = parts[1];
+    const UrlID = parts[2];
 
     // Fetch auction details
     const fetchAuctionDetails = useCallback(async () => {
@@ -30,6 +37,11 @@ function AuctionDetails() {
             const jewelryDetails = await fetchJewelryDetails(auctionData);
             console.log('Jewelry Details:', jewelryDetails);
             setJewelryDetails(jewelryDetails);
+
+            // Check if auction is open for joining
+            const currentTime = new Date();
+            const auctionStartTime = new Date(auctionData.starttime);
+            setIsAuctionOpen(currentTime >= auctionStartTime);
         } catch (err) {
             console.error('Error fetching auction details:', err);
         }
@@ -105,7 +117,14 @@ function AuctionDetails() {
         if (!accountWallet) {
             await fetchAccountWallet();
         }
-
+        if (!isAuctionOpen) {
+            message.error('Auction has not started yet. You cannot join.');
+            return;
+        }
+        if(auction && auction.accountId === accountId) {
+            message.error('You cannot join your auction');
+            return;
+        }
         if (auction && auction.auctionId) {
             try {
                 const bidResponse = await api.get(`api/Bid/GetBidByAuctionId/${auction.auctionId}`);
@@ -176,7 +195,7 @@ function AuctionDetails() {
                             <img className='item-img'
                                 src={`https://localhost:44361/${jewelry.jewelryImg}`}
                                 alt={jewelry.name}
-                                onError={(e) => { e.target.src = "../../../../../../src/assets/img/"; }} // Provide a default image path
+                                onError={(e) => { e.target.src = "../../../../../../src/assets/img/"; }}
                             />
                             <p><strong>Name:</strong> {jewelry.name}</p>
                             <p><strong>Materials:</strong> {jewelry.materials}</p>
@@ -205,7 +224,9 @@ function AuctionDetails() {
                         </div>
                     )}
 
-                    <button className="join-auction-button" onClick={handleJoinAuction}>Join Auction</button>
+                    <button className="join-auction-button" onClick={handleJoinAuction} disabled={!isAuctionOpen}>
+                        {isAuctionOpen ? 'Join Auction' : 'Auction Not Open'}
+                    </button>
                 </div>
             </div>
 

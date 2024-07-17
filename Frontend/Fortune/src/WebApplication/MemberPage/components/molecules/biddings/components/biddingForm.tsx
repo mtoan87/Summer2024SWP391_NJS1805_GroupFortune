@@ -156,9 +156,10 @@ function BiddingForm() {
 
         try {
             const bidData = {
-                bidId: id,
+                bidId: parseInt(id),
                 auctionId: auction.auctionId,
                 bidStep: bidAmount,
+                accountId: accountId, // Include accountId in the bidData object
             };
 
             const response = await api.post('/api/Bid/Bidding', bidData);
