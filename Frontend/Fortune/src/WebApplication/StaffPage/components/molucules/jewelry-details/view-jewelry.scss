@@ -101,4 +101,18 @@
 
   }
 
+.filters{
+  position: relative;
+  display: flex;
+  justify-content: center;  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
   
+
+}
+
+.filters .ant-select,
+.filters .ant-input-number {
+  width: 200px; /* Adjust width as needed */
+}
