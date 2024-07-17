@@ -15,16 +15,11 @@ function AuctionDetails() {
     const [accountWallet, setAccountWallet] = useState(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isAuctionOpen, setIsAuctionOpen] = useState(false); // State to track if auction is open for joining
+    const [isAuctionEnded, setIsAuctionEnded] = useState(false); // State to track if auction has ended
 
     const storedUser = sessionStorage.getItem("loginedUser");
     const user = storedUser ? JSON.parse(storedUser) : null;
     const accountId = user ? user.accountId : null;
-    const currentUrl = window.location.href;
-    const parsedUrl = new URL(currentUrl);
-    const pathName = parsedUrl.pathname;
-    const parts = pathName.split('/');
-    const endpoint = parts[1];
-    const UrlID = parts[2];
 
     // Fetch auction details
     const fetchAuctionDetails = useCallback(async () => {
@@ -41,7 +36,9 @@ function AuctionDetails() {
             // Check if auction is open for joining
             const currentTime = new Date();
             const auctionStartTime = new Date(auctionData.starttime);
-            setIsAuctionOpen(currentTime >= auctionStartTime);
+            const auctionEndTime = new Date(auctionData.endtime);
+            setIsAuctionOpen(currentTime >= auctionStartTime && currentTime <= auctionEndTime);
+            setIsAuctionEnded(currentTime > auctionEndTime); // Check if auction has ended
         } catch (err) {
             console.error('Error fetching auction details:', err);
         }
@@ -121,8 +118,8 @@ function AuctionDetails() {
             message.error('Auction has not started yet. You cannot join.');
             return;
         }
-        if(auction && auction.accountId === accountId) {
-            message.error('You cannot join your auction');
+        if (auction && auction.accountId === accountId) {
+            message.error('You cannot join your own auction.');
             return;
         }
         if (auction && auction.auctionId) {
@@ -192,7 +189,8 @@ function AuctionDetails() {
                 <div className="jewelry-details">
                     {jewelryDetails.map((jewelry, index) => (
                         <div key={index}>
-                            <img className='item-img'
+                            <img
+                                className='item-img'
                                 src={`https://localhost:44361/${jewelry.jewelryImg}`}
                                 alt={jewelry.name}
                                 onError={(e) => { e.target.src = "../../../../../../src/assets/img/"; }}
@@ -224,15 +222,15 @@ function AuctionDetails() {
                         </div>
                     )}
 
-                    <button className="join-auction-button" onClick={handleJoinAuction} disabled={!isAuctionOpen}>
-                        {isAuctionOpen ? 'Join Auction' : 'Auction Not Open'}
+                    <button className="join-auction-button" onClick={handleJoinAuction} disabled={!isAuctionOpen || isAuctionEnded}>
+                        {isAuctionEnded ? 'Auction Ended' : (isAuctionOpen ? 'Join Auction' : 'Auction Not Open')}
                     </button>
                 </div>
             </div>
 
             <Modal
                 title="No Wallet Found"
-                open={isModalVisible}
+                visible={isModalVisible}
                 onOk={handleModalOk}
                 onCancel={handleModalCancel}
                 cancelText="No"

@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { message } from 'antd';
+import { message} from 'antd';
 import './jewelry-upload-form.scss';
 import api from '../../../../../config/axios';
 import { useNavigate } from 'react-router-dom';
@@ -113,9 +113,7 @@ const silverPricesPerOunce = {
 const convertToOunces = (weight: number, unit: string) => {
   const conversionRates = {
     grams: 0.035274,
-    milligrams: 0.000035274,
     ounces: 1,
-    pennyweights: 0.05
   };
   return weight * conversionRates[unit];
 };
@@ -347,7 +345,6 @@ const JewelryUploadForm: React.FC = () => {
               <img
                 src={jewelry.imageUrl || "../../../../../../src/assets/img/jewelry_introduction.jpg"}
                 alt={jewelry.name}
-                onError={(e) => { e.currentTarget.src = "src/assets/img/jewelry_introduction.jpg"; }}
               />
               <div className="upload-text-details">Upload Image</div>
               <input ref={fileInputRef} type="file" id="image" name="image" onChange={handleImageUpload} accept="image/*" style={{ display: 'none' }} />
@@ -426,11 +423,12 @@ const JewelryUploadForm: React.FC = () => {
                 onChange={handleChange}
               >
                 <option value="grams">Grams (g)</option>
-                <option value="milligrams">Milligrams (mg)</option>
                 <option value="ounces">Ounces (oz)</option>
-                <option value="pennyweights">Pennyweights (dwt)</option>
               </select>
               {errors.weight && <span className="error">{errors.weight}</span>}
+            </div>
+            <div className="note">
+            <span color='red'>*1 Ounces (oz) = 31,1034768 grams</span>
             </div>
             {jewelry.materials === 'Gold' && (
               <>

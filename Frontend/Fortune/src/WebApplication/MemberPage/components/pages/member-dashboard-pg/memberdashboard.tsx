@@ -1,13 +1,19 @@
-import MemberDashboard from '../../template/memeber-dashboard/memberdashboardtmp'
+import MemberFooter from '../../atoms/member-footer/member-footer'
+import MemberHeader from '../../atoms/member-header/member-header'
+import MemberDashBoardTemplate from '../../template/memeber-dashboard/memberdashboardtmp'
 
 function MemberDashBoardPg() {
   return (
     <>
-
-    <div>
-        <MemberDashboard />
-    </div>
-
+      <header>
+        <MemberHeader />
+      </header>
+      <div>
+        <MemberDashBoardTemplate />
+      </div>
+      <footer>
+        <MemberFooter />
+      </footer>
     </>
   )
 }

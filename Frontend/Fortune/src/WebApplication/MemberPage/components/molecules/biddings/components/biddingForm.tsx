@@ -10,7 +10,7 @@ import { message } from 'antd';
 
 function BiddingForm() {
     const { id } = useParams();
-    const navigate = useNavigate(); // Initialize useNavigate hook
+    const navigate = useNavigate();
     const [auction, setAuction] = useState(null);
     const [startTime, setStartTime] = useState(null);
     const [endTime, setEndTime] = useState(null);
@@ -21,6 +21,8 @@ function BiddingForm() {
     const [highestPrice, setHighestPrice] = useState(null);
     const [isAuctionActive, setIsAuctionActive] = useState(true);
     const [remainingTime, setRemainingTime] = useState(null);
+    const [bidRecords, setBidRecords] = useState([]); // State for bid records
+
     const storedUser = sessionStorage.getItem("loginedUser");
     const user = storedUser ? JSON.parse(storedUser) : null;
     const accountId = user ? user.accountId : null;
@@ -52,10 +54,6 @@ function BiddingForm() {
             setStartTime(startDate.toLocaleTimeString());
             setEndTime(endDate.toLocaleTimeString());
 
-            // Calculate remaining time
-            const totalTime = endDate.getTime() - startDate.getTime();
-            setRemainingTime(totalTime);
-
             // SET STARTING PRICE
             let fetchedStartingPrice = 0;
             if (auctionData.jewelryGoldId) {
@@ -73,10 +71,24 @@ function BiddingForm() {
 
             const bidsResponse = await api.get(`/api/Bid/GetBidByAuctionId/${auctionData.auctionId}`);
             const auctionBids = bidsResponse.data.$values;
+            console.log('Auction Bids:', auctionBids);
+
+            const bidsRecordsResponse = await api.get(`/api/BidRecord/GetBidRecordByBidId?BidId=${auctionData.auctionId}`);
+            const allBidRecords = bidsRecordsResponse.data.$values;
+            console.log('Bid Records:', allBidRecords);
+
+            // Limit to the 5 latest bids
+            const latestBidRecords = allBidRecords.slice(-5); // Get last 5 records
+            setBidRecords(latestBidRecords);
 
             const highPrice = auctionBids.length > 0 ? Math.max(...auctionBids.map(bid => bid.maxprice)) : fetchedStartingPrice;
             setHighestPrice(highPrice);
             setCurrentHightPrice(highPrice);
+
+            // Calculate remaining time
+            const totalTime = endDate.getTime() - Date.now(); // Calculate remaining time from current time
+            setRemainingTime(totalTime);
+
         } catch (err) {
             console.error('Error fetching auction details:', err);
             toast.error('Error fetching auction details. Please try again.');
@@ -126,7 +138,7 @@ function BiddingForm() {
                     clearInterval(intervalId);
                     setIsAuctionActive(false);
                     toast.info("Auction has ended!");
-                    navigate(`/auction/${id}`); // Navigate to auction-details page
+                    navigate(`/auction/${id}`);
                     return 0;
                 }
                 return prevTime - 1000;
@@ -196,27 +208,33 @@ function BiddingForm() {
                     <li><DollarCircleOutlined /> <strong>Highest Price:</strong> ${highestPrice}</li>
                 </ul>
             </div>
+            <div className="bid-records">
+                <h2>Bid Records</h2>
+                <ul>
+                    <li>
+                        {bidRecords.map((record, index) => (
+                            <span key={index}>
+                                <strong>User</strong> {record.accountId} <strong>has bid</strong> {record.bidStep}$
+                                {index < bidRecords.length - 1 && <br />} {/* Line break except after the last item */}
+                            </span>
+                        ))}
+                    </li>
+                </ul>
+            </div>
             <div className="infor-bidding">
                 <ul>
-                    <li><strong>Fill Your Price to Bidding!</strong></li>
                     <li>
                         <input
                             type="number"
-                            placeholder="Price"
-                            min={0}
-                            max={99999}
-                            step={1}
-                            value={bidAmount === 0 ? "" : bidAmount}
-                            onChange={(e) => setBidAmount(parseFloat(e.target.value))}
-                            disabled={!isAuctionActive || budget <= highestPrice}
+                            placeholder="Enter your bid"
+                            value={bidAmount}
+                            onChange={(e) => setBidAmount(e.target.value)}
                         />
-                    </li>
-                    <li>
-                        <button 
-                            onClick={isAuctionActive && budget > highestPrice ? handleBidSubmit : handleDisabledClick} 
-                            disabled={!isAuctionActive || budget <= highestPrice}
+                        <button
+                            onClick={budget > highestPrice ? handleBidSubmit : handleDisabledClick}
+                            disabled={budget <= highestPrice}
                         >
-                            Send
+                            Place Bid
                         </button>
                     </li>
                 </ul>
