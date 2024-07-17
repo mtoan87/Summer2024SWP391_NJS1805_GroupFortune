@@ -5,6 +5,7 @@ import MainContent from '../Maincontent/Maincontent';
 import TableUser from '../Users/TableUser';
 import './Admins.scss';
 import ProfileAdmin from '../Admin-Profile/AdminProfile';
+import TableAuctionAdmin from '../Auction/AuctionAdmin';
 
 function Admins() {
   const [currentPage, setCurrentPage] = useState('dashboard'); 
@@ -21,6 +22,7 @@ function Admins() {
           {currentPage === 'dashboard' && <MainContent />}
           {currentPage === 'users' && <TableUser />}
           {currentPage === 'about' && <ProfileAdmin />}
+          {currentPage === 'auctions' && <TableAuctionAdmin />}
         </div>
       </div>
       <footer className='footer-page'>

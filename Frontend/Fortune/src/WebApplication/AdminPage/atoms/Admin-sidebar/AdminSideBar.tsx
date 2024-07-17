@@ -22,7 +22,6 @@ const Sidebar: React.FC<{ onMenuClick: (e: any) => void }> = ({ onMenuClick }) =
     { key: 'dashboard', icon: <DashboardOutlined />, label: 'Dashboard' },
     { key: 'users', icon: <UsergroupAddOutlined />, label: 'Users' },
     { key: 'auctions', icon: <ProductOutlined />, label: 'Auctions' },
-    { key: 'jewelry', icon: <RubyOutlined />, label: 'Jewelry' },
     {
       key: 'account',
       icon: <UserOutlined />,
