@@ -1,9 +1,7 @@
-import React from 'react';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../../../../../config/axios';
 import './jewelryDetails.scss';
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ReactImageZoom from 'react-image-zoom';
 

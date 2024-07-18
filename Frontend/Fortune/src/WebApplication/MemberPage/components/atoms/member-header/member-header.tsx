@@ -48,12 +48,12 @@ const MemberHeader: React.FC = () => {
             icon: <ShoppingOutlined />,
             onClick: () => handleNavigate("/userWallet")
         },
-        {
-            key: "5",
-            label: "My DashBoard",
-            icon: <SettingOutlined />,
-            onClick: () => handleNavigate("/mydashboard")
-        },
+        // {
+        //     key: "5",
+        //     label: "My DashBoard",
+        //     icon: <SettingOutlined />,
+        //     onClick: () => handleNavigate("/mydashboard")
+        // },
         {
             key: "6",
             label: "Logout",

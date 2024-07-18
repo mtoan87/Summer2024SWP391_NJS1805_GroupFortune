@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import './register-jewelry.scss';
 import api from '../../../../../config/axios';
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { message } from 'antd';
 
@@ -142,9 +141,6 @@ function RegisterJewelryForAuction() {
     } catch (error) {
       console.error('Error creating auction:', error);
       message.error('Error register auction. This jewelry is already in an auction!');
-      if (error.response && error.response.data) {
-        console.error('Response Data:', error.response.data);
-      }
     }
   };
   
@@ -230,7 +226,6 @@ function RegisterJewelryForAuction() {
       ) : (
         <p>No jewelry selected for auction registration.</p>
       )}
-      <ToastContainer className="toast-position" />
     </div>
   );
 }
