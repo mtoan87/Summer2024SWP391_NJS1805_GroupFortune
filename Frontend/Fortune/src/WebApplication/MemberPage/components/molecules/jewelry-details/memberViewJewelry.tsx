@@ -4,7 +4,7 @@ import api from '../../../../../config/axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Tooltip } from 'antd';
+import { message, Tooltip } from 'antd';
 
 function MemberViewJewelry() {
   const [goldJewelry, setGoldJewelry] = useState([]);
@@ -87,10 +87,7 @@ function MemberViewJewelry() {
       const auction = response.data;
 
       if (auction) {
-        toast.warning('This jewelry has already registered for auction!', {
-          position: 'top-right'
-        });
-        return true;
+        message.warning('This jewelry has already registered for auction!');
       }
     } catch (err) {
       console.error(`Error fetching auction for ${material} jewelry with ID ${jewelryId}`, err);
@@ -126,7 +123,7 @@ function MemberViewJewelry() {
 
   return (
     <>
-      <div className="jewel-content">
+      <div className="jewelry-content">
         <h1>My Jewelry</h1>
       </div>
       <div className="searchBar">
@@ -167,7 +164,14 @@ function MemberViewJewelry() {
               <p>Materials: {jewelry.materials}</p>
               <p>Gold Age: {goldAge[jewelry.goldAge]}</p>
               <p>Weight: {jewelry.weight}</p>
-              <p>Price: {jewelry.price}$</p>
+              {
+                jewelry.price ? (
+                  <p>Price: {jewelry.price}$</p>
+
+                ) : (
+                  <p>Price: is being appraisal</p>
+                )
+              }
               <p>Status: {jewelry.status}</p>
               <div className="jewelry-item-buttons-container">
                 {
@@ -230,10 +234,17 @@ function MemberViewJewelry() {
               <p>Materials: {jewelry.materials}</p>
               <p>Purity: {purity[jewelry.purity]}</p>
               <p>Weight: {jewelry.weight}</p>
-              <p>Price: {jewelry.price}$</p>
+              {
+                jewelry.price ? (
+                  <p>Price: {jewelry.price}$</p>
+
+                ) : (
+                  <p color='red'>Price: is being appraisal</p>
+                )
+              }
               <p>Status: {jewelry.status}</p>
               <div className="jewelry-item-buttons-container">
-              {
+                {
                   !!jewelry.price ? (
                     <Tooltip title="This jewelry is being verified">
                       <button
@@ -293,10 +304,17 @@ function MemberViewJewelry() {
               <p>Clarity: {jewelry.clarity}</p>
               <p>Carat: {jewelry.carat}</p>
               <p>Weight: {jewelry.weight}</p>
-              <p>Price: {jewelry.price}$</p>
+              {
+                jewelry.price ? (
+                  <p>Price: {jewelry.price}$</p>
+
+                ) : (
+                  <p color='red'>Price: is being appraisal</p>
+                )
+              }
               <p>Status: {jewelry.status}</p>
               <div className="jewelry-item-buttons-container">
-              {
+                {
                   !!jewelry.price ? (
                     <Tooltip title="This jewelry is being verified">
                       <button
