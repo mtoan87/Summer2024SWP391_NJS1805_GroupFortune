@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { message} from 'antd';
+import { message } from 'antd';
 import './jewelry-upload-form.scss';
 import api from '../../../../../config/axios';
 import { useNavigate } from 'react-router-dom';
@@ -104,10 +104,10 @@ const diamondPricesPerCarat = {
   I3: 100,
 };
 const silverPricesPerOunce = {
-  '99.99': { buying: 1950, selling: 2000 },
-  '99.9': { buying: 1910, selling: 1950 },
-  '92.5': { selling: 1820 },
-  'plated': { selling: 1450 }
+  '99.9%': { buying: 1950, selling: 2000 },
+  '95.8%': { buying: 1910, selling: 1950 },
+  '92.5%': { selling: 1820 },
+  '90.0%': { selling: 1450 }
 };
 
 const convertToOunces = (weight: number, unit: string) => {
@@ -236,30 +236,53 @@ const JewelryUploadForm: React.FC = () => {
 
 
   const calculatePrice = () => {
-    const weight = parseFloat(jewelry.weight);
-    if (!weight || isNaN(weight) || weight <= 0) return;
+    const weightInOunces = convertToOunces(parseFloat(jewelry.weight), jewelry.weightUnit);
 
-    const ounces = convertToOunces(weight, jewelry.weightUnit);
-    let price = 0;
+    if (jewelry.materials === 'Gold') {
+      const pricePerOunce = goldPricesPerOunce[jewelry.goldage || ''];
+      if (!pricePerOunce) return;
 
-    if (jewelry.materials === 'Gold' && jewelry.goldage) {
-      price = ounces * goldPricesPerOunce[jewelry.goldage as keyof typeof goldPricesPerOunce];
-    } else if (jewelry.materials === 'Silver' && jewelry.purity) {
-      const purityPrice = silverPricesPerOunce[jewelry.purity as keyof typeof silverPricesPerOunce];
-      price = ounces * (purityPrice?.selling || 0);
+      const calculatedPrice = weightInOunces * pricePerOunce;
+      setJewelry((prevState) => ({
+        ...prevState,
+        calculatedPrice: calculatedPrice.toFixed(2)
+      }));
+    } else if (jewelry.materials === 'Silver') {
+      const silverDetails = silverPricesPerOunce[jewelry.purity || ''];
+      const sellingPrice = silverDetails?.selling;
+      if (!sellingPrice) return;
+
+      const calculatedPrice = weightInOunces * sellingPrice;
+      setJewelry((prevState) => ({
+        ...prevState,
+        calculatedPrice: calculatedPrice.toFixed(2)
+      }));
     } else if (jewelry.materials === 'Gold, Diamond') {
-      if (jewelry.goldage && jewelry.clarity && jewelry.carat) {
-        const goldPrice = ounces * goldPricesPerOunce[jewelry.goldage as keyof typeof goldPricesPerOunce];
-        const diamondPrice = parseFloat(jewelry.carat) * diamondPricesPerCarat[jewelry.clarity as keyof typeof diamondPricesPerCarat];
-        price = goldPrice + diamondPrice;
-      }
-    }
+      const goldPricePerOunce = goldPricesPerOunce[jewelry.goldage || ''];
+      const diamondPricePerCarat = diamondPricesPerCarat[jewelry.clarity || ''];
 
-    setJewelry(prevState => ({
-      ...prevState,
-      calculatedPrice: price.toFixed(2)
-    }));
+      if (!goldPricePerOunce || !diamondPricePerCarat || !jewelry.carat) return;
+
+      const goldPrice = weightInOunces * goldPricePerOunce;
+      const diamondPrice = parseFloat(jewelry.carat) * diamondPricePerCarat;
+      const calculatedPrice = goldPrice + diamondPrice;
+
+      setJewelry((prevState) => ({
+        ...prevState,
+        calculatedPrice: calculatedPrice.toFixed(2)
+      }));
+    }
   };
+
+  useEffect(() => {
+    calculatePrice();
+  }, [
+    jewelry.weight,
+    jewelry.weightUnit,
+    jewelry.goldage,
+    jewelry.purity,
+    jewelry.carat
+  ]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -331,9 +354,6 @@ const JewelryUploadForm: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    calculatePrice();
-  }, [jewelry.weight, jewelry.weightUnit, jewelry.goldage, jewelry.purity, jewelry.carat]);
   return (
     <div className="jewelry-upload-container">
       <form onSubmit={handleSubmit}>
@@ -341,12 +361,12 @@ const JewelryUploadForm: React.FC = () => {
         <div className="form-content">
           <div className="image-upload-section">
             <label htmlFor="image">Image</label>
-            <div className="upload-label-details" onClick={handleImageClick}>
-              <img
-                src={jewelry.imageUrl || "../../../../../../src/assets/img/jewelry_introduction.jpg"}
-                alt={jewelry.name}
-              />
-              <div className="upload-text-details">Upload Image</div>
+            <div className="upload-label-details">
+              {jewelry.imageUrl ? (
+                <img src={jewelry.imageUrl} alt="jewelry_image" />
+              ) : (
+                <button className='submit-image' onClick={handleImageClick}>Uploads image</button>
+              )}
               <input ref={fileInputRef} type="file" id="image" name="image" onChange={handleImageUpload} accept="image/*" style={{ display: 'none' }} />
             </div>
             {errors.imageFile && <span className="error text-danger">{errors.imageFile}</span>}
@@ -428,7 +448,7 @@ const JewelryUploadForm: React.FC = () => {
               {errors.weight && <span className="error">{errors.weight}</span>}
             </div>
             <div className="note">
-            <span color='red'>*1 Ounces (oz) = 31,1034768 grams</span>
+              <span color='red'>*1 Ounces (oz) = 31,1034768 grams</span>
             </div>
             {jewelry.materials === 'Gold' && (
               <>
