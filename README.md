@@ -3,7 +3,6 @@
 ### Huỳnh Minh Toàn (Leader)
 ### Tăng Dư Yến
 ### Ngô Tùng Hiệp
-### Lý Văn Mỹ
 
 ## Related Resource
 [DocumentRDS](https://docs.google.com/document/d/1IbJgdlMSLRjdFQl4de3sVSOIGHNUJqyO/edit)
