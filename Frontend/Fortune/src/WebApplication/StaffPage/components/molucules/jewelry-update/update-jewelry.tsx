@@ -32,7 +32,8 @@ function StaffViewJewelryDetails() {
     price: '',
     collection: '',
     jewelryImg: '',
-    shipment: ''
+    shipment: '',
+    calculatePrice:'',
   });
   const [errors, setErrors] = useState({});
   const { id, material } = useParams();
@@ -96,7 +97,7 @@ function StaffViewJewelryDetails() {
       console.log("Price Calculation Response:", response.data);
       setJewelryDetails(prevState => ({
         ...prevState,
-        price: response.data.calculatedPrice.toFixed(2)  // Assuming calculatedPrice is returned from API
+        calculatePrice: response.data.calculatedPrice.toFixed(2)  // Assuming calculatedPrice is returned from API
       }));
     } catch (error) {
       console.error('Error calculating price:', error);
@@ -198,7 +199,7 @@ function StaffViewJewelryDetails() {
           <input type="text" name="category" value={jewelryDetails.category} disabled />
           
           <label htmlFor="weight">Weight</label>
-          <input type="text" name="weight" value={jewelryDetails.weight} onChange={handleInputChange} />
+          <input type="text" name="weight" value={jewelryDetails.weight} onChange={handleInputChange} disabled />
 
           {material === 'Gold' && (
             <>
@@ -214,7 +215,7 @@ function StaffViewJewelryDetails() {
           {material === 'Silver' && (
             <>
               <label htmlFor="purity">Purity</label>
-              <input type="text" name="purity" value={jewelryDetails.purity} onChange={handleInputChange} />
+              <input type="text" name="purity" value={jewelryDetails.purity} onChange={handleInputChange} disabled/>
               {errors.purity && <span className="error">{errors.purity}</span>}
             </>
           )}
@@ -228,15 +229,15 @@ function StaffViewJewelryDetails() {
                 ))}
               </select>
               <label htmlFor="clarity">Clarity</label>
-              <input type="text" name="clarity" value={jewelryDetails.clarity} onChange={handleInputChange} />
+              <input type="text" name="clarity" value={jewelryDetails.clarity} onChange={handleInputChange} disabled/>
               <label htmlFor="carat">Carat</label>
-              <input type="text" name="carat" value={jewelryDetails.carat} onChange={handleInputChange} />
+              <input type="text" name="carat" value={jewelryDetails.carat} onChange={handleInputChange} disabled/>
             </>
           )}
 
           <label htmlFor="price">Calculated Price</label>
           <div className="input-container">
-            <input type="text" name="price" value={jewelryDetails.price} onChange={handleInputChange} />
+            <input type="text" name="calculatedPrice" value={jewelryDetails.calculatePrice} onChange={handleInputChange} disabled/>
             <button onClick={calculatePrice}>Calculate Price</button>
           </div>
            <label htmlFor="price">Price</label>
@@ -245,12 +246,12 @@ function StaffViewJewelryDetails() {
           </div>
           {errors.price && <span className="error">{errors.price}</span>}
 
-          <label htmlFor="shipment">Shipment</label>
+          {/* <label htmlFor="shipment">Shipment</label>
           <select name="shipment" value={jewelryDetails.shipment} onChange={handleInputChange}>
             {shipmentOptions.map(option => (
               <option key={option} value={option}>{option}</option>
             ))}
-          </select>
+          </select> */}
 
           <button onClick={handleUpdateJewelry}><EditOutlined /> Update</button>
         </div>

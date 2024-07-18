@@ -454,7 +454,9 @@ function StaffViewJewelry() {
             >
               Delivered
             </Checkbox> */}
-                <Checkbox onChange={(e) => handleFormSubmit(
+                <Checkbox 
+                defaultChecked={jewelry.shipment === 'Deliveried'}
+                onChange={(e) => handleFormSubmit(
                   jewelry.jewelryGolddiaId,
                   jewelry.name,
                   jewelry.description,
@@ -468,7 +470,6 @@ function StaffViewJewelry() {
                   jewelry.price,
                   e.target.checked)
                 }
-
                 >
                   Delivered
                 </Checkbox>
