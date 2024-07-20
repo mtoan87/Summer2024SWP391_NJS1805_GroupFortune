@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Table, Tooltip, Button, message, Input, Select } from 'antd';
 import { TableProps } from 'antd/es/table';
 import api from '../../../../../../config/axios';
+import { SearchOutlined } from '@ant-design/icons';
+
 
 interface JewelrySilver {
   jewelrySilverId: number;
@@ -29,7 +31,7 @@ interface TableParams {
   filters?: Record<string, React.ReactText[]>;
 }
 
-const Purity = {
+const PurityEnum = {
   '92.5%': 'PureSilver925',
   '99.9%': 'PureSilver999',
   '90%': 'PureSilver900',
@@ -45,15 +47,20 @@ const columns = (
     title: 'Jewelry ID',
     dataIndex: 'jewelrySilverId',
     width: '10%',
+    render: (jewelrySilverId: number) => (jewelrySilverId ? jewelrySilverId : <span style={{ color: 'red' }}>N/A</span>),
   },
   {
     title: 'Name',
     dataIndex: 'name',
     width: '15%',
     render: (text: string, record: JewelrySilver) => (
-      <Tooltip title={<img src={`https://localhost:44361/${record.jewelryImg}`} alt={record.name} style={{ maxWidth: '200px' }} />}>
-        <span>{text}</span>
-      </Tooltip>
+      text ? (
+        <Tooltip title={<img src={`https://localhost:44361/${record.jewelryImg}`} alt={record.name} style={{ maxWidth: '200px' }} />}>
+          <span>{text}</span>
+        </Tooltip>
+      ) : (
+        <span style={{ color: 'red' }}>N/A</span>
+      )
     ),
   },
   {
@@ -66,16 +73,19 @@ const columns = (
       // Add other categories here
     ],
     onFilter: (value, record) => record.category.includes(value as string),
+    render: (category: string) => (category ? category : <span style={{ color: 'red' }}>N/A</span>),
   },
   {
     title: 'Materials',
     dataIndex: 'materials',
     width: '10%',
+    render: (materials: string) => (materials ? materials : <span style={{ color: 'red' }}>N/A</span>),
   },
   {
     title: 'Description',
     dataIndex: 'description',
     width: '15%',
+    render: (description: string) => (description ? description : <span style={{ color: 'red' }}>N/A</span>),
   },
   {
     title: 'Purity',
@@ -87,7 +97,10 @@ const columns = (
       { text: '90%', value: 'PureSilver900' },
     ],
     onFilter: (value, record) => record.purity.includes(value as string),
-    render: (purity: string) => Object.keys(Purity).find(key => Purity[key] === purity),
+    render: (purity: string) => {
+      const purityKey = Object.keys(PurityEnum).find(key => PurityEnum[key] === purity);
+      return purityKey ? purityKey : <span style={{ color: 'red' }}>N/A</span>;
+    },
   },
   {
     title: 'Price',
@@ -125,6 +138,7 @@ const columns = (
     title: 'Weight',
     dataIndex: 'weight',
     width: '10%',
+    render: (weight: string) => (weight ? weight : <span style={{ color: 'red' }}>N/A</span>),
   },
   {
     title: 'Actions',
@@ -140,6 +154,9 @@ const columns = (
 const SilverTable: React.FC = () => {
   const [data, setData] = useState<JewelrySilver[]>([]);
   const [loading, setLoading] = useState(false);
+  const [searchedColumn, setSearchedColumn] = useState<string>('');
+  const [searchText, setSearchText] = useState('');
+  let searchInput: Input | null = null; 
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: {
       current: 1,
@@ -212,7 +229,28 @@ const SilverTable: React.FC = () => {
       setData([]);
     }
   };
-
+  const handleSearch = (selectedKeys: string[], confirm: () => void, dataIndex: string) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+  const handleSearchBar = (
+    selectedKeys: React.Key[],
+    confirm: (param?: string | number) => void,
+    dataIndex: string
+  ) => {
+    confirm();
+    setSearchText(selectedKeys[0] as string);
+    setSearchedColumn(dataIndex);
+  };
+  const handleReset = (clearFilters: () => void) => {
+    clearFilters();
+    setSearchText('');
+  };
+  const handleResetBar = (clearFilters: (() => void) | undefined) => {
+    clearFilters && clearFilters();
+    setSearchText('');
+  };
   const handlePriceChange = (value: string, record: JewelrySilver) => {
     setData((prevData) =>
       prevData.map((item) =>
@@ -252,11 +290,26 @@ const SilverTable: React.FC = () => {
   return (
     <>
       <h1>Silver Jewelry Management</h1>
+      <Input
+        placeholder="Search auction data..."
+        allowClear
+        onChange={(e) => setSearchText(e.target.value)}
+        style={{ marginBottom: '1rem', width: '80rem' }}
+        prefix={<SearchOutlined />}
+      />
       <Table
         columns={columns(handlePriceChange, handleStatusChange, handleUpdate)}
         rowKey={(record) => record.jewelrySilverId.toString()}
-        dataSource={data}
-        pagination={tableParams.pagination}
+        dataSource={data.filter((jewelry) => {
+          if (searchText) {
+            const values = Object.values(jewelry) as Array<string | number>;
+            return values.some((value) =>
+              value.toString().toLowerCase().includes(searchText.toLowerCase())
+            );
+          }
+          return true;
+        })}
+        pagination={{pageSize:10}}
         loading={loading}
         onChange={handleTableChange}
       />

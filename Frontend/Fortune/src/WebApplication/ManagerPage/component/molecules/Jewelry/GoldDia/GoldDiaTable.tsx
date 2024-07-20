@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Table, Tooltip, Button, message, Input, Select } from 'antd';
 import { TableProps } from 'antd/es/table';
 import api from '../../../../../../config/axios';
+import { SearchOutlined } from '@ant-design/icons';
 
 interface jewelryGoldDia {
   jewelryGolddiaId: number;
@@ -48,15 +49,20 @@ const columns = (
     title: 'Jewelry ID',
     dataIndex: 'jewelryGolddiaId',
     width: '10%',
+    render: (jewelryGolddiaId: number) => (jewelryGolddiaId ? jewelryGolddiaId : <span style={{ color: 'red' }}>N/A</span>),
   },
   {
     title: 'Name',
     dataIndex: 'name',
     width: '15%',
     render: (text: string, record: jewelryGoldDia) => (
-      <Tooltip title={<img src={`https://localhost:44361/${record.jewelryImg}`} alt={record.name} style={{ maxWidth: '200px' }} />}>
-        <span>{text}</span>
-      </Tooltip>
+      text ? (
+        <Tooltip title={<img src={`https://localhost:44361/${record.jewelryImg}`} alt={record.name} style={{ maxWidth: '200px' }} />}>
+          <span>{text}</span>
+        </Tooltip>
+      ) : (
+        <span style={{ color: 'red' }}>N/A</span>
+      )
     ),
   },
   {
@@ -69,16 +75,19 @@ const columns = (
       // Add other categories here
     ],
     onFilter: (value, record) => record.category.includes(value as string),
+    render: (category: string) => (category ? category : <span style={{ color: 'red' }}>N/A</span>),
   },
   {
     title: 'Materials',
     dataIndex: 'materials',
     width: '10%',
+    render: (materials: string) => (materials ? materials : <span style={{ color: 'red' }}>N/A</span>),
   },
   {
     title: 'Description',
     dataIndex: 'description',
     width: '15%',
+    render: (description: string) => (description ? description : <span style={{ color: 'red' }}>N/A</span>),
   },
   {
     title: 'Gold Age',
@@ -91,7 +100,10 @@ const columns = (
       { text: '14K', value: 'Gold14' },
     ],
     onFilter: (value, record) => record.goldAge.includes(value as string),
-    render: (goldAge: string) => Object.keys(goldage).find(key => goldage[key] === goldAge),
+    render: (goldAge: string) => {
+      const age = Object.keys(goldage).find(key => goldage[key] === goldAge);
+      return age ? age : <span style={{ color: 'red' }}>N/A</span>;
+    },
   },
   {
     title: 'clarity',
@@ -114,6 +126,7 @@ const columns = (
   {
     title: 'carat',
     dataIndex: 'carat',
+    render: (carat: string) => (carat ? carat : <span style={{ color: 'red' }}>N/A</span>),
   },
   {
     title: 'Price',
@@ -151,6 +164,7 @@ const columns = (
     title: 'Weight',
     dataIndex: 'weight',
     width: '10%',
+    render: (weight: string) => (weight ? weight : <span style={{ color: 'red' }}>N/A</span>),
   },
   {
     title: 'Actions',
@@ -166,6 +180,9 @@ const columns = (
 const GoldTable: React.FC = () => {
   const [data, setData] = useState<jewelryGoldDia[]>([]);
   const [loading, setLoading] = useState(false);
+  const [searchedColumn, setSearchedColumn] = useState<string>('');
+  const [searchText, setSearchText] = useState('');
+  let searchInput: Input | null = null; 
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: {
       current: 1,
@@ -207,7 +224,28 @@ const GoldTable: React.FC = () => {
     sortOrder: params.sortOrder,
     ...params.filters, // Include filters directly in the params object
   });
-
+  const handleSearch = (selectedKeys: string[], confirm: () => void, dataIndex: string) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+  const handleSearchBar = (
+    selectedKeys: React.Key[],
+    confirm: (param?: string | number) => void,
+    dataIndex: string
+  ) => {
+    confirm();
+    setSearchText(selectedKeys[0] as string);
+    setSearchedColumn(dataIndex);
+  };
+  const handleReset = (clearFilters: () => void) => {
+    clearFilters();
+    setSearchText('');
+  };
+  const handleResetBar = (clearFilters: (() => void) | undefined) => {
+    clearFilters && clearFilters();
+    setSearchText('');
+  };
   useEffect(() => {
     fetchData();
   }, [
@@ -278,11 +316,26 @@ const GoldTable: React.FC = () => {
   return (
     <>
       <h1>Gold Jewelry Management</h1>
+      <Input
+        placeholder="Search auction data..."
+        allowClear
+        onChange={(e) => setSearchText(e.target.value)}
+        style={{ marginBottom: '1rem', width: '80rem' }}
+        prefix={<SearchOutlined />}
+      />
       <Table
         columns={columns(handlePriceChange, handleStatusChange, handleUpdate)}
         rowKey={(record) => record.jewelryGolddiaId.toString()}
-        dataSource={data}
-        pagination={tableParams.pagination}
+        dataSource={data.filter((jewelry) => {
+          if (searchText) {
+            const values = Object.values(jewelry) as Array<string | number>;
+            return values.some((value) =>
+              value.toString().toLowerCase().includes(searchText.toLowerCase())
+            );
+          }
+          return true;
+        })}
+        pagination={{ pageSize: 10 }}
         loading={loading}
         onChange={handleTableChange}
       />

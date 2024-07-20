@@ -29,7 +29,7 @@ function AuctionTable() {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState<string>('');
   const [filterDateRange, setFilterDateRange] = useState<[moment.Moment | null, moment.Moment | null]>([null, null]);
-  let searchInput: Input | null = null; // Define searchInput here
+  let searchInput: Input | null = null; 
 
   useEffect(() => {
     const fetchAccountDetails = async (accountId: number) => {
@@ -104,7 +104,7 @@ function AuctionTable() {
   },[]);
     
   const handleStatusChange = async (auction: Auction) => {
-    const newStatus = auction.status === 'Active' ? 'UnActive' : 'Active';
+    const newStatus = auction.status === 'UnActive' ? 'Active' : 'UnActive';
     let apiUrl = '';
     let updateData: any = {
       accountId: auction.accountId,
@@ -112,7 +112,8 @@ function AuctionTable() {
       endtime: auction.endtime,
       status: newStatus,
     };
-
+  
+    // Determine the correct API URL and include jewelry ID in the updateData
     if (auction.jewelryGoldId !== null) {
       apiUrl = `/api/Auctions/UpdateGoldAuction?id=${auction.auctionId}`;
       updateData['jewelryGoldId'] = auction.jewelryGoldId;
@@ -123,55 +124,13 @@ function AuctionTable() {
       apiUrl = `/api/Auctions/UpdateSilverAuction?id=${auction.auctionId}`;
       updateData['jewelrySilverId'] = auction.jewelrySilverId;
     }
-
+  
     try {
-      const sameJewelryAuctions = auctions.filter((a) => {
-        if (a.auctionId !== auction.auctionId) { // Exclude the current auction
-          if (auction.jewelrySilverId !== null && a.jewelrySilverId !== null && a.jewelrySilverId === auction.jewelrySilverId) {
-            return true; // Match for jewelrySilverId
-          }
-          if (auction.jewelryGoldId !== null && a.jewelryGoldId !== null && a.jewelryGoldId === auction.jewelryGoldId) {
-            return true; // Match for jewelryGoldId
-          }
-          if (auction.jewelryGolddiaId !== null && a.jewelryGolddiaId !== null && a.jewelryGolddiaId === auction.jewelryGolddiaId) {
-            return true; // Match for jewelryGolddiaId
-          }
-        }
-        return false;
-      });
-
-      console.log("same", sameJewelryAuctions);
-      // Prepare promises for deactivating other auctions
-      const deactivatePromises = sameJewelryAuctions.map(async (a) => {
-        if (a.auctionId !== auction.auctionId && a.status === 'Active') {
-          let deactivateApiUrl = '';
-          let updateDeactivateData: any = {
-            accountId: a.accountId,
-            starttime: a.starttime,
-            endtime: a.endtime,
-            status: 'UnActive',
-          };
-          if (a.jewelryGoldId !== null) {
-            deactivateApiUrl = `/api/Auctions/UpdateGoldAuction?id=${a.auctionId}`;
-            updateDeactivateData['jewelryGoldId'] = a.jewelryGoldId;
-          } else if (a.jewelryGolddiaId !== null) {
-            deactivateApiUrl = `/api/Auctions/UpdateGoldDiamondAuction?id=${a.auctionId}`;
-            updateDeactivateData['jewelryGolddiaId'] = a.jewelryGolddiaId;
-          } else if (a.jewelrySilverId !== null) {
-            deactivateApiUrl = `/api/Auctions/UpdateSilverAuction?id=${a.auctionId}`;
-            updateDeactivateData['jewelrySilverId'] = a.jewelrySilverId;
-          }
-
-          await api.put(deactivateApiUrl, updateDeactivateData);
-        }
-      });
-
-      // Execute all deactivate promises
-      await Promise.all(deactivatePromises);
-
       // Update the status of the current auction
       const response = await api.put(apiUrl, updateData);
-      console.log("deactivatePromises", response);
+      console.log("Auction status updated successfully", response);
+  
+      // Update the state to reflect the new status
       setAuctions((prevAuctions) =>
         prevAuctions.map((a) =>
           a.auctionId === auction.auctionId ? { ...a, status: newStatus } : a
@@ -184,6 +143,7 @@ function AuctionTable() {
       message.error('Error updating auction status');
     }
   };
+  
 
   const expandedRowRender = (record: Auction) => {
     const accountColumns = [
@@ -379,7 +339,7 @@ function AuctionTable() {
         placeholder="Search auction data..."
         allowClear
         onChange={(e) => setSearchText(e.target.value)}
-        style={{ marginBottom: '1rem', width: '92rem' }}
+        style={{ marginBottom: '1rem', width: '80rem' }}
         prefix={<SearchOutlined />}
       />
       
@@ -400,6 +360,7 @@ function AuctionTable() {
           rowExpandable: (record) => !!record.jewelryDetails,
         }}
         rowKey="auctionId"
+        pagination={{ pageSize: 10 }}
       />
     </>
   );

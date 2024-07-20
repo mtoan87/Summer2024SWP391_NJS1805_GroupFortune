@@ -11,6 +11,8 @@ function StaffViewJewelry() {
   const [goldJewelry, setGoldJewelry] = useState([]);
   const [silverJewelry, setSilverJewelry] = useState([]);
   const [golddiaJewelry, setGoldDiaJewelry] = useState([]);
+  const [activeAuctions, setActiveAuctions] = useState([]);
+  const [disabledItems, setDisabledItems] = useState(new Set());
   const [searchQuery, setSearchQuery] = useState('');
   const [goldAgeFilter, setGoldAgeFilter] = useState('');
   const [purityFilter, setPurityFilter] = useState('');
@@ -20,6 +22,9 @@ function StaffViewJewelry() {
   const [caratFilter, setCaratFilter] = useState('');
   const [minWeight, setMinWeight] = useState(null);
   const [maxWeight, setMaxWeight] = useState(null);
+  const [activeGoldIds, setActiveGoldIds] = useState(new Set());
+  const [activeSilverIds, setActiveSilverIds] = useState(new Set());
+  const [activeGoldDiaIds, setActiveGoldDiaIds] = useState(new Set());
   const loginedUser = JSON.parse(sessionStorage.getItem('loginedUser'));
   const accountId = loginedUser?.accountId;
   const location = useLocation();
@@ -28,40 +33,50 @@ function StaffViewJewelry() {
   const successMessage = state && state.successMessage;
 
   useEffect(() => {
-    const fetchGoldJewelry = async () => {
+    const fetchJewelryData = async () => {
       try {
-        const response = await api.get(`api/JewelryGold`);
-        setGoldJewelry(response.data?.$values || []);
+        const [goldResponse, silverResponse, goldDiaResponse, auctionsResponse] = await Promise.all([
+          api.get('/api/JewelryGold'),
+          api.get('/api/JewelrySilver'),
+          api.get('/api/JewelryGoldDia'),
+          api.get('/api/Auctions/GetAllActiveAuctions')
+        ]);
+
+        setGoldJewelry(goldResponse.data?.$values || []);
+        setSilverJewelry(silverResponse.data?.$values || []);
+        setGoldDiaJewelry(goldDiaResponse.data?.$values || []);
+
+
+        const activeAuctions = auctionsResponse.data?.$values || [];
+        const goldIds = new Set();
+        const silverIds = new Set();
+        const goldDiaIds = new Set();
+
+        activeAuctions.forEach(auction => {
+          if (auction.jewelryGoldId) goldIds.add(auction.jewelryGoldId);
+          if (auction.jewelrySilverId) silverIds.add(auction.jewelrySilverId);
+          if (auction.jewelryGolddiaId) goldDiaIds.add(auction.jewelryGolddiaId);
+        });
+console.log("gold",goldIds);
+console.log("silverIds",silverIds);
+console.log("goldDiaIds",goldDiaIds);
+        setActiveGoldIds(goldIds);
+        setActiveSilverIds(silverIds);
+        setActiveGoldDiaIds(goldDiaIds);
+
       } catch (err) {
-        console.error('Error fetching Gold jewelry', err);
+        console.error('Error fetching data', err);
         setGoldJewelry([]);
-      }
-    };
-
-    const fetchSilverJewelry = async () => {
-      try {
-        const response = await api.get(`api/JewelrySilver`);
-        setSilverJewelry(response.data?.$values || []);
-      } catch (err) {
-        console.error('Error fetching Silver jewelry', err);
         setSilverJewelry([]);
-      }
-    };
-
-    const fetchGoldDiaJewelry = async () => {
-      try {
-        const response = await api.get(`/api/JewelryGoldDia`);
-        setGoldDiaJewelry(response.data?.$values || []);
-      } catch (err) {
-        console.error('Error fetching Gold Dia jewelry', err);
         setGoldDiaJewelry([]);
+        setActiveGoldIds(new Set());
+        setActiveSilverIds(new Set());
+        setActiveGoldDiaIds(new Set());
       }
     };
 
     if (accountId) {
-      fetchGoldJewelry();
-      fetchSilverJewelry();
-      fetchGoldDiaJewelry();
+      fetchJewelryData();
     } else {
       console.error('No accountId found in loginedUser');
     }
@@ -72,6 +87,30 @@ function StaffViewJewelry() {
       message.success("Success Notification!");
     }
   }, [successMessage]);
+
+  useEffect(() => {
+    // Fetch all active auctions
+    const fetchActiveAuctions = async () => {
+      try {
+        const response = await api.get('api/Auctions/GetAllActiveAuctions');
+        setActiveAuctions(response.data);
+        // Extract IDs of jewelry items from active auctions
+        const activeJewelryIds = new Set();
+        response.data.forEach(auction => {
+          if (auction.jewelryGoldId) activeJewelryIds.add(auction.jewelryGoldId);
+          if (auction.jewelrySilverId) activeJewelryIds.add(auction.jewelrySilverId);
+          if (auction.jewelryGoldDiaId) activeJewelryIds.add(auction.jewelryGoldDiaId);
+        });
+        console.log('Active Jewelry IDs:', Array.from(activeJewelryIds));
+        setDisabledItems(activeJewelryIds);
+      } catch (error) {
+        console.error('Error fetching active auctions', error);
+      }
+    };
+
+    fetchActiveAuctions();
+  }, []);
+
 
   const handleUpdateJewelry = (jewelryId, material) => {
     navigate(`/staff/update-jewelry/${jewelryId}/${material}`);
@@ -201,7 +240,7 @@ function StaffViewJewelry() {
 
       console.log("Endpoint:", endpoint);
       console.log("FormData:", Array.from(formData.entries()));
-
+  
       const response = await api.put(endpoint, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -210,7 +249,9 @@ function StaffViewJewelry() {
 
       console.log("API Response Status:", response.status);
       console.log("API Response Data:", response.data);
-
+       setTimeout(() => {
+      window.location.reload();
+   },1000)
       if (response.status === 200) {
         message.success('Jewelry updated successfully!');
         navigate('/');
@@ -352,13 +393,16 @@ function StaffViewJewelry() {
               <p>Weight: {jewelry.weight}</p>
               <p>Price: {jewelry.price}$</p>
               <p>Shipment: {jewelry.shipment}</p>
+              {activeGoldIds.has(jewelry.jewelryGoldId) && <p className="active-auction-message">This item is currently in an active auction.</p>}
               <div className="jewelry-item-buttons">
                 <button onClick={() => handleUpdateJewelry(jewelry.jewelryGoldId, "Gold")}
                     disabled={jewelry.shipment === 'Deliveried'}
                     className={jewelry.shipment === 'Deliveried' ? 'button-disabled' : ''}>
                   <EditOutlined /> Appraise
                 </button>
-                <Checkbox onChange={(e) => handleFormSubmit(
+                <Checkbox 
+                defaultChecked={jewelry.shipment === 'Deliveried'}
+                onChange={(e) => handleFormSubmit(
                   jewelry.jewelryGoldId,
                   jewelry.name,
                   jewelry.description,
@@ -370,7 +414,9 @@ function StaffViewJewelry() {
                   `Gold`,
                   jewelry.weight,
                   jewelry.price,
-                  e.target.checked)}>
+                  e.target.checked)}
+                  disabled={activeGoldIds.has(jewelry.jewelryGoldId)}
+                  >
                   Delivered
                 </Checkbox>
               </div>
@@ -395,13 +441,16 @@ function StaffViewJewelry() {
               <p>Weight: {jewelry.weight}</p>
               <p>Price: {jewelry.price}$</p>
               <p>Shipment: {jewelry.shipment}</p>
+              {activeSilverIds.has(jewelry.jewelrySilverId) && <p className="active-auction-message">This item is currently in an active auction.</p>}
               <div className="jewelry-item-buttons">
                 <button onClick={() => handleUpdateJewelry(jewelry.jewelrySilverId, "Silver")}
                       disabled={jewelry.shipment === 'Deliveried'}
                       className={jewelry.shipment === 'Deliveried' ? 'button-disabled' : ''}>
                   <EditOutlined /> Appraise
                 </button>
-                <Checkbox onChange={(e) => handleFormSubmit(
+                <Checkbox 
+                defaultChecked={jewelry.shipment === 'Deliveried'}
+                onChange={(e) => handleFormSubmit(
                   jewelry.jewelrySilverId,
                   jewelry.name,
                   jewelry.description,
@@ -414,7 +463,7 @@ function StaffViewJewelry() {
                   jewelry.weight,
                   jewelry.price,
                   e.target.checked)}
-
+                  disabled={activeSilverIds.has(jewelry.jewelrySilverId)}
                 >
                   Delivered
                 </Checkbox>
@@ -442,6 +491,7 @@ function StaffViewJewelry() {
               <p>Weight: {jewelry.weight}</p>
               <p>Price: {jewelry.price}$</p>
               <p>Shipment: {jewelry.shipment}</p>
+              {activeGoldDiaIds.has(jewelry.jewelryGolddiaId) && <p className="active-auction-message">This item is currently in an active auction.</p>}
               <div className="jewelry-item-buttons">
                 <button onClick={() => handleUpdateJewelry(jewelry.jewelryGolddiaId, "GoldDia")}
                   disabled={jewelry.shipment === 'Deliveried'}
@@ -470,6 +520,7 @@ function StaffViewJewelry() {
                   jewelry.price,
                   e.target.checked)
                 }
+                disabled={activeGoldDiaIds.has(jewelry.jewelryGolddiaId)}
                 >
                   Delivered
                 </Checkbox>

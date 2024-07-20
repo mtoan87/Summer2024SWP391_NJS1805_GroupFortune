@@ -8,7 +8,9 @@
     font-weight: bold;
   }
 }
-
+.na-text {
+  color: red;
+}
 .jewelry-table {
   width: 100%;
   border-collapse: collapse;
@@ -33,7 +35,7 @@
     top: 100%; /* Position below the jewelry name */
     left: 50%; /* Center horizontally */
     transform: translateX(-50%);
-    width: 150px; /* Adjust size as needed */
+    width: auto; /* Adjust size as needed */
     padding: 10px;
     background-color: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -54,4 +56,13 @@
     width: 20rem;
     height: 15rem;
   }
+.pagination {
+    margin-top: 16px;
+    text-align: center;
+  }
+  .search-bar {
+    margin-bottom: 16px;
+    width: 100%;
+  }
 }
+  
