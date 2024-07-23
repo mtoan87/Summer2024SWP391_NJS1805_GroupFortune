@@ -38,10 +38,10 @@ const StaffHeader: React.FC = () => {
                                 style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
                             >
                                 <Dropdown show={isHovered} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
-                                    <Dropdown.Toggle variant="success" id="dropdown-basic" style={{ display: 'flex', alignItems: 'center' }}>
+                                    <Dropdown  className='btn-header' style={{ display: 'flex', alignItems: 'center' }}>
                                         <FaRegUser className="user-icon" />
                                         <h3 className="user-name" style={{ margin: '0 0 0 5px' }}>{user.name}</h3>
-                                    </Dropdown.Toggle>
+                                    </Dropdown>
                                     <Dropdown.Menu>
                                         <Dropdown.Item href="/staffprofile">
                                             <UserOutlined style={{ marginRight: '8px' }} />

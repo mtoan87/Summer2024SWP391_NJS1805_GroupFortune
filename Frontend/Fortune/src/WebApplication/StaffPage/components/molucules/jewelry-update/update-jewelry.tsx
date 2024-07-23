@@ -33,7 +33,7 @@ function StaffViewJewelryDetails() {
     collection: '',
     jewelryImg: '',
     shipment: '',
-    calculatePrice:'',
+    calculatePrice:null,
   });
   const [errors, setErrors] = useState({});
   const { id, material } = useParams();
@@ -89,7 +89,7 @@ function StaffViewJewelryDetails() {
         weightUnit: 'grams',  // Assuming weight is in grams
         goldAge,
         purity,
-        price: parseFloat(price),
+        price: 0,
         carat: parseFloat(carat),
         clarity
       });
@@ -122,7 +122,7 @@ function StaffViewJewelryDetails() {
     formData.append('Description', jewelryDetails.description);
     formData.append('Category', jewelryDetails.category);
     formData.append('Weight', jewelryDetails.weight);
-    formData.append('Price', jewelryDetails.price);
+    formData.append('Price', jewelryDetails.calculatePrice);
     formData.append('jewelryImg', jewelryDetails.jewelryImg);
     formData.append('Shipment', jewelryDetails.shipment);
 
@@ -235,15 +235,15 @@ function StaffViewJewelryDetails() {
             </>
           )}
 
-          <label htmlFor="price">Calculated Price</label>
+          <label htmlFor="price">Price</label>
           <div className="input-container">
-            <input type="text" name="calculatedPrice" value={jewelryDetails.calculatePrice} onChange={handleInputChange} disabled/>
+            <input type="text" placeholder="Press to calculate." name="calculatedPrice" value={jewelryDetails.calculatePrice} onChange={handleInputChange} disabled/>
             <button onClick={calculatePrice}>Calculate Price</button>
           </div>
-           <label htmlFor="price">Price</label>
+           {/* <label htmlFor="price">Price</label>
           <div className="input-container">
             <input type="text" name="price" value={jewelryDetails.price} onChange={handleInputChange} />
-          </div>
+          </div> */}
           {errors.price && <span className="error">{errors.price}</span>}
 
           {/* <label htmlFor="shipment">Shipment</label>
@@ -253,7 +253,11 @@ function StaffViewJewelryDetails() {
             ))}
           </select> */}
 
-          <button onClick={handleUpdateJewelry}><EditOutlined /> Update</button>
+          <button 
+          className={`update-jewelry ${jewelryDetails.calculatePrice === undefined ? 'disabled' : ''}`}
+          onClick={handleUpdateJewelry}
+           disabled={jewelryDetails.calculatePrice === undefined}
+          ><EditOutlined /> Update</button>
         </div>
       </div>
     </div>
