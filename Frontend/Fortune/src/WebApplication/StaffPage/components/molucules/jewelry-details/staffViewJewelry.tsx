@@ -15,13 +15,12 @@ function StaffViewJewelry() {
   const [disabledItems, setDisabledItems] = useState(new Set());
   const [searchQuery, setSearchQuery] = useState('');
   const [goldAgeFilter, setGoldAgeFilter] = useState('');
+  const [shipmentFilter, setShipmentFilter] = useState('');
   const [purityFilter, setPurityFilter] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [materialFilter, setMaterialFilter] = useState('');
   const [clarityFilter, setClarityFilter] = useState('');
   const [caratFilter, setCaratFilter] = useState('');
-  const [minWeight, setMinWeight] = useState(null);
-  const [maxWeight, setMaxWeight] = useState(null);
   const [activeGoldIds, setActiveGoldIds] = useState(new Set());
   const [activeSilverIds, setActiveSilverIds] = useState(new Set());
   const [activeGoldDiaIds, setActiveGoldDiaIds] = useState(new Set());
@@ -31,7 +30,12 @@ function StaffViewJewelry() {
   const navigate = useNavigate();
   const { state } = location;
   const successMessage = state && state.successMessage;
-
+  const purities = {
+    'PureSilver925': '92.5%',
+    'PureSilver999': '99.9%',
+    'PureSilver900': '90.0%',
+    'PureSilver958': '95.8%',
+  };
   useEffect(() => {
     const fetchJewelryData = async () => {
       try {
@@ -41,9 +45,16 @@ function StaffViewJewelry() {
           api.get('/api/JewelryGoldDia'),
           api.get('/api/Auctions/GetAllActiveAuctions')
         ]);
+        const silverJewelry = silverResponse.data?.$values || [];
 
+        // Map purity values using the purityMapping object
+        const mappedSilverJewelry = silverJewelry.map(item => ({
+          ...item,
+          mappedPurity: purities[item.purity] || item.purity,
+        }));
+        console.log(mappedSilverJewelry);
+        setSilverJewelry(mappedSilverJewelry);
         setGoldJewelry(goldResponse.data?.$values || []);
-        setSilverJewelry(silverResponse.data?.$values || []);
         setGoldDiaJewelry(goldDiaResponse.data?.$values || []);
 
 
@@ -57,9 +68,6 @@ function StaffViewJewelry() {
           if (auction.jewelrySilverId) silverIds.add(auction.jewelrySilverId);
           if (auction.jewelryGolddiaId) goldDiaIds.add(auction.jewelryGolddiaId);
         });
-console.log("gold",goldIds);
-console.log("silverIds",silverIds);
-console.log("goldDiaIds",goldDiaIds);
         setActiveGoldIds(goldIds);
         setActiveSilverIds(silverIds);
         setActiveGoldDiaIds(goldDiaIds);
@@ -123,7 +131,9 @@ console.log("goldDiaIds",goldDiaIds);
   const handleGoldAgeChange = (value) => {
     setGoldAgeFilter(value);
   };
-
+  const handleShipmentChange = (value) => {
+    setShipmentFilter(value);
+  };
   const handlePurityChange = (value) => {
     setPurityFilter(value);
   };
@@ -136,15 +146,9 @@ console.log("goldDiaIds",goldDiaIds);
     setMaterialFilter(value);
   };
 
-  const handleMinWeightChange = (value) => {
-    setMinWeight(value);
-  };
-
-  const handleMaxWeightChange = (value) => {
-    setMaxWeight(value);
-  };
+  const value = caratFilter ? parseFloat(caratFilter) : null;
   const handleCaratChange = (value) => {
-    setCaratFilter(value);
+    setCaratFilter(value ? `${value}ct` : '');
   };
   const handleClarityChange = (value) => {
     setClarityFilter(value);
@@ -154,11 +158,10 @@ console.log("goldDiaIds",goldDiaIds);
     setPurityFilter('');
     setCategoryFilter('');
     setMaterialFilter('');
-    setMinWeight(null);
-    setMaxWeight(null);
     setClarityFilter('');
     setCaratFilter('');
     setSearchQuery('');
+    setShipmentFilter('');
   };
 
   const filterJewelry = (jewelry) => {
@@ -167,7 +170,7 @@ console.log("goldDiaIds",goldDiaIds);
     const isPurityMatch = !purityFilter || jewelry.purity === purityFilter;
     const isCategoryMatch = !categoryFilter || jewelry.category === categoryFilter;
     const isMaterialMatch = !materialFilter || (jewelry.materials && jewelry.materials.toLowerCase().includes(materialFilter.toLowerCase()));
-    const isWeightMatch = (!minWeight || jewelry.weight >= minWeight) && (!maxWeight || jewelry.weight <= maxWeight);
+    const isShipmentMatch = !shipmentFilter || jewelry.shipment === shipmentFilter;
     const isClarityMatch = !clarityFilter || jewelry.clarity === clarityFilter;
     const isCaratMatch = !caratFilter || jewelry.carat === caratFilter;
     return (
@@ -176,8 +179,9 @@ console.log("goldDiaIds",goldDiaIds);
       (jewelry.collection && jewelry.collection.toLowerCase().includes(lowerCaseQuery)) ||
       (jewelry.goldAge && jewelry.goldAge.toLowerCase().includes(lowerCaseQuery)) ||
       (jewelry.materials && jewelry.materials.toLowerCase().includes(lowerCaseQuery)) ||
-      (jewelry.weight && jewelry.weight.toString().toLowerCase().includes(lowerCaseQuery))
-    ) && isGoldAgeMatch && isPurityMatch && isCategoryMatch && isMaterialMatch && isWeightMatch && isClarityMatch && isCaratMatch;
+      (jewelry.shipment && jewelry.shipment.toLowerCase().includes(lowerCaseQuery))
+
+    ) && isGoldAgeMatch && isPurityMatch && isCategoryMatch && isMaterialMatch && isClarityMatch && isShipmentMatch && isCaratMatch;
   };
 
 
@@ -240,7 +244,7 @@ console.log("goldDiaIds",goldDiaIds);
 
       console.log("Endpoint:", endpoint);
       console.log("FormData:", Array.from(formData.entries()));
-  
+
       const response = await api.put(endpoint, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -249,9 +253,9 @@ console.log("goldDiaIds",goldDiaIds);
 
       console.log("API Response Status:", response.status);
       console.log("API Response Data:", response.data);
-       setTimeout(() => {
-      window.location.reload();
-   },1000)
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000)
       if (response.status === 200) {
         message.success('Jewelry updated successfully!');
         navigate('/');
@@ -281,6 +285,14 @@ console.log("goldDiaIds",goldDiaIds);
         </div>
       </div>
       <div className="filters">
+        <InputNumber
+          placeholder="Enter Carat"
+          onChange={handleCaratChange}
+          value={value}
+          className="filter-item"
+          min={0} // Set minimum value if needed
+          step={0.1} // Adjust step if needed (e.g., 0.1 for decimal precision)
+        />
         <Select
           placeholder="Select Clarity"
           onChange={handleClarityChange}
@@ -288,10 +300,17 @@ console.log("goldDiaIds",goldDiaIds);
           className="filter-item"
           value={clarityFilter || undefined}
         >
-          <Option value="VVS">VVS</Option>
-          <Option value="VS">VS</Option>
-          <Option value="SI">SI</Option>
-          <Option value="I">I</Option>
+          <Option value="FL">FL</Option>
+          <Option value="IF">IF</Option>
+          <Option value="VVS1">VVS1</Option>
+          <Option value="VVS2">VVS2</Option>
+          <Option value="VS1">VS1</Option>
+          <Option value="VS2">VS2</Option>
+          <Option value="SI1">SI1</Option>
+          <Option value="SI2">SI2</Option>
+          <Option value="I1">I1</Option>
+          <Option value="I2">I2</Option>
+          <Option value="I3">I3</Option>
         </Select>
         <Select
           placeholder="Select Gold Age"
@@ -300,11 +319,11 @@ console.log("goldDiaIds",goldDiaIds);
           className="filter-item"
           value={goldAgeFilter || undefined}  // Ensure placeholder shows when goldAgeFilter is empty
         >
-          <Option value="14K">14K</Option>
-          <Option value="18K">18K</Option>
-          <Option value="20K">20K</Option>
-          <Option value="22K">22K</Option>
-          <Option value="24K">24K</Option>
+          <Option value="Gold14">14K</Option>
+          <Option value="Gold18">18K</Option>
+          <Option value="Gold20">20K</Option>
+          <Option value="Gold22">22K</Option>
+          <Option value="Gold24">24K</Option>
         </Select>
         <Select
           placeholder="Select Purity"
@@ -313,10 +332,10 @@ console.log("goldDiaIds",goldDiaIds);
           className="filter-item"
           value={purityFilter || undefined}  // Ensure placeholder shows when purityFilter is empty
         >
-          <Option value="92.5%">92.5%</Option>
-          <Option value="99.9%">99.9%</Option>
-          <Option value="90%">90%</Option>
-          <Option value="95.8%">95.8%</Option>
+          <Option value="PureSilver925">92.5%</Option>
+          <Option value="PureSilver999%">99.9%</Option>
+          <Option value="PureSilver900">90%</Option>
+          <Option value="PureSilver958%">95.8%</Option>
         </Select>
         <Select
           placeholder="Select Category"
@@ -329,6 +348,36 @@ console.log("goldDiaIds",goldDiaIds);
           <Option value="Necklace">Necklace</Option>
           <Option value="Bracelet">Bracelet</Option>
           <Option value="Earrings">Earrings</Option>
+          <Option value="Pendant">Pendant</Option>
+          <Option value="Brooch">Brooch</Option>
+          <Option value="Anklet">Anklet</Option>
+          <Option value="Charm">Charm</Option>
+          <Option value="Cufflinks">Cufflinks</Option>
+          <Option value="Tiara">Tiara</Option>
+          <Option value="Diadem">Diadem</Option>
+          <Option value="Choker">Choker</Option>
+          <Option value="Bangle">Bangle</Option>
+          <Option value="Hairpin">Hairpin</Option>
+          <Option value="Barrette">Barrette</Option>
+          <Option value="Locket">Locket</Option>
+          <Option value="SignetRing">Signet Ring</Option>
+          <Option value="StudEarrings">Stud Earrings</Option>
+          <Option value="HoopEarrings">Hoop Earrings</Option>
+          <Option value="Cameo">Cameo</Option>
+          <Option value="ClusterRing">Cluster Ring</Option>
+          <Option value="CocktailRing">Cocktail Ring</Option>
+          <Option value="CuffBracelet">Cuff Bracelet</Option>
+
+        </Select>
+        <Select
+          placeholder="Select Shipment status"
+          onChange={handleShipmentChange}
+          allowClear
+          className="filter-item"
+          value={shipmentFilter || undefined}  // Ensure placeholder shows when goldAgeFilter is empty
+        >
+          <Option value="Deliveried">Deliveried</Option>
+          <Option value="Delivering">Delivering</Option>
         </Select>
         <Select
           placeholder="Select Material"
@@ -341,32 +390,6 @@ console.log("goldDiaIds",goldDiaIds);
           <Option value="Silver">Silver</Option>
           <Option value="Diamond">Gold Diamond</Option>
         </Select>
-        <Select
-          placeholder="Select Carat"
-          onChange={handleCaratChange}
-          allowClear
-          className="filter-item"
-          value={caratFilter || undefined}
-        >
-          <Option value="1ct">1ct</Option>
-          <Option value="2ct">2ct</Option>
-          <Option value="3ct">3ct</Option>
-          <Option value="4ct">4ct</Option>
-        </Select>
-        <InputNumber
-          placeholder="Min Weight"
-          min={0}
-          value={minWeight}
-          onChange={handleMinWeightChange}
-          className="filter-item"
-        />
-        <InputNumber
-          placeholder="Max Weight"
-          min={0}
-          value={maxWeight}
-          onChange={handleMaxWeightChange}
-          className="filter-item"
-        />
         <Button
           onClick={clearFilters}
           className="filter-item"
@@ -391,32 +414,32 @@ console.log("goldDiaIds",goldDiaIds);
               <p>Gold Age: {jewelry.goldAge.replace('Gold', '')}k</p>
               <p>Materials: {jewelry.materials}</p>
               <p>Weight: {jewelry.weight}</p>
-              <p>Price: {jewelry.price}$</p>
+              <p>Price: {jewelry.price !== null ? `${jewelry.price}$` : 'Appraising'}</p>
               <p>Shipment: {jewelry.shipment}</p>
               {activeGoldIds.has(jewelry.jewelryGoldId) && <p className="active-auction-message">This item is currently in an active auction.</p>}
               <div className="jewelry-item-buttons">
                 <button onClick={() => handleUpdateJewelry(jewelry.jewelryGoldId, "Gold")}
-                    disabled={jewelry.shipment === 'Deliveried'}
-                    className={jewelry.shipment === 'Deliveried' ? 'button-disabled' : ''}>
+                  disabled={jewelry.shipment === 'Deliveried'}
+                  className={jewelry.shipment === 'Deliveried' ? 'button-disabled' : ''}>
                   <EditOutlined /> Appraise
                 </button>
-                <Checkbox 
-                defaultChecked={jewelry.shipment === 'Deliveried'}
-                onChange={(e) => handleFormSubmit(
-                  jewelry.jewelryGoldId,
-                  jewelry.name,
-                  jewelry.description,
-                  jewelry.category,
-                  null,
-                  null,
-                  null,
-                  jewelry.goldAge,
-                  `Gold`,
-                  jewelry.weight,
-                  jewelry.price,
-                  e.target.checked)}
-                  disabled={activeGoldIds.has(jewelry.jewelryGoldId)}
-                  >
+                <Checkbox
+                  defaultChecked={jewelry.shipment === 'Deliveried'}
+                  onChange={(e) => handleFormSubmit(
+                    jewelry.jewelryGoldId,
+                    jewelry.name,
+                    jewelry.description,
+                    jewelry.category,
+                    null,
+                    null,
+                    null,
+                    jewelry.goldAge,
+                    `Gold`,
+                    jewelry.weight,
+                    jewelry.price,
+                    e.target.checked)}
+                  disabled={activeGoldIds.has(jewelry.jewelryGoldId) || jewelry.price === undefined}
+                >
                   Delivered
                 </Checkbox>
               </div>
@@ -436,34 +459,34 @@ console.log("goldDiaIds",goldDiaIds);
               <h3>{jewelry.name}</h3>
               <p>Description: {jewelry.description}</p>
               <p>Category: {jewelry.category}</p>
-              <p>Purity: {jewelry.purity}</p>
+              <p>Purity: {jewelry.mappedPurity}</p>
               <p>Materials: {jewelry.materials}</p>
               <p>Weight: {jewelry.weight}</p>
-              <p>Price: {jewelry.price}$</p>
+              <p>Price: {jewelry.price !== null ? `${jewelry.price}$` : 'Appraising'}</p>
               <p>Shipment: {jewelry.shipment}</p>
               {activeSilverIds.has(jewelry.jewelrySilverId) && <p className="active-auction-message">This item is currently in an active auction.</p>}
               <div className="jewelry-item-buttons">
                 <button onClick={() => handleUpdateJewelry(jewelry.jewelrySilverId, "Silver")}
-                      disabled={jewelry.shipment === 'Deliveried'}
-                      className={jewelry.shipment === 'Deliveried' ? 'button-disabled' : ''}>
+                  disabled={jewelry.shipment === 'Deliveried'}
+                  className={jewelry.shipment === 'Deliveried' ? 'button-disabled' : ''}>
                   <EditOutlined /> Appraise
                 </button>
-                <Checkbox 
-                defaultChecked={jewelry.shipment === 'Deliveried'}
-                onChange={(e) => handleFormSubmit(
-                  jewelry.jewelrySilverId,
-                  jewelry.name,
-                  jewelry.description,
-                  jewelry.category,
-                  null,
-                  jewelry.purity,
-                  null,
-                  null,
-                  `Silver`,
-                  jewelry.weight,
-                  jewelry.price,
-                  e.target.checked)}
-                  disabled={activeSilverIds.has(jewelry.jewelrySilverId)}
+                <Checkbox
+                  defaultChecked={jewelry.shipment === 'Deliveried'}
+                  onChange={(e) => handleFormSubmit(
+                    jewelry.jewelrySilverId,
+                    jewelry.name,
+                    jewelry.description,
+                    jewelry.category,
+                    null,
+                    jewelry.purity,
+                    null,
+                    null,
+                    `Silver`,
+                    jewelry.weight,
+                    jewelry.price,
+                    e.target.checked)}
+                  disabled={activeSilverIds.has(jewelry.jewelrySilverId) || jewelry.price === undefined}
                 >
                   Delivered
                 </Checkbox>
@@ -489,7 +512,7 @@ console.log("goldDiaIds",goldDiaIds);
               <p>Carat: {jewelry.carat}</p>
               <p>Materials: {jewelry.materials}</p>
               <p>Weight: {jewelry.weight}</p>
-              <p>Price: {jewelry.price}$</p>
+              <p>Price: {jewelry.price !== undefined ? `${jewelry.price}$` : 'Appraising'}</p>
               <p>Shipment: {jewelry.shipment}</p>
               {activeGoldDiaIds.has(jewelry.jewelryGolddiaId) && <p className="active-auction-message">This item is currently in an active auction.</p>}
               <div className="jewelry-item-buttons">
@@ -504,23 +527,23 @@ console.log("goldDiaIds",goldDiaIds);
             >
               Delivered
             </Checkbox> */}
-                <Checkbox 
-                defaultChecked={jewelry.shipment === 'Deliveried'}
-                onChange={(e) => handleFormSubmit(
-                  jewelry.jewelryGolddiaId,
-                  jewelry.name,
-                  jewelry.description,
-                  jewelry.category,
-                  jewelry.clarity,
-                  jewelry.carat,
-                  null,
-                  jewelry.goldAge,
-                  `GoldDiamond`,
-                  jewelry.weight,
-                  jewelry.price,
-                  e.target.checked)
-                }
-                disabled={activeGoldDiaIds.has(jewelry.jewelryGolddiaId)}
+                <Checkbox
+                  defaultChecked={jewelry.shipment === 'Deliveried'}
+                  onChange={(e) => handleFormSubmit(
+                    jewelry.jewelryGolddiaId,
+                    jewelry.name,
+                    jewelry.description,
+                    jewelry.category,
+                    jewelry.clarity,
+                    jewelry.carat,
+                    null,
+                    jewelry.goldAge,
+                    `GoldDiamond`,
+                    jewelry.weight,
+                    jewelry.price,
+                    e.target.checked)
+                  }
+                  disabled={activeGoldDiaIds.has(jewelry.jewelryGolddiaId) || jewelry.price === undefined}
                 >
                   Delivered
                 </Checkbox>

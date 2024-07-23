@@ -311,7 +311,7 @@ const JewelryUploadForm: React.FC = () => {
     } else if (jewelry.materials === 'Gold, Diamond') {
       formData.append('goldage', goldAges[jewelry.goldage!]);
       formData.append('clarity', clarity[jewelry.clarity!]);
-      formData.append('carat', jewelry.carat!);
+      formData.append('carat', jewelry.carat!+"ct");
     }
 
     logFormData(formData);
