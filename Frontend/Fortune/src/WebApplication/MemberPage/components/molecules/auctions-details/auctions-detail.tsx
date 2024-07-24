@@ -21,6 +21,13 @@ function AuctionDetails() {
     const user = storedUser ? JSON.parse(storedUser) : null;
     const accountId = user ? user.accountId : null;
 
+    const currentUrl = window.location.href;
+    const parsedUrl = new URL(currentUrl);
+    const pathName = parsedUrl.pathname;
+    const parts = pathName.split('/');
+    const endpoint = parts[1];
+    const UrlID = parts[2];
+
     // Fetch auction details
     const fetchAuctionDetails = useCallback(async () => {
         try {
@@ -38,7 +45,7 @@ function AuctionDetails() {
             const auctionStartTime = new Date(auctionData.starttime);
             const auctionEndTime = new Date(auctionData.endtime);
             setIsAuctionOpen(currentTime >= auctionStartTime && currentTime <= auctionEndTime);
-            setIsAuctionEnded(currentTime > auctionEndTime); // Check if auction has ended
+            setIsAuctionEnded(currentTime > auctionEndTime);
         } catch (err) {
             console.error('Error fetching auction details:', err);
         }
@@ -217,12 +224,11 @@ function AuctionDetails() {
                         <div className="account-wallet">
                             <h2>Account Wallet</h2>
                             <p><strong>Bank Name:</strong> {accountWallet.bankName}</p>
-                            <p><strong>Bank No:</strong> {accountWallet.bankNo}</p>
                             <p><strong>Budget:</strong> ${accountWallet.budget}</p>
                         </div>
                     )}
 
-                    <button className="join-auction-button" onClick={handleJoinAuction} disabled={!isAuctionOpen || isAuctionEnded}>
+                    <button className="member-join-auction-button" onClick={handleJoinAuction} disabled={!isAuctionOpen || isAuctionEnded}>
                         {isAuctionEnded ? 'Auction Ended' : (isAuctionOpen ? 'Join Auction' : 'Auction Not Open')}
                     </button>
                 </div>
