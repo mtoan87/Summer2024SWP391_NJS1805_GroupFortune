@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import api from '../../../../../config/axios';
 import './account-wallet.scss';
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
+import { message } from 'antd';
 
 function AccountWallet() {
     const loginedUser = JSON.parse(sessionStorage.getItem('loginedUser'));
@@ -34,12 +34,12 @@ function AccountWallet() {
         try {
             const response = await api.post('/AccountWallet/CreateAccountWallet', formData);
             console.log('Account wallet created successfully:', response.data);
-            toast.success('Account wallet created successfully!', { position: 'top-right' });
+            message.success('Account wallet created successfully!');
 
-            navigate(`${endpointAndId}`,{ state: { message: 'Account wallet created successfully!' } });
+            navigate('userWallet',{ state: { message: 'Account wallet created successfully!' } });
         } catch (error) {
             console.error('Error creating account wallet:', error);
-            toast.error('Error creating account wallet. Please try again!', { position: 'top-right' });
+            message.error('Error creating account wallet. Please try again!');
         }
     };
 
@@ -81,7 +81,6 @@ function AccountWallet() {
                 </div>
                 <button type="submit">Submit</button>
             </form>
-            <ToastContainer />
         </>
     );
 }

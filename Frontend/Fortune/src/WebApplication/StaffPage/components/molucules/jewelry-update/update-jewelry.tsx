@@ -15,6 +15,20 @@ const GoldAgeMapping = {
   'Gold24': '24K'
 };
 
+const purityMapping = {
+  'PureSilver925': '92.5%',
+  'PureSilver999': '99.9%',
+  'PureSilver900': '90.0%',
+  'PureSilver958': '95.8%',
+};
+
+const reversePurityMapping = {
+  '92.5%': 'PureSilver925',
+  '99.9%': 'PureSilver999',
+  '90.0%': 'PureSilver900',
+  '95.8%': 'PureSilver958',
+};
+
 function StaffViewJewelryDetails() {
   const [jewelryDetails, setJewelryDetails] = useState({
     accountId: '',
@@ -33,7 +47,7 @@ function StaffViewJewelryDetails() {
     collection: '',
     jewelryImg: '',
     shipment: '',
-    calculatePrice:null,
+    calculatePrice: null,
   });
   const [errors, setErrors] = useState({});
   const { id, material } = useParams();
@@ -53,12 +67,16 @@ function StaffViewJewelryDetails() {
           response = await api.get(`/api/JewelryGold/GetById/${id}`);
         } else if (material === 'GoldDia') {
           response = await api.get(`/api/JewelryGoldDia/GetById/${id}`);
-          console.log("Gold Diamond: ", response.data)
+          console.log("Gold Diamond: ", response.data);
         } else {
           response = await api.get(`/api/JewelrySilver/GetById/${id}`);
         }
-        console.log("API Response:", response.data);
-        setJewelryDetails(response.data);
+        const data = response.data;
+        if (material === 'Silver') {
+          data.purity = purityMapping[data.purity] || data.purity;
+        }
+        console.log("API Response:", data);
+        setJewelryDetails(data);
       } catch (error) {
         console.error('Error fetching jewelry details:', error);
       }
@@ -88,7 +106,7 @@ function StaffViewJewelryDetails() {
         weight: parseFloat(weight),
         weightUnit: 'grams',  // Assuming weight is in grams
         goldAge,
-        purity,
+        purity: reversePurityMapping[purity] || purity,
         price: 0,
         carat: parseFloat(carat),
         clarity
@@ -106,15 +124,6 @@ function StaffViewJewelryDetails() {
   };
 
   const handleUpdateJewelry = async () => {
-    const newErrors = {};
-    if (jewelryDetails.materials === 'Silver' && !jewelryDetails.purity) {
-      newErrors.purity = 'Purity is required for silver jewelry';
-    }
-    setErrors(newErrors);
-    if (Object.keys(newErrors).length > 0) {
-      return;
-    }
-
     const formData = new FormData();
     formData.append('AccountId', jewelryDetails.accountId);
     formData.append('Name', jewelryDetails.name);
@@ -128,19 +137,12 @@ function StaffViewJewelryDetails() {
 
     if (material === 'Gold') {
       formData.append('GoldAge', jewelryDetails.goldAge);
-    } else if (material === 'GoldDia') {
+    } else if (material === 'GoldDiamond') {
       formData.append('Clarity', jewelryDetails.clarity);
       formData.append('Carat', jewelryDetails.carat);
       formData.append('GoldAge', jewelryDetails.goldAge);
     } else {
-      const purityMapping = {
-        '92.5%': 'PureSilver925',
-        '99.9%': 'PureSilver999',
-        '90.0%': 'PureSilver900',
-        '95.8%': 'PureSilver958',
-      };
-      const convertedPurity = purityMapping[jewelryDetails.purity];
-      formData.append('Purity', convertedPurity);
+      formData.append('Purity', reversePurityMapping[jewelryDetails.purity] || jewelryDetails.purity);
     }
     try {
       const endpoint = material === 'Gold'
@@ -185,7 +187,6 @@ function StaffViewJewelryDetails() {
             <img className='item-img'
               src={`https://localhost:44361/${jewelryDetails.jewelryImg}`}
               alt={jewelryDetails.name}
-              onError={(e) => { e.target.src = "src/assets/img/jewelry_introduction.jpg"; }}
             />
           </div>
 
@@ -215,7 +216,7 @@ function StaffViewJewelryDetails() {
           {material === 'Silver' && (
             <>
               <label htmlFor="purity">Purity</label>
-              <input type="text" name="purity" value={jewelryDetails.purity} onChange={handleInputChange} disabled/>
+              <input type="text" name="purity" value={jewelryDetails.purity} onChange={handleInputChange} disabled />
               {errors.purity && <span className="error">{errors.purity}</span>}
             </>
           )}
@@ -229,34 +230,22 @@ function StaffViewJewelryDetails() {
                 ))}
               </select>
               <label htmlFor="clarity">Clarity</label>
-              <input type="text" name="clarity" value={jewelryDetails.clarity} onChange={handleInputChange} disabled/>
+              <input type="text" name="clarity" value={jewelryDetails.clarity} onChange={handleInputChange} disabled />
               <label htmlFor="carat">Carat</label>
-              <input type="text" name="carat" value={jewelryDetails.carat} onChange={handleInputChange} disabled/>
+              <input type="text" name="carat" value={jewelryDetails.carat} onChange={handleInputChange} disabled />
             </>
           )}
 
           <label htmlFor="price">Price</label>
           <div className="input-container">
-            <input type="text" placeholder="Press to calculate." name="calculatedPrice" value={jewelryDetails.calculatePrice} onChange={handleInputChange} disabled/>
+            <input type="text" placeholder="Press to calculate." name="calculatedPrice" value={jewelryDetails.calculatePrice} onChange={handleInputChange} disabled />
             <button onClick={calculatePrice}>Calculate Price</button>
           </div>
-           {/* <label htmlFor="price">Price</label>
-          <div className="input-container">
-            <input type="text" name="price" value={jewelryDetails.price} onChange={handleInputChange} />
-          </div> */}
-          {errors.price && <span className="error">{errors.price}</span>}
-
-          {/* <label htmlFor="shipment">Shipment</label>
-          <select name="shipment" value={jewelryDetails.shipment} onChange={handleInputChange}>
-            {shipmentOptions.map(option => (
-              <option key={option} value={option}>{option}</option>
-            ))}
-          </select> */}
 
           <button 
-          className={`update-jewelry ${jewelryDetails.calculatePrice === undefined ? 'disabled' : ''}`}
-          onClick={handleUpdateJewelry}
-           disabled={jewelryDetails.calculatePrice === undefined}
+            className={`update-jewelry ${jewelryDetails.calculatePrice === undefined ? 'disabled' : ''}`}
+            onClick={handleUpdateJewelry}
+            disabled={jewelryDetails.calculatePrice === undefined}
           ><EditOutlined /> Update</button>
         </div>
       </div>
@@ -265,4 +254,3 @@ function StaffViewJewelryDetails() {
 }
 
 export default StaffViewJewelryDetails;
-

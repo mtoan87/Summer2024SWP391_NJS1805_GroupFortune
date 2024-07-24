@@ -29,11 +29,15 @@ function MyWallet() {
         }
     }, [accountId]);
 
-    const handleUpdateWallet = () => {
+    const handleChargeWallet = () => {
         navigate('/update-wallet')
     };
     const handleRegisterWallet = () => {
         navigate(`/register-wallet/${endpoint}/${UrlID}`)
+    };
+
+    const handleWithdrawWallet = () => {
+        navigate('/withdraw-wallet')
     };
 
     return (
@@ -46,7 +50,10 @@ function MyWallet() {
                         <p>Bank Number: {walletInfo.bankNo}</p>
                         <p>Budget: {walletInfo.budget}</p>
                     </div>
-                    <button onClick={handleUpdateWallet}>Update Wallet</button>
+                    <div className="action-button">
+                        <button onClick={handleChargeWallet}>Charge</button>
+                        <button onClick={handleWithdrawWallet}>Withdraw</button>
+                    </div>
                 </>
             ) : (
                 <>
