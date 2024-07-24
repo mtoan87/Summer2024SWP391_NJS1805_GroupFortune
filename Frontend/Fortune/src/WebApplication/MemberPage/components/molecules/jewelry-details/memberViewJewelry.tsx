@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import './view-jewelry.scss';
 import api from '../../../../../config/axios';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { message, Tooltip } from 'antd';
 
@@ -17,6 +16,7 @@ function MemberViewJewelry() {
   const { state } = location;
   const successMessage = state && state.successMessage;
   const [goldDiamondJewelry, setGoldDiamondJewelry] = useState([]);
+  const [auctions, setAuctions] = useState([]);
 
   const purity = {
     PureSilver925: '92.5%',
@@ -64,6 +64,16 @@ function MemberViewJewelry() {
       }
     };
 
+    const fetchAllAuctions = async () => {
+      try {
+        const response = await api.get('/api/Auctions/GetAllAuctions');
+        setAuctions(response.data);
+
+      } catch (error) {
+
+      }
+    };
+    fetchAllAuctions();
     if (accountId) {
       fetchGoldJewelry();
       fetchSilverJewelry();
@@ -75,28 +85,12 @@ function MemberViewJewelry() {
 
   useEffect(() => {
     if (successMessage) {
-      toast.success(successMessage, {
-        position: 'top-right'
-      });
+      message.success(successMessage);
     }
   }, [successMessage]);
 
-  const checkAuction = async (jewelryId, material) => {
-    try {
-      const response = await api.get(`api/Auctions/GetById/${jewelryId}`);
-      const auction = response.data;
-
-      if (auction) {
-        message.warning('This jewelry has already registered for auction!');
-      }
-    } catch (err) {
-      console.error(`Error fetching auction for ${material} jewelry with ID ${jewelryId}`, err);
-    }
-    return false;
-  };
-
   const handleUpdateJewelry = (jewelry, material) => {
-    const id = material === 'Gold' ? jewelry.jewelryGoldId : material === 'Silver' ? jewelry.jewelrySilverId : jewelry.jewelryGoldDiaId;
+    const id = material === 'Gold' ? jewelry.jewelryGoldId : material === 'Silver' ? jewelry.jewelrySilverId : jewelry.jewelryGolddiaId;
     navigate(`/update-jewelry/${id}/${material}`);
   };
 
@@ -358,7 +352,6 @@ function MemberViewJewelry() {
           <p>No jewelry items found.</p>
         )}
       </div >
-      <ToastContainer className="toast-position" />
     </>
   );
 }
