@@ -71,7 +71,29 @@ const columns = (
     width: '10%',
     filters: [
       { text: 'Ring', value: 'Ring' },
-      { text: 'Necklace', value: 'Necklace' },
+{ text: 'Necklace', value: 'Necklace' },
+{ text: 'Bracelet', value: 'Bracelet' },
+{ text: 'Earrings', value: 'Earrings' },
+{ text: 'Pendant', value: 'Pendant' },
+{ text: 'Brooch', value: 'Brooch' },
+{ text: 'Anklet', value: 'Anklet' },
+{ text: 'Charm', value: 'Charm' },
+{ text: 'Cufflinks', value: 'Cufflinks' },
+{ text: 'Tiara', value: 'Tiara' },
+{ text: 'Diadem', value: 'Diadem' },
+{ text: 'Choker', value: 'Choker' },
+{ text: 'Bangle', value: 'Bangle' },
+{ text: 'Hairpin', value: 'Hairpin' },
+{ text: 'Barrette', value: 'Barrette' },
+{ text: 'Locket', value: 'Locket' },
+{ text: 'SignetRing', value: 'SignetRing' },
+{ text: 'StudEarrings', value: 'StudEarrings' },
+{ text: 'HoopEarrings', value: 'HoopEarrings' },
+{ text: 'Cameo', value: 'Cameo' },
+{ text: 'ClusterRing', value: 'ClusterRing' },
+{ text: 'CocktailRing', value: 'CocktailRing' },
+{ text: 'CuffBracelet', value: 'CuffBracelet' }
+
       // Add other categories here
     ],
     onFilter: (value, record) => record.category.includes(value as string),
@@ -131,7 +153,7 @@ const columns = (
   {
     title: 'Price',
     dataIndex: 'price',
-    width: '10%',
+    width: '20%',
     render: (price: number | null, record: jewelryGoldDia) => (
       <Input
         value={price !== null ? price.toString() : ''}

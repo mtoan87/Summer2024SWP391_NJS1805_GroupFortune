@@ -13,11 +13,10 @@ interface JewelrySilver {
   materials: string;
   description: string;
   purity: string;
-  price: number | null; // Allow null for price field
+  price: number | null; 
   weight: string;
   status: string;
-  jewelryImg: string; // Assuming this field is present in your API response
-  // Add more fields as needed
+  jewelryImg: string; 
 }
 
 interface TableParams {
@@ -43,120 +42,142 @@ const columns = (
   handleStatusChange: (value: string, record: JewelrySilver) => void,
   handleUpdate: (record: JewelrySilver) => void
 ) => [
-  {
-    title: 'Jewelry ID',
-    dataIndex: 'jewelrySilverId',
-    width: '10%',
-    render: (jewelrySilverId: number) => (jewelrySilverId ? jewelrySilverId : <span style={{ color: 'red' }}>N/A</span>),
-  },
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    width: '15%',
-    render: (text: string, record: JewelrySilver) => (
-      text ? (
-        <Tooltip title={<img src={`https://localhost:44361/${record.jewelryImg}`} alt={record.name} style={{ maxWidth: '200px' }} />}>
-          <span>{text}</span>
-        </Tooltip>
-      ) : (
-        <span style={{ color: 'red' }}>N/A</span>
-      )
-    ),
-  },
-  {
-    title: 'Category',
-    dataIndex: 'category',
-    width: '10%',
-    filters: [
-      { text: 'Ring', value: 'Ring' },
-      { text: 'Necklace', value: 'Necklace' },
-      // Add other categories here
-    ],
-    onFilter: (value, record) => record.category.includes(value as string),
-    render: (category: string) => (category ? category : <span style={{ color: 'red' }}>N/A</span>),
-  },
-  {
-    title: 'Materials',
-    dataIndex: 'materials',
-    width: '10%',
-    render: (materials: string) => (materials ? materials : <span style={{ color: 'red' }}>N/A</span>),
-  },
-  {
-    title: 'Description',
-    dataIndex: 'description',
-    width: '15%',
-    render: (description: string) => (description ? description : <span style={{ color: 'red' }}>N/A</span>),
-  },
-  {
-    title: 'Purity',
-    dataIndex: 'purity',
-    filters: [
-      { text: '99.9%', value: 'PureSilver999' },
-      { text: '95.8%', value: 'PureSilver958' },
-      { text: '92.5%', value: 'PureSilver925' },
-      { text: '90%', value: 'PureSilver900' },
-    ],
-    onFilter: (value, record) => record.purity.includes(value as string),
-    render: (purity: string) => {
-      const purityKey = Object.keys(PurityEnum).find(key => PurityEnum[key] === purity);
-      return purityKey ? purityKey : <span style={{ color: 'red' }}>N/A</span>;
+    {
+      title: 'Jewelry ID',
+      dataIndex: 'jewelrySilverId',
+      width: '10%',
+      render: (jewelrySilverId: number) => (jewelrySilverId ? jewelrySilverId : <span style={{ color: 'red' }}>N/A</span>),
     },
-  },
-  {
-    title: 'Price',
-    dataIndex: 'price',
-    width: '10%',
-    render: (price: number | null, record: JewelrySilver) => (
-      <Input
-        value={price !== null ? price.toString() : ''}
-        onChange={(e) => handlePriceChange(e.target.value, record)}
-        style={{ width: '100%' }}
-      />
-    ),
-  },
-  {
-    title: 'Status',
-    dataIndex: 'status',
-    width: '10%',
-    filters: [
-      { text: 'Verified', value: 'Verified' },
-      { text: 'Unverified', value: 'Unverified' },
-    ],
-    onFilter: (value, record) => record.status.includes(value as string),
-    render: (status: string, record: JewelrySilver) => (
-      <Select
-        value={status}
-        onChange={(value) => handleStatusChange(value, record)}
-        style={{ width: '100%' }}
-      >
-        <Select.Option value="Verified">Verified</Select.Option>
-        <Select.Option value="Unverified">Unverified</Select.Option>
-      </Select>
-    ),
-  },
-  {
-    title: 'Weight',
-    dataIndex: 'weight',
-    width: '10%',
-    render: (weight: string) => (weight ? weight : <span style={{ color: 'red' }}>N/A</span>),
-  },
-  {
-    title: 'Actions',
-    dataIndex: 'actions',
-    render: (_: string, record: JewelrySilver) => (
-      <Button type="primary" onClick={() => handleUpdate(record)}>
-        Update
-      </Button>
-    ),
-  },
-];
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      width: '15%',
+      render: (text: string, record: JewelrySilver) => (
+        text ? (
+          <Tooltip title={<img src={`https://localhost:44361/${record.jewelryImg}`} alt={record.name} style={{ maxWidth: '200px' }} />}>
+            <span>{text}</span>
+          </Tooltip>
+        ) : (
+          <span style={{ color: 'red' }}>N/A</span>
+        )
+      ),
+    },
+    {
+      title: 'Category',
+      dataIndex: 'category',
+      width: '10%',
+      filters: [
+        { text: 'Ring', value: 'Ring' },
+        { text: 'Necklace', value: 'Necklace' },
+        { text: 'Bracelet', value: 'Bracelet' },
+        { text: 'Earrings', value: 'Earrings' },
+        { text: 'Pendant', value: 'Pendant' },
+        { text: 'Brooch', value: 'Brooch' },
+        { text: 'Anklet', value: 'Anklet' },
+        { text: 'Charm', value: 'Charm' },
+        { text: 'Cufflinks', value: 'Cufflinks' },
+        { text: 'Tiara', value: 'Tiara' },
+        { text: 'Diadem', value: 'Diadem' },
+        { text: 'Choker', value: 'Choker' },
+        { text: 'Bangle', value: 'Bangle' },
+        { text: 'Hairpin', value: 'Hairpin' },
+        { text: 'Barrette', value: 'Barrette' },
+        { text: 'Locket', value: 'Locket' },
+        { text: 'SignetRing', value: 'SignetRing' },
+        { text: 'StudEarrings', value: 'StudEarrings' },
+        { text: 'HoopEarrings', value: 'HoopEarrings' },
+        { text: 'Cameo', value: 'Cameo' },
+        { text: 'ClusterRing', value: 'ClusterRing' },
+        { text: 'CocktailRing', value: 'CocktailRing' },
+        { text: 'CuffBracelet', value: 'CuffBracelet' }
+
+        // Add other categories here
+      ],
+      onFilter: (value, record) => record.category.includes(value as string),
+      render: (category: string) => (category ? category : <span style={{ color: 'red' }}>N/A</span>),
+    },
+    {
+      title: 'Materials',
+      dataIndex: 'materials',
+      width: '10%',
+      render: (materials: string) => (materials ? materials : <span style={{ color: 'red' }}>N/A</span>),
+    },
+    {
+      title: 'Description',
+      dataIndex: 'description',
+      width: '15%',
+      render: (description: string) => (description ? description : <span style={{ color: 'red' }}>N/A</span>),
+    },
+    {
+      title: 'Purity',
+      dataIndex: 'purity',
+      filters: [
+        { text: '99.9%', value: 'PureSilver999' },
+        { text: '95.8%', value: 'PureSilver958' },
+        { text: '92.5%', value: 'PureSilver925' },
+        { text: '90%', value: 'PureSilver900' },
+      ],
+      onFilter: (value, record) => record.purity.includes(value as string),
+      render: (purity: string) => {
+        const purityKey = Object.keys(PurityEnum).find(key => PurityEnum[key] === purity);
+        return purityKey ? purityKey : <span style={{ color: 'red' }}>N/A</span>;
+      },
+    },
+    {
+      title: 'Price',
+      dataIndex: 'price',
+      width: '10%',
+      render: (price: number | null, record: JewelrySilver) => (
+        <Input
+          value={price !== null ? price.toString() : ''}
+          onChange={(e) => handlePriceChange(e.target.value, record)}
+          style={{ width: '100%' }}
+        />
+      ),
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      width: '10%',
+      filters: [
+        { text: 'Verified', value: 'Verified' },
+        { text: 'Unverified', value: 'Unverified' },
+      ],
+      onFilter: (value, record) => record.status.includes(value as string),
+      render: (status: string, record: JewelrySilver) => (
+        <Select
+          value={status}
+          onChange={(value) => handleStatusChange(value, record)}
+          style={{ width: '100%' }}
+        >
+          <Select.Option value="Verified">Verified</Select.Option>
+          <Select.Option value="Unverified">Unverified</Select.Option>
+        </Select>
+      ),
+    },
+    {
+      title: 'Weight',
+      dataIndex: 'weight',
+      width: '10%',
+      render: (weight: string) => (weight ? weight : <span style={{ color: 'red' }}>N/A</span>),
+    },
+    {
+      title: 'Actions',
+      dataIndex: 'actions',
+      render: (_: string, record: JewelrySilver) => (
+        <Button type="primary" onClick={() => handleUpdate(record)}>
+          Update
+        </Button>
+      ),
+    },
+  ];
 
 const SilverTable: React.FC = () => {
   const [data, setData] = useState<JewelrySilver[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchedColumn, setSearchedColumn] = useState<string>('');
   const [searchText, setSearchText] = useState('');
-  let searchInput: Input | null = null; 
+  let searchInput: Input | null = null;
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: {
       current: 1,
@@ -309,7 +330,7 @@ const SilverTable: React.FC = () => {
           }
           return true;
         })}
-        pagination={{pageSize:10}}
+        pagination={{ pageSize: 10 }}
         loading={loading}
         onChange={handleTableChange}
       />

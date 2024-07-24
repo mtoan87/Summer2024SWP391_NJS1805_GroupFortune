@@ -1,8 +1,5 @@
-.Profile-page-Manager{
-  padding-top: 70px;
-  padding-bottom: 50px;
-  .profile-manager {
-  width: 400px; /* Set form width */
+.profile-staff-container {
+  width: 400px; /* Đặt chiều rộng của form */
   margin: 0 auto; /* Center form horizontally */
   padding: 20px;
   border: 1px solid #ccc;
@@ -39,7 +36,7 @@
     }
   }
 
-  .bt {
+  .button-container {
     text-align: center;
     margin-top: 20px;
 
@@ -57,18 +54,4 @@
       background-color: #9a6442;
     }
   }
-
-  .loaded-message {
-    margin-bottom: 20px;
-
-    h1 {
-      margin-bottom: 10px;
-    }
-
-    .alert {
-      margin-top: 10px;
-    }
-  }
-}
-
 }
