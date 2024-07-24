@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ClockCircleOutlined, DollarCircleOutlined } from '@ant-design/icons';
-import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import * as signalR from '@microsoft/signalr';
 import '../Styles/bidding.scss';
@@ -21,7 +20,7 @@ function BiddingForm() {
     const [highestPrice, setHighestPrice] = useState(null);
     const [isAuctionActive, setIsAuctionActive] = useState(true);
     const [remainingTime, setRemainingTime] = useState(null);
-    const [bidRecords, setBidRecords] = useState([]); // State for bid records
+    const [bidRecords, setBidRecords] = useState([]); // Initialize as an array
 
     const storedUser = sessionStorage.getItem("loginedUser");
     const user = storedUser ? JSON.parse(storedUser) : null;
@@ -33,14 +32,13 @@ function BiddingForm() {
         try {
             const response = await api.get(`/AccountWallet/GetAccountWalletByAccountId/${accountId}`);
             const walletData = response.data;
-            console.log('Account Wallet:', walletData);
             setAccountWallet(walletData);
             setBudget(walletData.budget);
         } catch (error) {
             console.error('Error fetching account wallet:', error);
             message.error('Error fetching account wallet. Please try again.');
         }
-    }
+    };
 
     const fetchAuctionDetails = async () => {
         try {
@@ -50,9 +48,13 @@ function BiddingForm() {
 
             const startDate = new Date(auctionData.starttime);
             const endDate = new Date(auctionData.endtime);
+
+            const formattedStartTime = startDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            const formattedEndTime = endDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
             setDate(startDate.toLocaleDateString());
-            setStartTime(startDate.toLocaleTimeString());
-            setEndTime(endDate.toLocaleTimeString());
+            setStartTime(formattedStartTime);
+            setEndTime(formattedEndTime);
 
             // SET STARTING PRICE
             let fetchedStartingPrice = 0;
@@ -70,16 +72,15 @@ function BiddingForm() {
             setStartingPrice(fetchedStartingPrice);
 
             const bidsResponse = await api.get(`/api/Bid/GetBidByAuctionId/${auctionData.auctionId}`);
-            const auctionBids = bidsResponse.data.$values;
-            console.log('Auction Bids:', auctionBids);
+            const auctionBids = bidsResponse.data.$values || [];
 
             const bidsRecordsResponse = await api.get(`/api/BidRecord/GetBidRecordByBidId?BidId=${auctionData.auctionId}`);
-            const allBidRecords = bidsRecordsResponse.data.$values;
-            console.log('Bid Records:', allBidRecords);
+            const allBidRecords = bidsRecordsResponse.data.$values || [];
 
-            // Limit to the 5 latest bids
-            const latestBidRecords = allBidRecords.slice(-5); // Get last 5 records
-            setBidRecords(latestBidRecords);
+            // Ensure bidRecords is set to an array and get the top 5 records
+            const topBidRecords = allBidRecords.slice(0, 5);
+            setBidRecords(Array.isArray(topBidRecords) ? topBidRecords : []);
+
 
             const highPrice = auctionBids.length > 0 ? Math.max(...auctionBids.map(bid => bid.maxprice)) : fetchedStartingPrice;
             setHighestPrice(highPrice);
@@ -91,10 +92,15 @@ function BiddingForm() {
 
         } catch (err) {
             console.error('Error fetching auction details:', err);
-            toast.error('Error fetching auction details. Please try again.');
+            message.error('Error fetching auction details. Please try again.');
+
+            // Set bidRecords to an empty array on error to avoid map error
+            setBidRecords([]);
         }
     };
 
+
+    // SIGNALR
     useEffect(() => {
         if (accountId) {
             fetchAccountWallet();
@@ -115,30 +121,48 @@ function BiddingForm() {
         connection.on("HighestPrice", (price) => {
             message.info(`Highest Price: ${price}`);
             setHighestPrice(price);
-        })
+        });
+
+        connection.on("BidStep", (bids) => {
+            const newBidInstance = bids.$values[0];
+
+            // Use functional state update to get the latest state
+            setBidRecords(prevBidRecords => {
+                const temp = prevBidRecords.slice(0, prevBidRecords.length - 1);
+                console.log(prevBidRecords);
+                console.log(temp);
+                console.log(newBidInstance, ...temp);
+                return [newBidInstance, ...temp];
+            });
+
+            message.info(`New bidstep records: ${JSON.stringify(newBidInstance.bidStep)}`);
+        });
 
         connection.on("ReceiveNotification", (title, content) => {
-            toast.info(content, title)
-        })
+            message.info(content, title);
+        });
 
         connection.start()
             .then(() => {
                 connection.invoke("JoinRoom", id)
                     .then(() => {
-                        console.log("Connected to auction room: " + id)
-                        message.info("Connected to auction room: " + id)
-                    })
+                        message.info("Connected to auction room: " + id);
+                    });
             })
             .catch((err) => document.write(err));
+    }, [id, accountId]);
 
+    useEffect(() => {
         // Countdown timer
         const intervalId = setInterval(() => {
             setRemainingTime(prevTime => {
                 if (prevTime <= 1000) {
                     clearInterval(intervalId);
                     setIsAuctionActive(false);
-                    toast.info("Auction has ended!");
-                    navigate(`/auction/${id}`);
+                    announceWinnerAndSubmitResult();
+                    setTimeout(() => {
+                        navigate(`/auction/${id}`);
+                    }, 5000);
                     return 0;
                 }
                 return prevTime - 1000;
@@ -146,7 +170,7 @@ function BiddingForm() {
         }, 1000);
 
         return () => clearInterval(intervalId);
-    }, [id, accountId]);
+    }, [])
 
     const formatRemainingTime = (milliseconds) => {
         const totalSeconds = Math.floor(milliseconds / 1000);
@@ -156,13 +180,60 @@ function BiddingForm() {
         return `${hours}h ${minutes}m ${seconds}s`;
     };
 
+    const announceWinnerAndSubmitResult = async () => {
+        console.log(bidRecords);
+        if (bidRecords.length > 0) {
+            // Find the highest bid amount and determine the winner
+            let highestBidAmount = 0;
+            let winnerAccountId = null;
+
+            // Identify the highest bid
+            bidRecords.forEach(record => {
+                if (record.bidAmount > highestBidAmount) {
+                    highestBidAmount = record.bidAmount;
+                    winnerAccountId = record.accountId;
+                }
+            });
+
+            console.log(winnerAccountId);
+            
+            if (winnerAccountId) {
+                message.success(`User ${winnerAccountId} with a bid of $${highestBidAmount} is the winner.`);
+
+                for (const record of bidRecords) {
+                    const status = record.accountId === winnerAccountId ? 'Won' : 'Lose';
+                    const auctionResultData = {
+                        joinauctionId: auction.auctionId,
+                        date: new Date().toISOString(),
+                        status: status,
+                        price: record.bidAmount,
+                        accountId: record.accountId,
+                    };
+
+                    try {
+                        await api.post('/api/AuctionResults/CreateAuctionResult', auctionResultData);
+                    } catch (error) {
+                        console.error(`Error submitting auction result for account ${record.accountId}:`, error);
+                        message.error(`Error submitting result for user ${record.accountId}. Please try again.`);
+                    }
+                }
+
+                message.success('Auction results submitted successfully.');
+            } else {
+                message.info('Bid records failed');
+            }
+        } else {
+            message.info('No bids were placed in this auction.');
+        }
+    };
+
     const handleBidSubmit = async () => {
         if (!bidAmount || isNaN(bidAmount) || bidAmount <= 0) {
             message.error('Please enter a valid bid amount.');
             return;
         }
         if (budget <= highestPrice) {
-            toast.error('Your budget is insufficient to place a bid.');
+            message.error('Your budget is insufficient to place a bid.');
             return;
         }
 
@@ -178,17 +249,27 @@ function BiddingForm() {
 
             if (response.status === 200) {
                 setBidAmount(0);
+
+                // Get new bid amount list based on auctionId
+                const newBidData = await api.get(`/api/BidRecord/GetBidRecordByBidId?BidId=${auction.auctionId}`);
+
+                // Get top 5 value from newBidData
+                const topBidRecords = newBidData.data.$values.slice(0, 5);
+
+                setBidRecords(Array.isArray(topBidRecords) ? topBidRecords : []);
             } else {
                 message.error('Error submitting bid. Please try again.');
             }
         } catch (err) {
             console.error('Error submitting bid:', err);
-            toast.error('Error submitting bid. Please try again.');
+            message.error('Error submitting bid. Please try again.');
         }
     };
 
+
+
     const handleDisabledClick = () => {
-        toast.error('Your budget is insufficient to place a bid.');
+        message.error('Your budget is insufficient to place a bid.');
     };
 
     return (
@@ -210,16 +291,19 @@ function BiddingForm() {
             </div>
             <div className="bid-records">
                 <h2>Bid Records</h2>
-                <ul>
-                    <li>
-                        {bidRecords.map((record, index) => (
-                            <span key={index}>
-                                <strong>User</strong> {record.accountId} <strong>has bid</strong> {record.bidStep}$
-                                {index < bidRecords.length - 1 && <br />} {/* Line break except after the last item */}
-                            </span>
-                        ))}
-                    </li>
-                </ul>
+                <span>
+                    {bidRecords.length > 0 ? (
+                        bidRecords.map((record, index) => (
+                            <li key={index}>
+                                <span>
+                                    <strong>User</strong> {record.accountId} <strong>has bid</strong> {record.bidStep}$
+                                </span>
+                            </li>
+                        ))
+                    ) : (
+                        <li>No bids placed yet.</li>
+                    )}
+                </span>
             </div>
             <div className="infor-bidding">
                 <ul>
