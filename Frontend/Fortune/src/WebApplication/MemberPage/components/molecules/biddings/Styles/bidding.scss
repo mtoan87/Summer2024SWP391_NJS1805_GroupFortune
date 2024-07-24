@@ -1,9 +1,14 @@
 .bidding-form {
-    background-color: #eeeeee; /* Light background color for the form */
-    padding: 20px; /* Padding inside the form */
-    border-radius: 10px; /* Rounded corners for the form */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Light shadow for the form */
-    max-width: 300px; /* Max width of the form */
+    background-color: #eeeeee;
+    /* Light background color for the form */
+    padding: 20px;
+    /* Padding inside the form */
+    border-radius: 10px;
+    /* Rounded corners for the form */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    /* Light shadow for the form */
+    max-width: 300px;
+    /* Max width of the form */
     margin: 10px;
     font-family: Arial, sans-serif;
     color: #311b18e5;
@@ -18,21 +23,28 @@
     .infor-price,
     .infor-bidding,
     .bid-records {
-        margin-bottom: 20px; /* Margin between information sections */
+        margin-bottom: 20px;
+
+        /* Margin between information sections */
+        span {
+            li {
+                list-style-type: none;
+            }
+        }
 
         ul {
-            list-style-type: none; /* Remove list style */
+            list-style-type: none;
             padding: 0;
 
             li {
-                margin-bottom: 25px; /* Margin between list items */
+                margin-bottom: 25px;
                 font-size: 16px;
-                padding: 20px; /* Padding inside list items */
-                border-radius: 10px; /* Rounded corners for list items */
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Light shadow for list items */
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 
                 strong {
-                    color: #0f0e0e; /* Bold text color */
+                    color: #0f0e0e;
                 }
             }
         }
@@ -49,24 +61,38 @@
             }
 
             input {
-                width: 100%; /* Full width */
-                padding: 10px; /* Padding inside input */
-                margin-bottom: 10px; /* Margin below input */
-                border-radius: 5px; /* Rounded corners for input */
-                border: 1px solid #6e4126; /* Border for input */
+                width: 100%;
+                /* Full width */
+                padding: 10px;
+                /* Padding inside input */
+                margin-bottom: 10px;
+                /* Margin below input */
+                border-radius: 5px;
+                /* Rounded corners for input */
+                border: 1px solid #6e4126;
+                /* Border for input */
             }
 
             button {
                 width: 100%;
-                padding: 10px 90px; /* Padding inside button */
-                background-color: #6e4126; /* Button background color */
-                color: #fff; /* Button text color */
-                border: none; /* Remove button border */
-                border-radius: 5px; /* Rounded corners for button */
-                cursor: pointer; /* Cursor change on hover */
-                transition: background-color 0.3s ease; /* Transition effect for hover */
+                padding: 10px 90px;
+                /* Padding inside button */
+                background-color: #6e4126;
+                /* Button background color */
+                color: #fff;
+                /* Button text color */
+                border: none;
+                /* Remove button border */
+                border-radius: 5px;
+                /* Rounded corners for button */
+                cursor: pointer;
+                /* Cursor change on hover */
+                transition: background-color 0.3s ease;
+
+                /* Transition effect for hover */
                 &:hover {
-                    background-color: #9a6442; /* Background color on hover */
+                    background-color: #9a6442;
+                    /* Background color on hover */
                 }
             }
         }
