@@ -83,13 +83,12 @@ const App: React.FC = () => {
                 <>
                   <Route path='/' element={<StaffJewelryPg />} />
                   <Route path="/staff/update-jewelry/:id/:material" element={<StaffViewJewelryPg />} />
-                  <Route path='/staffprofile' element={<ProfileStaff />} />
+                  <Route path="/staffprofile" element={<ProfileStaff />} />
                 </>
               )}
               {user?.role === 5 && (
                 <>
                   <Route index element={<ManagerHomePg />} />
-                  <Route path='/managerA&DJew' element={<ProfileStaff />} />
                 </>
               )}
             </>

@@ -45,7 +45,7 @@ const ManagerHomePg: React.FC = () => {
           </div>
         </Content>
         <footer>
-          <MemberFooter />
+          {/* <MemberFooter /> */}
         </footer>
       </Layout>
     </Layout>

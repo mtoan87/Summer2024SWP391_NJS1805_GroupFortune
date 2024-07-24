@@ -28,7 +28,6 @@ function AuctionTable() {
   const [error, setError] = useState<string | null>(null);
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState<string>('');
-  const [filterDateRange, setFilterDateRange] = useState<[moment.Moment | null, moment.Moment | null]>([null, null]);
   let searchInput: Input | null = null; 
 
   useEffect(() => {
@@ -87,7 +86,6 @@ function AuctionTable() {
               return auction;
             })
           );
-          console.log(auctionsWithDetails);
           setAuctions(auctionsWithDetails);
         } else {
           console.error('Invalid response data format:', response.data);
