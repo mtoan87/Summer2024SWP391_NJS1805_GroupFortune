@@ -311,7 +311,7 @@ const JewelryUploadForm: React.FC = () => {
     } else if (jewelry.materials === 'Gold, Diamond') {
       formData.append('goldage', goldAges[jewelry.goldage!]);
       formData.append('clarity', clarity[jewelry.clarity!]);
-      formData.append('carat', jewelry.carat!+"ct");
+      formData.append('carat', jewelry.carat! + "ct");
     }
 
     logFormData(formData);
@@ -538,12 +538,14 @@ const JewelryUploadForm: React.FC = () => {
                 <label htmlFor="carat">Carat:</label>
                 <div className="input-container">
                   <input
-                    type="text"
+                    type="number"
                     id="carat"
                     name="carat"
                     value={jewelry.carat}
                     onChange={handleChange}
                     required
+                    min="0"
+                    step="0.001"
                   />
                   {errors.carat && <span className="error">{errors.carat}</span>}
                 </div>
