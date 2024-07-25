@@ -58,7 +58,7 @@ function MyWallet() {
             ) : (
                 <>
                     <p>You have not register wallet yet</p>
-                    <button onClick={handleRegisterWallet}>Register Wallet</button>
+                    <button className='register-wallet-button' onClick={handleRegisterWallet}>Register Wallet</button>
                 </>
             )}
         </div>

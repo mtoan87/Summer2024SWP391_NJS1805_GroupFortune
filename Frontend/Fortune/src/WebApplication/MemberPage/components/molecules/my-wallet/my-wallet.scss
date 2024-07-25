@@ -28,8 +28,26 @@
         }
       }
     }
+
+    .action-button {
+      margin-top: 2rem;
+      margin-left: 5rem;
+      display: flex;
+      align-items: center;
+      gap: 13rem;
+      height: 6rem;
+      button {
+        background-color: #824d4d;
+        height: 3rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        color: white;
+        border: none;
+        border-radius: 5px;
+      }
+    }
   
-    button {
+    .register-wallet-button {
       margin-top: 2.5rem;
       font-size: 1rem; 
       max-width: 10rem;
@@ -44,17 +62,6 @@
       &:hover {
         background-color: #8f5050;
       }
-    }
-  
-    p.loading-message {
-      margin-top: 20px;
-      font-style: italic;
-      color: #888;
-    }
-  
-    p.error-message {
-      margin-top: 20px;
-      color: #ff6347; /* Tomato color */
     }
   }
   

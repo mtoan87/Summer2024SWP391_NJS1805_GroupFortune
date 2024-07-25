@@ -44,7 +44,7 @@ function UpdateWallet() {
             console.log(formData);
             const response = await api.put(`/AccountWallet/UpdateAccountWallet?id=${formData.accountwalletId}`, formData); 
             console.log('Wallet updated successfully:', response.data);
-            message.success('Update budget successfully');
+            message.success('Charge budget successfully');
             navigate('/userWallet');
         } catch (error) {
             console.error('Error updating wallet:', error);
@@ -55,7 +55,7 @@ function UpdateWallet() {
         <div className="update-my-wallet">
             {formData ? (
                 <form onSubmit={handleSubmit}>
-                    <h1>Update Wallet</h1>
+                    <h1>Charge Wallet</h1>
                     <div className="update-wallet-info">
                         <div className="form-group">
                             <label htmlFor="bankName">Bank Name</label>
