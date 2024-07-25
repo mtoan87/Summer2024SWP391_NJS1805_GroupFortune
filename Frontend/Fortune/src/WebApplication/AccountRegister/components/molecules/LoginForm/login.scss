@@ -1,0 +1,106 @@
+.login-form {
+  width: 700px;
+  margin: 10;
+  padding: 30px;
+  background-color: #282323;
+  border-radius: 50px;
+  box-shadow: 0 0 15px rgb(249, 249, 249); /* Box shadow */
+  color: #ffffff;
+  margin-top: 100px;
+
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+  }
+
+  .form-label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #282323;
+
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: transparent;
+    color: #ffffff;
+    background-color: #282323;
+
+
+    &::placeholder {
+      color: #aaa;
+    }
+  }
+
+  .ant-input-affix-wrapper {
+    background-color: transparent;
+    border: 1px solid #ccc;
+    color: #ffffff;
+  }
+
+  .ant-input-prefix {
+    color: #aaa;
+  }
+
+  .btn-primary {
+    width: 100%;
+    height: 50px;
+    padding: 10px;
+    background-color: rgb(29, 28, 28);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #ffffff;
+    box-shadow: 0 0 15px rgb(249, 249, 249); /* Box shadow */
+
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: rgb(38, 36, 33) !important;
+      color: #333;
+    }
+  }
+
+  .register-link,
+  .forgot-link {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    color: #ffffff;
+    text-decoration: none;
+
+    a {
+      color: #ffffff;
+
+      &:hover {
+        color: rgb(228, 175, 111);
+        cursor: pointer;
+      }
+    }
+  }
+
+  .social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+
+    a {
+      color: #ffffff;
+      font-size: 24px;
+      text-decoration: none;
+
+      &:hover {
+        color: rgb(228, 175, 111);
+      }
+    }
+  }
+}

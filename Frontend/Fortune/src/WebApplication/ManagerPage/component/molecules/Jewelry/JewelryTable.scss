@@ -1,0 +1,68 @@
+// JewelryTable.scss
+
+.jewelry-table-container {
+  text-align: center;
+
+  .jewelry-error-message {
+    color: red;
+    font-weight: bold;
+  }
+}
+.na-text {
+  color: red;
+}
+.jewelry-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+
+  th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+
+  th {
+    background-color: #f4f4f4;
+  }
+
+  .jewelry-name {
+    position: relative;
+    cursor: pointer; /* Optional: Change cursor to pointer on hover */
+  }
+
+  .image-preview {
+    position: absolute;
+    top: 100%; /* Position below the jewelry name */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%);
+    width: auto; /* Adjust size as needed */
+    padding: 10px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1; /* Ensure it appears above other content */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    display: none; /* Initially hide */
+  }
+
+  .jewelry-name:hover .image-preview {
+    display: block; /* Show on hover */
+  }
+
+  .image-preview img {
+    width: 20rem;
+    height: 15rem;
+  }
+.pagination {
+    margin-top: 16px;
+    text-align: center;
+  }
+  .search-bar {
+    margin-bottom: 16px;
+    width: 100%;
+  }
+}
+  

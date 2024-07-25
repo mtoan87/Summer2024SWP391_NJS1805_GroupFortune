@@ -1,0 +1,77 @@
+.guest-header-home {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    .logo {
+        height: 6rem;
+        margin: 0 auto; /* Để căn giữa logo */
+        display: block; /* Để tránh margin-bottom ảnh hưởng */
+    }
+
+    .account {
+        height: 50px;
+    }
+
+    nav {
+        ul {
+            display: flex;
+            justify-content: space-between; /* Để các mục menu căn đều và cách nhau */
+            align-items: center;
+            padding: 0; /* Bỏ padding mặc định của ul */
+            margin: 0; /* Bỏ margin mặc định của ul */
+            list-style: none; /* Bỏ bullet của list */
+           
+
+            .guest-header-items {
+                display: flex;
+                align-items: center;
+                padding: 10px 60px; /* Giảm khoảng cách padding giữa các mục */
+                border-radius: 10px;
+                transition: background-color 0.25s ease-out;
+
+                &:hover {
+                    background-color: #f0f0f0; /* Màu nền khi hover */
+                    cursor: pointer;
+                }
+
+                li {
+                    white-space: nowrap;
+                    font-size: 18px;
+
+                    a {
+                        text-decoration: none;
+                        color: #824d4d;
+                        display: flex;
+                        align-items: center;
+
+                        &:hover {
+                            color: #000;
+                        }
+
+                        .anticon {
+                            font-size: 25px;
+                            margin-right: 8px; /* Khoảng cách giữa icon và text */
+                        }
+                    }
+                }
+
+                .login-container {
+                    display: flex;
+                    align-items: center;
+
+                    img {
+                        margin-right: 8px; /* Khoảng cách giữa icon và text */
+                    }
+                }
+            }
+        }
+    }
+
+    .content {
+        margin-top: 100px;
+    }
+}

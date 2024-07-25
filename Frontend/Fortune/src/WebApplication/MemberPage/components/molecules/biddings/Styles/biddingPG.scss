@@ -1,0 +1,10 @@
+.content-container {
+    display: flex;
+    flex-direction: row; /* Hoặc row nếu muốn nằm ngang */
+    gap: -5px; /* Khoảng cách giữa hai component */
+  }
+  
+  .content-container > * {
+    flex: 1;
+  }
+  

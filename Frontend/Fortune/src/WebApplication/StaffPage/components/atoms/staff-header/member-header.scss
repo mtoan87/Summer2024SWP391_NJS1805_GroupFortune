@@ -1,0 +1,73 @@
+.staff-header-home {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 100px;
+        padding: 0 100px; // Thêm khoảng cách từ hai bên của màn hình
+    }
+
+    .logo {
+        height: 100px;
+
+        &:hover{
+            background-color: beige;
+            transition: ease-out 0.25s;
+            border-radius: 10px;
+        }
+    }
+
+    ul {
+        display: flex;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+
+        .staff-header-items {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+            
+            &:hover {
+                background-color: beige;
+                transition: ease-out 0.25s;
+                border-radius: 10px;
+            }
+        }
+
+        li {
+            list-style: none;
+            white-space: nowrap;
+            color: #824D4D;
+            font-size: 20px;
+
+            a {
+                text-decoration: none;
+                color: inherit;
+                
+                &:hover {
+                    background-color: beige;
+                    transition: ease-out 0.25s;
+                    transform: scale(1.05);
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+
+    .dropdown {
+        width: 10rem !important;
+    }
+
+    .user-icon {
+        font-size: 2rem;
+    }
+}

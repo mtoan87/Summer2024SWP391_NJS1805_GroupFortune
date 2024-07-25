@@ -1,0 +1,57 @@
+h1 {
+  text-align: center;
+  color: #824d4d;
+}
+
+.form-label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.icon {
+  margin-right: 0.5rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control:focus {
+  outline: 0;
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #6e4126;
+  border-color: #6e4126;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: #9a6442;
+  border-color: #9a6442;
+}
+
+/* Điều chỉnh chiều rộng của input, lấy còn lại sau khi trừ đi chiều rộng của label */
+.mb-3 {
+  display: flex;
+  flex-direction: column;
+}
+
+.mb-3 input[type="text"],
+.mb-3 input[type="email"],
+.mb-3 input[type="password"] {
+  width: 100% /* Điều chỉnh chiều rộng của input, lấy còn lại sau khi trừ đi chiều rộng của label */
+}

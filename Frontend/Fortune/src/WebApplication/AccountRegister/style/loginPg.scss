@@ -1,0 +1,19 @@
+.login-body {
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: url('../../../../../../src/assets/img/jewelry_072527474_205.jpg') no-repeat center center fixed;
+  background-size: cover;
+  animation: moveBackgroundY 30s linear infinite;
+
+  @keyframes moveBackgroundY {
+    0% {
+      background-position: center top;
+    }
+    100% {
+      background-position: center bottom;
+    }
+  }
+}

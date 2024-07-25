@@ -1,0 +1,18 @@
+.register-body {
+    height: 100vh  ; /* Đặt chiều cao bằng 100% chiều cao của viewport */
+    width: 100%;
+    margin: 0;
+    background: url('../../../../src/assets/img/jewelry-desktop-background_072525344_205.jpg') no-repeat center center fixed;
+    background-size: cover;
+    position: relative;
+    animation: moveBackgroundY 20s linear infinite;
+}
+
+@keyframes moveBackgroundY {
+    0% {
+        background-position: center top;
+    }
+    100% {
+        background-position: center bottom;
+    }
+}

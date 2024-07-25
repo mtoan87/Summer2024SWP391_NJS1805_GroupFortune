@@ -1,0 +1,109 @@
+.jewelry-details-container {
+    padding-top: 10rem; /* Adjust this value based on your header height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 100vh; 
+    background-color: #f5f5f5; 
+    padding-bottom: 5rem;
+}
+
+.jewelry-details-content {
+    display: flex;
+    max-width: 1200px;
+    width: 100%; 
+    margin: 0 auto; 
+    background-color: #fff; 
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.jewelry-image {
+    flex: 1;
+    display: flex;
+    width: 5rem;
+    justify-content: center;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.jewelry-info {
+    flex: 1;
+    text-align: left;
+    border: 1px solid #ccc;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    background-color: #fff;
+    
+    p {
+        margin: 10px 0;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #ccc;
+        
+        &:not(:last-child) {
+            margin-bottom: 20px;
+        }
+    }
+}
+
+.join-auction-button {
+    padding: 10px 20px;
+    background-color: bisque;
+    color: black;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.join-auction-button:hover {
+    background-color: #e1eb5c;
+}
+
+/* Assuming your zoomed area has a class or ID, adjust accordingly */
+/* jewelryDetails.scss */
+.js-image-zoom__zoomed-area {
+    background-position: 0px 0px;
+    float: right;
+    overflow: hidden;
+    z-index: 999;
+    transform: translateZ(0px);
+    opacity: 0.4;
+    zoom: 1;
+    width: 95.5078px;
+    height: 95.5078px;
+    background-color: white;
+    cursor: default;
+    border: 1px solid rgb(0, 0, 0);
+    background-repeat: no-repeat;
+    position: absolute;
+    left: 392.6px;
+    top: 288.8px;
+    display: none;
+}
+.js-image-zoom__zoomed-image{
+    overflow: hidden;
+    background-position: 0px 0px;
+    text-align: center;
+    background-color: rgb(255, 255, 255);
+    width: 100%;
+    height: 100%;
+    float: left;
+    background-size: 2048px 2048px;
+    display: none;
+    z-index: 100;
+    border: 4px solid rgb(136, 136, 136);
+    background-repeat: no-repeat;
+    position: absolute;
+}
+
+.item-name{
+    font-size: 30px;
+    line-height: normal;
+    text-align: start;
+    letter-spacing: 1px;
+    font-family: serif;
+    color: #010101;
+}

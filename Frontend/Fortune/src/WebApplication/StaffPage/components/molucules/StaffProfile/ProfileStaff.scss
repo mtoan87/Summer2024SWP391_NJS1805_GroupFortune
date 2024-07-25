@@ -1,0 +1,70 @@
+.profile-staff {
+  width: 400px; /* Đặt chiều rộng của form */
+  margin: 0 auto; /* Center form horizontally */
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #f9f9f9;
+  padding-top: 170px;
+
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+
+    .form-label {
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+      margin-bottom: 5px;
+
+      svg {
+        margin-right: 10px;
+      }
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+  }
+
+  .bt {
+    text-align: center;
+    margin-top: 20px;
+
+    .btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      background-color: #6e4126;
+      color: white;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background-color: #9a6442;
+    }
+  }
+
+  .LoadedMessage {
+    margin-bottom: 20px;
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    .Alert {
+      margin-top: 10px;
+    }
+  }
+}

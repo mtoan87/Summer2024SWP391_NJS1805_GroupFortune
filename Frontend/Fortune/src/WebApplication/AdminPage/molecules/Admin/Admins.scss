@@ -1,0 +1,30 @@
+.admin-page {
+    display: flex;
+    flex-direction: column;
+ }
+  
+  .header-page {
+    flex-shrink: 0;
+  }
+  
+  .body-page {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+  
+  .sider {
+    flex-shrink: 0;
+  }
+  
+  .main-content {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+  }
+  
+  .footer-page {
+    flex-shrink: 0;
+  }
+  
+

@@ -1,0 +1,67 @@
+.my-wallet {
+    max-width: 600px;
+    margin-top: 10rem;
+    margin-left: 40rem;
+    padding: 20px;
+    background-color: transparent;
+    margin-bottom: 10rem;
+  
+    h1 {
+      font-size: 5rem;
+      margin-bottom: 20px;
+      color: #333;
+    }
+  
+    .wallet-info {
+      border-top: 1px solid #ccc;
+      padding-top: 20px;
+      margin-top: 20px;
+      background-color: transparent;
+  
+      p {
+        margin-bottom: 10px;
+        font-size: 1.1rem;
+        color: #666;
+  
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    .action-button {
+      margin-top: 2rem;
+      margin-left: 5rem;
+      display: flex;
+      align-items: center;
+      gap: 13rem;
+      height: 6rem;
+      button {
+        background-color: #824d4d;
+        height: 3rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        color: white;
+        border: none;
+        border-radius: 5px;
+      }
+    }
+  
+    .register-wallet-button {
+      margin-top: 2.5rem;
+      font-size: 1rem; 
+      max-width: 10rem;
+      margin-left: 12rem;
+      background-color: #824d4d;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+  
+      &:hover {
+        background-color: #8f5050;
+      }
+    }
+  }
+  

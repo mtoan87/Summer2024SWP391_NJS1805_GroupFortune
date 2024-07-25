@@ -1,0 +1,35 @@
+.auction-table-container {
+  text-align: center;
+
+  .error-message {
+    color: red;
+    font-weight: bold;
+  }
+  
+  .ant-input-search {
+    width: 400px;
+    margin-bottom: 16px;
+    border: 2px solid red;  // Viền đỏ bao quanh thanh tìm kiếm
+    border-radius: 4px;
+
+    .ant-input {
+      border: none;  // Loại bỏ viền mặc định của input
+      padding: 8px;
+      box-shadow: none;  // Loại bỏ shadow mặc định
+    }
+
+    .ant-input-group-addon {
+      .ant-btn {
+        border-radius: 0 4px 4px 0;
+        background-color: transparent;
+        color: black;
+        border: none;  // Loại bỏ viền của nút tìm kiếm
+        transition: background-color 0.3s;
+
+        &:hover {
+          background-color: #f0f0f0;  // Màu nền khi hover
+        }
+      }
+    }
+  }
+}

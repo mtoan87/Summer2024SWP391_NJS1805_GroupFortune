@@ -1,0 +1,47 @@
+.contents-details {
+    padding: 20px;
+    margin-top: 100px;
+
+    .contents-details-content {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .jewelry-details {
+        display: flex;
+        flex-direction: column;
+        width: 100%; 
+    }
+    
+    .jewelry-item {
+        display: flex;
+        width: 100%; 
+        margin-bottom: 10px;
+        border: 1px solid #6e4126;
+        padding: 10px;
+        border-radius: 5px;
+        box-sizing: border-box; 
+    }
+    
+    .item-img {
+        width: 60rem; 
+        height: 50rem; 
+        margin-right: 1rem;
+        border-radius: 5px;
+        flex: 1;
+    }
+    
+    .jewelry-info {
+        display: flex;
+        flex-direction: column;
+        flex: 0 0 20rem; 
+        max-width: 20rem;
+    }
+    
+    .jewelry-info p {
+        margin: 5px 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis; 
+    }   
+}

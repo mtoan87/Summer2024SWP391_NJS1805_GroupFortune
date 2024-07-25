@@ -1,0 +1,71 @@
+.forgot-body {
+  height: 60rem;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: url('../../../../src/assets/img/p1.jpg') no-repeat center center fixed;
+  background-size: cover;
+  padding-left: 100px;
+  padding-bottom:80px;
+
+  h1, h2 {
+    margin-top: 2rem;
+    color: rgb(0, 0, 0);
+    text-align: center;
+  }
+
+  .forgot-password-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background-color: #1c1c1c; /* Black theme background */
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgb(249, 249, 249); /* Box shadow */
+    margin-top: 2rem;
+
+    .input-container {
+      position: relative;
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 1.5rem;
+
+      .input-icon {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #ffffff; /* White icon color for contrast */
+      }
+
+      input {
+        width: 100%;
+        padding: 10px 10px 10px 40px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #333; /* Dark background */
+        color: #ffffff; /* White text */
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* Box shadow */
+      }
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #444; /* Darker background for button */
+      color: #ffffff; /* White text */
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(106, 106, 106, 0.5); /* Box shadow */
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: #555; /* Slightly lighter on hover */
+      }
+    }
+  }
+}
