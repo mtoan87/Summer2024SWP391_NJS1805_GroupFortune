@@ -112,7 +112,7 @@ function RegisterJewelryForAuction() {
       } else if (material === 'Silver') {
         requestData.jewelrySilverId = formData.jewelrySilverId;
       } else if (material === 'GoldDiamond') {
-        requestData.jewelryGoldDiaId = formData.jewelryGoldDiaId;
+        requestData.jewelryGolddiaId = formData.jewelryGoldDiaId;
       } else {
         console.error('Unsupported jewelry material type');
         return;
