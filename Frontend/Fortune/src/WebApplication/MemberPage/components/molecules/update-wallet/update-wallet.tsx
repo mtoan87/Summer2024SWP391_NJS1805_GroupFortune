@@ -89,7 +89,7 @@ function UpdateWallet() {
                             />
                         </div>
                     </div>
-                    <button type="submit">Submit</button>
+                    <button type="submit">Charge</button>
                 </form>
             ) : (
                 <p>Loading wallet information...</p>

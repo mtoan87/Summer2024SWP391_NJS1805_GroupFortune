@@ -18,7 +18,7 @@ function AccountWallet() {
         accountId: loginedUser?.accountId || 0,
         bankName: '',
         bankNo: '',
-        budget: 0,
+        amount: 0,
     });
 
     const handleChange = (e) => {
@@ -36,7 +36,7 @@ function AccountWallet() {
             console.log('Account wallet created successfully:', response.data);
             message.success('Account wallet created successfully!');
 
-            navigate('userWallet',{ state: { message: 'Account wallet created successfully!' } });
+            navigate('/userWallet', { state: { message: 'Account wallet created successfully!' } });
         } catch (error) {
             console.error('Error creating account wallet:', error);
             message.error('Error creating account wallet. Please try again!');
@@ -46,6 +46,7 @@ function AccountWallet() {
     return (
         <>
             <form onSubmit={handleSubmit} className="wallet-form">
+                <h1>Register Wallet</h1>
                 <div className="form-group">
                     <label htmlFor="bankName">Bank Name</label>
                     <input
@@ -69,12 +70,12 @@ function AccountWallet() {
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="budget">Budget</label>
+                    <label htmlFor="amount">Amount</label>
                     <input
                         type="number"
-                        id="budget"
-                        name="budget"
-                        value={formData.budget}
+                        id="amount"
+                        name="amount"
+                        value={formData.amount}
                         onChange={handleChange}
                         required
                     />

@@ -21,7 +21,7 @@ function BiddingForm() {
     const [isAuctionActive, setIsAuctionActive] = useState(true);
     const [remainingTime, setRemainingTime] = useState(null);
     const [bidRecords, setBidRecords] = useState([]); // Initialize as an array
-
+    const [lastBidderId, setLastBidderId] = useState(null);
     const storedUser = sessionStorage.getItem("loginedUser");
     const user = storedUser ? JSON.parse(storedUser) : null;
     const accountId = user ? user.accountId : null;
@@ -134,6 +134,7 @@ function BiddingForm() {
                 console.log(newBidInstance, ...temp);
                 return [newBidInstance, ...temp];
             });
+            setLastBidderId(newBidInstance.accountId);
 
             message.info(`New bidstep records: ${JSON.stringify(newBidInstance.bidStep)}`);
         });
@@ -170,7 +171,7 @@ function BiddingForm() {
         }, 1000);
 
         return () => clearInterval(intervalId);
-    }, [])
+    }, [bidRecords])
 
     const formatRemainingTime = (milliseconds) => {
         const totalSeconds = Math.floor(milliseconds / 1000);
@@ -181,12 +182,11 @@ function BiddingForm() {
     };
 
     const announceWinnerAndSubmitResult = async () => {
-        console.log(bidRecords);
         if (bidRecords.length > 0) {
             // Find the highest bid amount and determine the winner
             let highestBidAmount = 0;
             let winnerAccountId = null;
-
+    
             // Identify the highest bid
             bidRecords.forEach(record => {
                 if (record.bidAmount > highestBidAmount) {
@@ -194,31 +194,37 @@ function BiddingForm() {
                     winnerAccountId = record.accountId;
                 }
             });
-
-            console.log(winnerAccountId);
-            
+    
             if (winnerAccountId) {
-                message.success(`User ${winnerAccountId} with a bid of $${highestBidAmount} is the winner.`);
-
-                for (const record of bidRecords) {
-                    const status = record.accountId === winnerAccountId ? 'Won' : 'Lose';
-                    const auctionResultData = {
-                        joinauctionId: auction.auctionId,
-                        date: new Date().toISOString(),
-                        status: status,
-                        price: record.bidAmount,
-                        accountId: record.accountId,
-                    };
-
-                    try {
-                        await api.post('/api/AuctionResults/CreateAuctionResult', auctionResultData);
-                    } catch (error) {
-                        console.error(`Error submitting auction result for account ${record.accountId}:`, error);
-                        message.error(`Error submitting result for user ${record.accountId}. Please try again.`);
-                    }
+                // Fetch the join auction records
+                const joinAuctionResponse = await api.get('/api/JoinAuction');
+                const joinAuctionRecords = joinAuctionResponse.data.$values;
+    
+                // Find the latest join record for the winner
+                const latestJoinRecord = joinAuctionRecords
+                    .filter(record => record.accountId === winnerAccountId)
+                    .reduce((latest, current) => {
+                        return new Date(current.joindate) > new Date(latest.joindate) ? current : latest;
+                    });
+    
+                const auctionResultData = {
+                    joinauctionId: latestJoinRecord ? latestJoinRecord.id : null,
+                    date: new Date().toISOString(),
+                    status: 'Win',
+                    price: highestBidAmount,
+                    accountId: winnerAccountId,
+                };
+    
+                console.log(auctionResultData);
+    
+                try {
+                    await api.post('/api/AuctionResults/CreateAuctionResult', auctionResultData);
+                    message.success(`User ${winnerAccountId} with a bid of $${highestBidAmount} is the winner.`);
+                    message.success('Auction results submitted successfully.');
+                } catch (error) {
+                    console.error(`Error submitting auction result for account ${winnerAccountId}:`, error);
+                    message.error('Error submitting auction result. Please try again.');
                 }
-
-                message.success('Auction results submitted successfully.');
             } else {
                 message.info('Bid records failed');
             }
@@ -226,6 +232,8 @@ function BiddingForm() {
             message.info('No bids were placed in this auction.');
         }
     };
+    
+    
 
     const handleBidSubmit = async () => {
         if (!bidAmount || isNaN(bidAmount) || bidAmount <= 0) {
@@ -234,6 +242,11 @@ function BiddingForm() {
         }
         if (budget <= highestPrice) {
             message.error('Your budget is insufficient to place a bid.');
+            return;
+        }
+
+        if (lastBidderId === accountId) {
+            message.error('Please wait for another user to place a bid.');
             return;
         }
 
@@ -314,9 +327,14 @@ function BiddingForm() {
                             value={bidAmount}
                             onChange={(e) => setBidAmount(e.target.value)}
                         />
-                        <button
+                        {/* <button
                             onClick={budget > highestPrice ? handleBidSubmit : handleDisabledClick}
                             disabled={budget <= highestPrice}
+                        >
+                            Place Bid
+                        </button> */}
+                        <button
+                            onClick={handleBidSubmit}
                         >
                             Place Bid
                         </button>

@@ -70,7 +70,7 @@ function MyBids() {
 
   return (
     <div className="my-bids-container">
-      <h2>My Bids</h2>
+      <h1>My Bids</h1>
       <div className="join-auctions-list">
         {auctionsData.length === 0 ? (
           <p>No auction results found for this account.</p>
