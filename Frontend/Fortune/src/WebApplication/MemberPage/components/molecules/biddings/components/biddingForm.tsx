@@ -129,9 +129,9 @@ function BiddingForm() {
             // Use functional state update to get the latest state
             setBidRecords(prevBidRecords => {
                 const temp = prevBidRecords.slice(0, prevBidRecords.length - 1);
-                console.log(temp);
                 console.log(prevBidRecords);
-                console.log([newBidInstance, ...temp]); 
+                console.log(temp);
+                console.log(newBidInstance, ...temp);
                 return [newBidInstance, ...temp];
             });
             setLastBidderId(newBidInstance.accountId);
@@ -244,6 +244,7 @@ function BiddingForm() {
             message.error('Your budget is insufficient to place a bid.');
             return;
         }
+
         if (lastBidderId === accountId) {
             message.error('Please wait for another user to place a bid.');
             return;
@@ -326,9 +327,14 @@ function BiddingForm() {
                             value={bidAmount}
                             onChange={(e) => setBidAmount(e.target.value)}
                         />
-                        <button
+                        {/* <button
                             onClick={budget > highestPrice ? handleBidSubmit : handleDisabledClick}
                             disabled={budget <= highestPrice}
+                        >
+                            Place Bid
+                        </button> */}
+                        <button
+                            onClick={handleBidSubmit}
                         >
                             Place Bid
                         </button>
