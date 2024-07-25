@@ -35,10 +35,10 @@ function ViewJewelryDetails() {
   };
 
   const materials = {
-    'Gold' : 'Gold',
-    'Silver' : 'Silver',
-    'GoldDiamond' : 'Gold, Diamond'
-  }
+    'Gold': 'Gold',
+    'Silver': 'Silver',
+    'GoldDiamond': 'Gold, Diamond'
+  };
 
   const goldAges = {
     '24K': 'Gold24',
@@ -53,7 +53,7 @@ function ViewJewelryDetails() {
     'Bracelet': 'Bracelet',
     'Earrings': 'Earrings',
     'Pendant': 'Pendant',
-  }
+  };
 
   const clarity = {
     'FL': 'FL',
@@ -80,8 +80,6 @@ function ViewJewelryDetails() {
         } else {
           response = await api.get(`/api/JewelrySilver/GetById/${id}`);
         }
-
-        console.log('API response:', response.data);
 
         setJewelryDetails(prevState => ({
           ...prevState,
@@ -146,7 +144,7 @@ function ViewJewelryDetails() {
         return;
       }
     } else if (jewelryDetails.materials === 'GoldDiamond') {
-      formData.append('Clarity', jewelryDetails.clarity);
+      formData.append('Clarity', clarity[jewelryDetails.clarity]);
       formData.append('Carat', jewelryDetails.carat);
       formData.append('GoldAge', jewelryDetails.goldAge);
     }

@@ -196,28 +196,30 @@ function BiddingForm() {
             });
     
             if (winnerAccountId) {
-                // Fetch the join auction records
-                const joinAuctionResponse = await api.get('/api/JoinAuction');
-                const joinAuctionRecords = joinAuctionResponse.data.$values;
-    
-                // Find the latest join record for the winner
-                const latestJoinRecord = joinAuctionRecords
-                    .filter(record => record.accountId === winnerAccountId)
-                    .reduce((latest, current) => {
-                        return new Date(current.joindate) > new Date(latest.joindate) ? current : latest;
-                    });
-    
-                const auctionResultData = {
-                    joinauctionId: latestJoinRecord ? latestJoinRecord.id : null,
-                    date: new Date().toISOString(),
-                    status: 'Win',
-                    price: highestBidAmount,
-                    accountId: winnerAccountId,
-                };
-    
-                console.log(auctionResultData);
-    
                 try {
+                    // Fetch the join auction records
+                    const joinAuctionResponse = await api.get('/api/JoinAuction');
+                    console.log('Join auction response:', joinAuctionResponse);
+    
+                    const joinAuctionRecords = joinAuctionResponse.data.$values;
+                    console.log('Join auction records:', joinAuctionRecords);
+    
+                    // Find the latest join record for the winner
+                    const filteredRecords = joinAuctionRecords.filter(record => record.accountId === winnerAccountId);
+                    const latestJoinRecord = filteredRecords.length > 0 ? filteredRecords.reduce((latest, current) => {
+                        return new Date(current.joindate) > new Date(latest.joindate) ? current : latest;
+                    }) : null;
+    
+                    const auctionResultData = {
+                        joinauctionId: latestJoinRecord ? latestJoinRecord.id : 0,
+                        status: 'Win',
+                        price: highestBidAmount,
+                        accountId: winnerAccountId,
+                    };
+    
+                    console.log('Auction result data:', auctionResultData);
+    
+                    // Submit auction result
                     await api.post('/api/AuctionResults/CreateAuctionResult', auctionResultData);
                     message.success(`User ${winnerAccountId} with a bid of $${highestBidAmount} is the winner.`);
                     message.success('Auction results submitted successfully.');
@@ -234,7 +236,6 @@ function BiddingForm() {
     };
     
     
-
     const handleBidSubmit = async () => {
         if (!bidAmount || isNaN(bidAmount) || bidAmount <= 0) {
             message.error('Please enter a valid bid amount.');
@@ -279,11 +280,9 @@ function BiddingForm() {
         }
     };
 
-
-
-    const handleDisabledClick = () => {
-        message.error('Your budget is insufficient to place a bid.');
-    };
+    // const handleDisabledClick = () => {
+    //     message.error('Your budget is insufficient to place a bid.');
+    // };
 
     return (
         <div className="bidding-form">
