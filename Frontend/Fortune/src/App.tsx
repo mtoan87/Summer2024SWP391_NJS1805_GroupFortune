@@ -66,7 +66,7 @@ const App: React.FC = () => {
                   <Route path="/mydashboard" element={<MemeberDashBoardPG />} />
                   <Route path="/auction/:id" element={<MemberAucDetailsPg />} />
                   <Route path="/mybidding/:id" element={<BiddingPG />} />
-                  <Route path="/jewelry/:id" element={<MemberJewDetailsPg />} />
+                  <Route path="/jewelry/:id/:material" element={<MemberJewDetailsPg />} />
                   <Route path='/userBid' element={<MemberMyBidsPg />} />
                   <Route path='/userAuc' element={<MemberAuctionPg />} />
                   <Route path='/userJewel/upload' element={<JewelryUploadPg />} />

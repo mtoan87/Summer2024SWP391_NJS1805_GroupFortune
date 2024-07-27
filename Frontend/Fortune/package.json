@@ -17,6 +17,8 @@
     "@react-oauth/google": "^0.12.1",
     "antd": "^5.19.1",
     "axios": "^1.7.2",
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
     "bootstrap": "^5.3.3",
     "cors": "^2.8.5",
     "mdb-react-ui-kit": "^8.0.0",
