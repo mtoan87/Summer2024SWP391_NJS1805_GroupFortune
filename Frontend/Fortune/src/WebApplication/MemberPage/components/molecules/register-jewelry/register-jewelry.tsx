@@ -17,7 +17,7 @@ function RegisterJewelryForAuction() {
     accountId: accountId,
     jewelryGoldId: material === 'Gold' ? jewelryId : null,
     jewelrySilverId: material === 'Silver' ? jewelryId : null,
-    jewelryGoldDiaId: material === 'GoldDiamond' ? jewelryId : null,
+    jewelryGolddiaId: material === 'GoldDiamond' ? jewelryId : null,
     date: '',
     startTime: '',
     endTime: '',
@@ -112,7 +112,7 @@ function RegisterJewelryForAuction() {
       } else if (material === 'Silver') {
         requestData.jewelrySilverId = formData.jewelrySilverId;
       } else if (material === 'GoldDiamond') {
-        requestData.jewelryGoldDiaId = formData.jewelryGoldDiaId;
+        requestData.jewelryGolddiaId = formData.jewelryGolddiaId;
       } else {
         console.error('Unsupported jewelry material type');
         return;

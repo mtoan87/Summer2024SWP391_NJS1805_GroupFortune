@@ -50,24 +50,6 @@ const category = {
   'Bracelet': 'Bracelet',
   'Earrings': 'Earrings',
   'Pendant': 'Pendant',
-  'Brooch': 'Brooch',
-  'Anklet': 'Anklet',
-  'Charm': 'Charm',
-  'Clufflinks': 'Cufflinks',
-  'Tiara': 'Tiara',
-  'Diadem': 'Diadem',
-  'Choker': 'Choker',
-  'Bangle': 'Bangle',
-  'Hairpin': 'Hairpin',
-  'Barrette': 'Barrette',
-  'Locket': 'Locket',
-  'Signet Ring': 'SignetRing',
-  'Stud Earrings': 'StudEarrings',
-  'Hoop Earrings': 'HoopEarrings',
-  'Cameo': 'Cameo',
-  'Cluster Ring': 'ClusterRing',
-  'Cocktail Ring': 'CocktailRing',
-  'Cuff Bracelet': 'CuffBracelet'
 }
 
 const materials = {

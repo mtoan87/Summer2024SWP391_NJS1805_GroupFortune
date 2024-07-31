@@ -51,8 +51,8 @@ function MemberJewelry() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const displayedItems = jewelry.slice(startIndex, startIndex + itemsPerPage);
 
-  const handleJewelryClick = (jewelryId) => {
-    navigate(`/jewelry/${jewelryId}`);
+  const handleJewelryClick = (jewelryId,type) => {
+    navigate(`/jewelry/${jewelryId}/${type}`);
   };
 
   return (
@@ -71,7 +71,10 @@ function MemberJewelry() {
             <div
               key={key}
               className="member-jewelry-item"
-              onClick={() => handleJewelryClick(item.jewelrySilverId || item.jewelryGoldId || item.jewelryGolddiaId)}
+              onClick={() =>handleJewelryClick(
+                item.jewelrySilverId || item.jewelryGoldId || item.jewelryGolddiaId,
+                item.jewelrySilverId ? 'silver' : item.jewelryGoldId ? 'gold' : 'goldDia'
+              )}
             >
               <img
                 src={`https://localhost:44361/${item.jewelryImg}`}
