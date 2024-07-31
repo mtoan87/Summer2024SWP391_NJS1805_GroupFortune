@@ -8,7 +8,7 @@ import ProfileAdmin from '../Admin-Profile/AdminProfile';
 import TableAuctionAdmin from '../Auction/AuctionAdmin';
 
 function Admins() {
-  const [currentPage, setCurrentPage] = useState('dashboard'); 
+  const [currentPage, setCurrentPage] = useState('overall'); 
 
   const handleMenuClick = (key) => {
     setCurrentPage(key); 
@@ -19,7 +19,7 @@ function Admins() {
       <div className="body-page">
         <Sidebar onMenuClick={handleMenuClick} /> 
         <div className="main-content">
-          {currentPage === 'dashboard' && <MainContent />}
+          {currentPage === 'overall' && <MainContent />}
           {currentPage === 'users' && <TableUser />}
           {currentPage === 'about' && <ProfileAdmin />}
           {currentPage === 'auctions' && <TableAuctionAdmin />}

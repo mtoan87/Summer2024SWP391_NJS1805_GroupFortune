@@ -138,3 +138,14 @@
   }
 }
 
+.custom-tabs {
+  .ant-tabs-nav {
+    width: 100%;
+  }
+
+  .ant-tabs-tab {
+    flex: 1;
+    width: 278px;
+    text-align: center;
+  }
+}

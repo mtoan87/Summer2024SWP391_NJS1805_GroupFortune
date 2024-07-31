@@ -19,9 +19,12 @@ const Sidebar: React.FC<{ onMenuClick: (e: any) => void }> = ({ onMenuClick }) =
   };
 
   const items: MenuProps['items'] = [
-    { key: 'dashboard', icon: <DashboardOutlined />, label: 'Dashboard' },
-    { key: 'users', icon: <UsergroupAddOutlined />, label: 'Users' },
-    { key: 'auctions', icon: <ProductOutlined />, label: 'Auctions' },
+    { key: 'dashboard', icon: <DashboardOutlined />, label: 'Dashboard',
+         children: [
+      { key: 'overall', label: 'Overall', icon: <InfoCircleOutlined /> },
+      { key: 'auctions', icon: <ProductOutlined />, label: 'Auctions' },
+      { key: 'users', icon: <UsergroupAddOutlined />, label: 'Users' },
+    ],},
     {
       key: 'account',
       icon: <UserOutlined />,
