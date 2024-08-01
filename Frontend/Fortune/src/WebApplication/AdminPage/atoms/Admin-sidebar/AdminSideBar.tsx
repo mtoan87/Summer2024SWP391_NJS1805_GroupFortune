@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Menu } from 'antd';
-import { UserOutlined, LogoutOutlined, UsergroupAddOutlined, DashboardOutlined, InfoCircleOutlined, ProductOutlined, RubyOutlined } from '@ant-design/icons';
+import { UserOutlined, LogoutOutlined, UsergroupAddOutlined, DashboardOutlined, InfoCircleOutlined, ProductOutlined, RubyOutlined, FundOutlined, WalletOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import Sider from 'antd/es/layout/Sider';
 import './AdminSidebar.scss'; 
@@ -21,12 +21,12 @@ const Sidebar: React.FC<{ onMenuClick: (e: any) => void }> = ({ onMenuClick }) =
   const items: MenuProps['items'] = [
     { key: 'dashboard', icon: <DashboardOutlined />, label: 'Dashboard',
          children: [
-      { key: 'overall', label: 'Overall', icon: <InfoCircleOutlined /> },
+      { key: 'overall', label: 'Overall', icon: <FundOutlined /> },
       { key: 'auctions', icon: <ProductOutlined />, label: 'Auctions' },
       { key: 'users', icon: <UsergroupAddOutlined />, label: 'Users' },
       { key: 'biddings', icon: <UsergroupAddOutlined />, label: 'Bidding' },
-      { key: 'payments', icon: <UsergroupAddOutlined />, label: 'Payments' },
-      { key: 'transactions', icon: <UsergroupAddOutlined />, label: 'Transactions' },
+      { key: 'payments', icon: <WalletOutlined />, label: 'Payments' },
+      { key: 'transactions', icon: <WalletOutlined />, label: 'Transactions' },
     ],},
     {
       key: 'account',

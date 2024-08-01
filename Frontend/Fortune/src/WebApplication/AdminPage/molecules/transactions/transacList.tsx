@@ -2,55 +2,52 @@ import React, { useEffect, useState } from 'react';
 import { Table, Button, Input } from 'antd';
 import { ReloadOutlined } from '@ant-design/icons';
 import api from '../../../../config/axios';
-import './tableBiddings.scss'; // Import SCSS file
+import './tableTransact.scss'; // Import SCSS file
 
 const { Search } = Input;
 
-const TableBiddings = () => {
-  const [bidData, setBidData] = useState([]);
+const TableTransact = () => {
+  const [transactionData, setTransactionData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
-    fetchBidData();
+    fetchTransactionData();
   }, []);
 
   useEffect(() => {
+    // Update filteredData when transactionData or searchText changes
     filterData();
-  }, [bidData, searchText]);
+  }, [transactionData, searchText]);
 
-  const fetchBidData = async () => {
+  const fetchTransactionData = async () => {
     try {
-      const response = await api.get('api/Bid/GetAllBids');
+      const response = await api.get('api/Transaction/GetAllTransactions');
       console.log('Fetched data:', response.data);
-      const formattedData = response.data.$values.map(bid => {
+      const formattedData = response.data.$values.map(transaction => {
         // Split datetime into date and time
-        const [date, time] = bid.datetime.split('T');
+        const [date, time] = transaction.dateTime.split('T');
         return {
-          bidId: bid.bidId,
-          auctionId: bid.auctionId,
-          minprice: bid.minprice,
-          maxprice: bid.maxprice,
+          transactionId: transaction.transactionId,
+          accountwalletId: transaction.accountwalletId,
+          amount: transaction.amount,
           date,
-          time,
+          time
         };
       });
-      setBidData(formattedData);
+      setTransactionData(formattedData);
     } catch (error) {
-      console.error('Error fetching bid data:', error);
+      console.error('Error fetching transaction data:', error);
     }
   };
 
   const filterData = () => {
     const lowerCaseSearchText = searchText.toLowerCase();
-    const filtered = bidData.filter(bid => {
+    const filtered = transactionData.filter(transaction => {
       return (
-        bid.bidId.toString().includes(lowerCaseSearchText) ||
-        bid.auctionId.toString().includes(lowerCaseSearchText) ||
-        bid.minprice.toString().includes(lowerCaseSearchText) ||
-        bid.maxprice.toString().includes(lowerCaseSearchText) ||
-        bid.date.includes(lowerCaseSearchText) ||
-        bid.time.includes(lowerCaseSearchText)
+        transaction.transactionId.toString().includes(lowerCaseSearchText) ||
+        transaction.accountwalletId.toString().includes(lowerCaseSearchText) ||
+        transaction.amount.toString().includes(lowerCaseSearchText) 
       );
     });
     setFilteredData(filtered);
@@ -61,38 +58,32 @@ const TableBiddings = () => {
   };
 
   const handleReload = () => {
-    fetchBidData();
+    fetchTransactionData();
     setSearchText(''); // Reset search text
   };
 
   const columns = [
     {
-      title: 'Bid ID',
-      dataIndex: 'bidId',
-      key: 'bidId',
+      title: 'Transaction ID',
+      dataIndex: 'transactionId',
+      key: 'transactionId',
       align: 'center',
       className: 'table-column',
     },
     {
-      title: 'Auction ID',
-      dataIndex: 'auctionId',
-      key: 'auctionId',
+      title: 'Account Wallet ID',
+      dataIndex: 'accountwalletId',
+      key: 'accountwalletId',
       align: 'center',
       className: 'table-column',
     },
     {
-      title: 'Min Price',
-      dataIndex: 'minprice',
-      key: 'minprice',
+      title: 'Amount',
+      dataIndex: 'amount',
+      key: 'amount',
       align: 'center',
       className: 'table-column',
-    },
-    {
-      title: 'Max Price',
-      dataIndex: 'maxprice',
-      key: 'maxprice',
-      align: 'center',
-      className: 'table-column',
+      render: (text) => `${text}$`,
     },
     {
       title: 'Date',
@@ -113,10 +104,10 @@ const TableBiddings = () => {
   return (
     <>
       <div className="table-container">
-        <h1>Bid Data</h1>
+        <h1>Transaction Data</h1>
         <Button onClick={handleReload} className="reload" icon={<ReloadOutlined />} />
         <Search
-          placeholder="Search bids..."
+          placeholder="Search transactions..."
           onSearch={handleSearch}
           style={{ marginBottom: 10 }}
           enterButton
@@ -124,7 +115,7 @@ const TableBiddings = () => {
         <Table
           columns={columns}
           dataSource={filteredData}
-          rowKey="bidId"
+          rowKey="transactionId"
           pagination={{ pageSize: 15 }}
         />
       </div>
@@ -132,4 +123,4 @@ const TableBiddings = () => {
   );
 };
 
-export default TableBiddings;
+export default TableTransact;

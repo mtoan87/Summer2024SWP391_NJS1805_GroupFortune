@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Space, Typography, Button, Input } from 'antd';
-import { UserOutlined, ReloadOutlined } from '@ant-design/icons';
+import { Table, Typography, Button, Input } from 'antd';
+import { ReloadOutlined } from '@ant-design/icons';
 import api from '../../../../config/axios';
 import './TableAuctionAdmin.scss'; // Import SCSS file
 
@@ -35,7 +35,6 @@ const TableAuctionAdmin = () => {
       }));
       console.log(formattedData);
       setAuctionData(formattedData);
-      
     } catch (error) {
       console.error('Error fetching auction data:', error);
     }
@@ -85,7 +84,6 @@ const TableAuctionAdmin = () => {
     },
     {
       title: 'Date',
-      dataIndex: 'date',
       key: 'date',
       align: 'center',
       className: 'table-column',
@@ -93,7 +91,6 @@ const TableAuctionAdmin = () => {
     },
     {
       title: 'Time',
-      dataIndex: 'time',
       key: 'time',
       align: 'center',
       className: 'table-column',
@@ -118,6 +115,7 @@ const TableAuctionAdmin = () => {
           onSearch={handleSearch}
           style={{ marginBottom: 10 }}
           className="search-bar"
+          enterButton
         />
         <Table
           columns={columns}
