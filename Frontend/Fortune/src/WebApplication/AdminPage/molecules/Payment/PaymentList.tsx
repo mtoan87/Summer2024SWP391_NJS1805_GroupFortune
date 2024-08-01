@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Table, Button, Input } from 'antd';
-import { ReloadOutlined } from '@ant-design/icons';
+import React, { useEffect, useState, useRef } from 'react';
+import { Table, Input, Form, Popconfirm, message } from 'antd';
+import { ReloadOutlined, DeleteOutlined } from '@ant-design/icons';
 import api from '../../../../config/axios';
 import './tablePayments.scss'; // Import SCSS file
 
@@ -16,7 +16,6 @@ const TablePayment = () => {
   }, []);
 
   useEffect(() => {
-    // Update filtered data whenever payment data or search text changes
     filterData();
   }, [paymentData, searchText]);
 
@@ -24,22 +23,17 @@ const TablePayment = () => {
     try {
       const response = await api.get('api/Payment/GetAllPayments');
       console.log('Fetched data:', response.data);
-      const formattedData = response.data.$values.map(payment => {
-        // Split datetime into date and time
-        const [date, time] = payment.date.split('T');
-        return {
-          paymentId: payment.paymentId,
-          accountId: payment.accountId,
-          auctionResultId: payment.auctionResultId,
-          status: payment.status,
-          paymentmethod: payment.paymentmethod,
-          date,
-          time,
-          price: payment.price,
-          totalprice: payment.totalprice,
-          fee: payment.fee
-        };
-      });
+      const formattedData = response.data.$values.map(payment => ({
+        paymentId: payment.paymentId,
+        accountId: payment.accountId,
+        auctionResultId: payment.auctionResultId,
+        status: payment.status,
+        paymentmethod: payment.paymentmethod,
+        date: payment.date, // Maintain the original date format
+        price: payment.price,
+        totalprice: payment.totalprice,
+        fee: payment.fee
+      }));
       setPaymentData(formattedData);
     } catch (error) {
       console.error('Error fetching payment data:', error);
@@ -56,7 +50,6 @@ const TablePayment = () => {
         payment.status.toLowerCase().includes(lowerCaseSearchText) ||
         payment.paymentmethod.toLowerCase().includes(lowerCaseSearchText) ||
         payment.date.includes(lowerCaseSearchText) ||
-        payment.time.includes(lowerCaseSearchText) ||
         payment.price.toString().includes(lowerCaseSearchText) ||
         payment.totalprice.toString().includes(lowerCaseSearchText) ||
         payment.fee.toString().includes(lowerCaseSearchText)
@@ -71,7 +64,31 @@ const TablePayment = () => {
 
   const handleReload = () => {
     fetchPaymentData();
-    setSearchText(''); // Reset search text
+    setSearchText('');
+  };
+
+  const handleSave = async (row) => {
+    try {
+      await api.put(`api/Payment/UpdatePayment/${row.paymentId}`, row);
+      fetchPaymentData(); // Refresh data after update
+    } catch (error) {
+      console.error('Error updating payment:', error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await api.delete(`api/Payment/DeletePayment?id=${id}`);
+      message.success('Payment deleted successfully');
+      fetchPaymentData(); // Refresh data after delete
+    } catch (error) {
+      console.error('Error deleting payment:', error);
+      message.error('Failed to delete payment');
+    }
+  };
+
+  const editable = (column) => {
+    return column !== 'paymentId' && column !== 'accountId' && column !== 'auctionResultId' && column !== 'action';
   };
 
   const columns = [
@@ -102,6 +119,7 @@ const TablePayment = () => {
       key: 'paymentmethod',
       align: 'center',
       className: 'table-column',
+      editable: editable('paymentmethod'),
     },
     {
       title: 'Date',
@@ -109,13 +127,7 @@ const TablePayment = () => {
       key: 'date',
       align: 'center',
       className: 'table-column',
-    },
-    {
-      title: 'Time',
-      dataIndex: 'time',
-      key: 'time',
-      align: 'center',
-      className: 'table-column',
+      editable: editable('date'),
     },
     {
       title: 'Price',
@@ -123,6 +135,7 @@ const TablePayment = () => {
       key: 'price',
       align: 'center',
       className: 'table-column',
+      editable: editable('price'),
       render: (text) => `${text}$`,
     },
     {
@@ -131,6 +144,7 @@ const TablePayment = () => {
       key: 'totalprice',
       align: 'center',
       className: 'table-column',
+      editable: editable('totalprice'),
       render: (text) => `${text}$`,
     },
     {
@@ -139,6 +153,7 @@ const TablePayment = () => {
       key: 'fee',
       align: 'center',
       className: 'table-column',
+      editable: editable('fee'),
       render: (text) => `${text}$`,
     },
     {
@@ -147,43 +162,36 @@ const TablePayment = () => {
       key: 'status',
       align: 'center',
       className: 'table-column',
-      render: (text) => {
-        let backgroundColor = 'transparent'; // Default background
-        let color = 'black'; // Default text color
-  
-        if (text === 'Successful') {
-          backgroundColor = 'green';
-          color = 'white'; // White text for better contrast
-        } else if (text === 'Failed') {
-          backgroundColor = 'red';
-          color = 'white'; // White text for better contrast
-        }
-  
-        return (
-          <span
-            style={{
-              display: 'inline-block',
-              padding: '4px 8px',
-              borderRadius: '4px',
-              backgroundColor,
-              color,
-              textAlign: 'center', // Center-align text
-              width: '100%', // Make sure text is centered in the box
-              boxSizing: 'border-box' // Ensure padding is included in width
-            }}
-          >
-            {text}
-          </span>
-        );
-      },
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      dataIndex: 'action',
+      align: 'center',
+      render: (_, record) =>
+        paymentData.length >= 1 ? (
+          <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.paymentId)}>
+            <DeleteOutlined style={{ color: 'red', cursor: 'pointer' }} />
+          </Popconfirm>
+        ) : null,
     },
   ];
+
+  const mergedColumns = columns.map(col => ({
+    ...col,
+    onCell: record => ({
+      record,
+      editable: editable(col.dataIndex),
+      title: col.title,
+      handleSave: handleSave,
+    }),
+  }));
 
   return (
     <>
       <div className="table-container">
         <h1>Payment Data</h1>
-        <Button onClick={handleReload} className="reload" icon={<ReloadOutlined />} />
+        <ReloadOutlined onClick={handleReload} className="reload" style={{ fontSize: '20px', marginBottom: '10px', cursor: 'pointer' }} />
         <Search
           placeholder="Search payments..."
           onSearch={handleSearch}
@@ -191,13 +199,74 @@ const TablePayment = () => {
           enterButton
         />
         <Table
-          columns={columns}
+          components={{
+            body: {
+              cell: EditableCell,
+            },
+          }}
+          columns={mergedColumns}
           dataSource={filteredData}
           rowKey="paymentId"
           pagination={{ pageSize: 15 }}
         />
       </div>
     </>
+  );
+};
+
+const EditableCell = ({
+  title,
+  editable,
+  children,
+  record,
+  handleSave,
+  ...restProps
+}) => {
+  const [editing, setEditing] = useState(false);
+  const [form] = Form.useForm();
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (editing) {
+      inputRef.current.focus();
+    }
+  }, [editing]);
+
+  const toggleEdit = () => {
+    setEditing(!editing);
+    form.setFieldsValue({ [title]: record[title] });
+  };
+
+  const save = async () => {
+    try {
+      const values = await form.validateFields();
+      toggleEdit();
+      handleSave({ ...record, ...values });
+    } catch (errInfo) {
+      console.log('Save failed:', errInfo);
+    }
+  };
+
+  return (
+    <td {...restProps}>
+      {editable ? (
+        editing ? (
+          <Form form={form} component={false}>
+            <Form.Item
+              name={title}
+              style={{ margin: 0 }}
+              initialValue={record[title]}
+            >
+              <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+            </Form.Item>
+          </Form>
+        ) : (
+          <div onClick={toggleEdit}>{children}</div>
+        )
+      ) : (
+        children
+      )}
+    </td>
   );
 };
 

@@ -6,7 +6,7 @@ import moment from 'moment';
 import api from '../../../../config/axios';
 import './maincontent.scss';
 const { Option } = Select;
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
+const COLORS = ['#8884d8', '#82ca9d', '#FFBB28'];
 interface DataType {
   key: string;
   time: string;
@@ -703,7 +703,7 @@ const MainContent: React.FC = () => {
               rowKey="key"
             />
           </Tabs.TabPane>
-          <Tabs.TabPane tab="Revenue" key="4">
+          <Tabs.TabPane tab="Tasks" key="4">
           <Table
               columns={columns}
               dataSource={tableData}
