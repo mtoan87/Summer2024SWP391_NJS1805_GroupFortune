@@ -79,7 +79,7 @@ function MemberBidsRecord() {
       setIsModalVisible(false);
     } catch (error) {
       console.error('Error processing payment:', error);
-      message.error('Failed to process payment. Please try again.');
+      message.error('This payment has been paid');
     }
   };
 

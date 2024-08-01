@@ -5,7 +5,7 @@ import logo from '../../../../../../src/assets/img/logo2.png';
 import { Link as ScrollLink } from 'react-scroll';
 import { FaRegUser } from "react-icons/fa";
 import { Menu, Dropdown, Button } from 'antd';
-import { DownOutlined, HomeOutlined, AppstoreOutlined, ShoppingOutlined, DollarOutlined, LogoutOutlined, FileTextOutlined, HistoryOutlined, BankOutlined } from '@ant-design/icons';
+import { DownOutlined, HomeOutlined, AppstoreOutlined, ShoppingOutlined, DollarOutlined, LogoutOutlined, FileTextOutlined, HistoryOutlined, BankOutlined, SettingOutlined } from '@ant-design/icons';
 
 const MemberHeader: React.FC = () => {
     const [isHovered, setIsHovered] = useState(false);
@@ -55,13 +55,13 @@ const MemberHeader: React.FC = () => {
             onClick: () => handleNavigate("/userTransaction")
         },
         // {
-        //     key: "5",
+        //     key: "6",
         //     label: "My DashBoard",
         //     icon: <SettingOutlined />,
         //     onClick: () => handleNavigate("/mydashboard")
         // },
         {
-            key: "6",
+            key: "7",
             label: "Logout",
             icon: <LogoutOutlined />,
             onClick: handleLogout

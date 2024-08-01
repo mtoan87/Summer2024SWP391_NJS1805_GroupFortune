@@ -1,10 +1,10 @@
-import { useEffect, useState, useCallback } from 'react';
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
-import './auctions-details.scss';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import api from '../../../../../config/axios';
-import { message, Modal } from 'antd';
+import './staff-auction-details.scss'
+import { useCallback, useEffect, useState } from 'react';
+import { message } from 'antd';
 
-function AuctionDetails() {
+function StaffAuctionDetails() {
     const { id } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
@@ -12,21 +12,12 @@ function AuctionDetails() {
     const [auction, setAuction] = useState(null);
     const [jewelryDetails, setJewelryDetails] = useState(null);
     const [attendeeCount, setAttendeeCount] = useState(0);
-    const [accountWallet, setAccountWallet] = useState(null);
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    const [isAuctionOpen, setIsAuctionOpen] = useState(false); // State to track if auction is open for joining
-    const [isAuctionEnded, setIsAuctionEnded] = useState(false); // State to track if auction has ended
+    const [isAuctionOpen, setIsAuctionOpen] = useState(false);
+    const [isAuctionEnded, setIsAuctionEnded] = useState(false);
 
     const storedUser = sessionStorage.getItem("loginedUser");
     const user = storedUser ? JSON.parse(storedUser) : null;
     const accountId = user ? user.accountId : null;
-
-    const currentUrl = window.location.href;
-    const parsedUrl = new URL(currentUrl);
-    const pathName = parsedUrl.pathname;
-    const parts = pathName.split('/');
-    const endpoint = parts[1];
-    const UrlID = parts[2];
 
     // Fetch auction details
     const fetchAuctionDetails = useCallback(async () => {
@@ -51,7 +42,6 @@ function AuctionDetails() {
         }
     }, [id]);
 
-    // Fetch attendee count
     const fetchAttendeeCount = useCallback(async () => {
         try {
             const response = await api.get(`api/Auctions/${id}/account-count`);
@@ -62,25 +52,6 @@ function AuctionDetails() {
         }
     }, [id]);
 
-    // Fetch account wallet
-    const fetchAccountWallet = useCallback(async () => {
-        if (!user) return;
-        try {
-            const response = await api.get('AccountWallet/GetAccountWallet');
-            console.log('Account Wallet:', response.data);
-            const wallets = response.data.$values;
-            const userWallet = wallets.find(wallet => wallet.accountId === accountId);
-            if (!userWallet) {
-                setIsModalVisible(true);
-            } else {
-                setAccountWallet(userWallet);
-            }
-        } catch (err) {
-            console.error('Error fetching account wallet:', err);
-        }
-    }, [accountId, user]);
-
-    // Fetch auction details and attendee count on component mount
     useEffect(() => {
         fetchAuctionDetails();
         fetchAttendeeCount();
@@ -118,56 +89,11 @@ function AuctionDetails() {
 
     // Handle join auction
     const handleJoinAuction = async () => {
-        if (!accountWallet) {
-            await fetchAccountWallet();
-        }
         if (!isAuctionOpen) {
             message.error('Auction has not started yet. You cannot join.');
             return;
         }
-        if (auction && auction.accountId === accountId) {
-            message.error('You cannot join your own auction.');
-            return;
-        }
-        if (auction && auction.auctionId) {
-            try {
-                const bidResponse = await api.get(`api/Bid/GetBidByAuctionId/${auction.auctionId}`);
-                console.log('Bid Response:', bidResponse.data);
-                const bidValues = bidResponse.data.$values;
-                if (bidValues && bidValues.length > 0) {
-                    const bidId = bidValues[0].bidId;
-
-                    const joinAuctionData = {
-                        accountId: accountId,
-                        auctionId: auction.auctionId,
-                        bidId: bidId,
-                    };
-
-                    const response = await api.post('api/JoinAuction/CreateJoinAuction', joinAuctionData);
-                    console.log('Join Auction Response:', response.data);
-                    message.success('Successfully joined the auction');
-
-                    setTimeout(() => {
-                        navigate(`/mybidding/${id}`);
-                    }, 1000);
-                } else {
-                    message.error('No bid data found for this auction');
-                }
-            } catch (err) {
-                console.error('Error joining auction:', err);
-                message.error('Failed to join the auction');
-            }
-        }
-    };
-
-    // Handle modal actions
-    const handleModalOk = () => {
-        setIsModalVisible(false);
-        navigate(`/register-wallet/${endpoint}/${UrlID}`);
-    };
-
-    const handleModalCancel = () => {
-        setIsModalVisible(false);
+        navigate(`/mybidding/${id}`);
     };
 
     if (!auction || !jewelryDetails) {
@@ -222,34 +148,15 @@ function AuctionDetails() {
                         </div>
                     ))}
 
+                    <p><strong>Date:</strong> {new Date(auction.starttime).toLocaleDateString()}</p>
                     <p><strong>Start Time:</strong> {new Date(auction.starttime).toLocaleString('en-US', { hour: '2-digit', minute: '2-digit' })}</p>
                     <p><strong>End Time:</strong> {new Date(auction.endtime).toLocaleString('en-US', { hour: '2-digit', minute: '2-digit' })}</p>
                     <p><strong>Number of Attendees:</strong> {attendeeCount}</p>
-
-                    {accountWallet && (
-                        <div className="account-wallet">
-                            <h2>Account Wallet</h2>
-                            <p><strong>Bank Name:</strong> {accountWallet.bankName}</p>
-                            <p><strong>Budget:</strong> ${accountWallet.budget}</p>
-                        </div>
-                    )}
-
-                    <button className="member-join-auction-button" onClick={handleJoinAuction} disabled={!isAuctionOpen || isAuctionEnded}>
+                    <button className="staff-join-auction-button" onClick={handleJoinAuction} disabled={!isAuctionOpen || isAuctionEnded}>
                         {isAuctionEnded ? 'Auction Ended' : (isAuctionOpen ? 'Join Auction' : 'Auction Not Open')}
                     </button>
                 </div>
             </div>
-
-            <Modal
-                title="No Wallet Found"
-                visible={isModalVisible}
-                onOk={handleModalOk}
-                onCancel={handleModalCancel}
-                cancelText="No"
-                okText="Yes"
-            >
-                <p>No wallet found for your account. Would you like to create one?</p>
-            </Modal>
         </div>
     );
 }
@@ -288,4 +195,5 @@ async function fetchJewelryDetails(item) {
     }
 }
 
-export default AuctionDetails;
+
+export default StaffAuctionDetails
