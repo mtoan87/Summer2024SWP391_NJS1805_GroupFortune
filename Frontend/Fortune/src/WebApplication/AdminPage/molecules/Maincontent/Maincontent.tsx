@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { Select, Row, Col, Card, Statistic, Progress, Table, Modal, Button, Form, Input, Switch, Tabs } from 'antd';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Cell,PieChart, Pie,LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { RubyOutlined, GoldOutlined, UsergroupAddOutlined, DollarOutlined, PlusOutlined, FileTextOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import api from '../../../../config/axios';
 import './maincontent.scss';
 const { Option } = Select;
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
 interface DataType {
   key: string;
   time: string;
   plan: string;
   description: string;
 }
-
+interface PieChartData {
+  name: string;
+  value: number;
+}
 interface ChartDataType {
   name: string;
   sales?: number;
@@ -242,10 +246,10 @@ const MainContent: React.FC = () => {
     },
   ]);
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  // const [isModalVisible, setIsModalVisible] = useState(false);
   const [revenue, setRevenue] = useState<number>(0);
-  const [monthlyData, setMonthlyData] = useState<ChartDataType[]>([]);
-  const [dailyData, setDailyData] = useState<ChartDataType[]>([]);
+  // const [monthlyData, setMonthlyData] = useState<ChartDataType[]>([]);
+  // const [dailyData, setDailyData] = useState<ChartDataType[]>([]);
   const [totalFees, setTotalFees] = useState<number>(0);
   const [amountOfJewelry, setAmountOfJewelry] = useState<number>(0);
   const [amountOfAuction, setAmountOfAuction] = useState<number>(0);
@@ -254,6 +258,7 @@ const MainContent: React.FC = () => {
   const [paymentData, setPaymentData] = useState<PaymentDataType[]>([]);
   const [transactionsData, setTransactionsData] = useState<TransactionDataType[]>([]);
   const [data, setData] = useState([]);
+  const [pieData, setPieData] = useState<PieChartData[]>([]);
   const [viewBy, setViewBy] = useState('month');
   const [availableYears, setAvailableYears] = useState([]);
   const [availableMonths, setAvailableMonths] = useState({});
@@ -261,11 +266,14 @@ const MainContent: React.FC = () => {
   const [selectedMonth, setSelectedMonth] = useState(null);
   const [form] = Form.useForm();
 
-  useEffect(() => {
-    fetchAvailableYearsAndMonths();
-  }, []);
+  // useEffect(() => {
+  //   fetchAvailableYearsAndMonths();
+  // }, []);
 
   useEffect(() => {
+ 
+
+    
     // Fetch total fees from the API
     api.get('api/Payment/total-fees')
       .then(response => {
@@ -394,13 +402,18 @@ const MainContent: React.FC = () => {
       .catch(error => {
         console.error('Error fetching account data:', error);
       });
-    
+    }, []);
+    useEffect(() => {
+      fetchAvailableYearsAndMonths();
+
       if (viewBy === 'month' && selectedYear !== null) {
         fetchMonthlyData(selectedYear);
       } else if (viewBy === 'year' && selectedYear !== null && selectedMonth !== null) {
         fetchDailyData(selectedYear, selectedMonth);
       }
 
+
+      
   }, [viewBy, selectedYear, selectedMonth]);
 
   const fetchAvailableYearsAndMonths = async () => {
@@ -469,31 +482,28 @@ const MainContent: React.FC = () => {
       console.error('Error fetching daily data:', error);
     }
   };
-
   
+  // const showModal = () => {
+  //   setIsModalVisible(true);
+  // };
 
-  
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
+  // const handleOk = () => {
+  //   form.validateFields().then(values => {
+  //     const newData: DataType = {
+  //       key: (tableData.length + 1).toString(),
+  //       time: moment().format('YYYY-MM-DD HH:mm:ss'),
+  //       plan: values.plan,
+  //       description: values.description,
+  //     };
+  //     setTableData([newData, ...tableData]);
+  //     setIsModalVisible(false);
+  //     form.resetFields();
+  //   });
+  // };
 
-  const handleOk = () => {
-    form.validateFields().then(values => {
-      const newData: DataType = {
-        key: (tableData.length + 1).toString(),
-        time: moment().format('YYYY-MM-DD HH:mm:ss'),
-        plan: values.plan,
-        description: values.description,
-      };
-      setTableData([newData, ...tableData]);
-      setIsModalVisible(false);
-      form.resetFields();
-    });
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
-  };
+  // const handleCancel = () => {
+  //   setIsModalVisible(false);
+  // };
 
   const formatNumber = (value: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -516,6 +526,52 @@ const MainContent: React.FC = () => {
   const handleMonthChange = (value) => {
     setSelectedMonth(value);
   };
+
+  const PieChartComponent: React.FC = () => {
+  const [data, setData] = useState<PieChartData[]>([]);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const totalPriceResponse = await api.get('api/Payment/total-price');
+        const totalPrice = totalPriceResponse.data;
+        const totalFeesResponse = await api.get('api/Payment/total-fees');
+        const totalFees = totalFeesResponse.data;
+
+        setData([
+          { name: 'Profit', value: totalFees },
+          { name: 'Sales', value: totalPrice },
+        ]);
+      } catch (error) {
+        console.error('Error fetching data', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+ 
+
+  return (
+    <PieChart width={400} height={400}>
+      <Tooltip />
+      <Legend />
+      <Pie
+        data={data}
+        dataKey="value"
+        nameKey="name"
+        outerRadius={150}
+        fill="#8884d8"
+        label
+      >
+        {data.map((entry, index) => (
+          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+        ))}
+      </Pie>
+    </PieChart>
+  );
+};
+
   return (
     <div className="main-content">
       <h1>ADMIN</h1>
@@ -570,9 +626,9 @@ const MainContent: React.FC = () => {
           <Card title="Profits Overview">
           <Row style={{ marginBottom: 20 }}>
         <Col>
-          <Select defaultValue="month" onChange={handleViewChange} style={{ width: 120, marginRight: 10 }}>
-            <Option value="month">Month</Option>
-            <Option value="year">Year</Option>
+          <Select defaultValue="Select View Type" onChange={handleViewChange} style={{ width: 120, marginRight: 10 }}>
+            <Option value="View by year">Month</Option>
+            <Option value="View by month">Year</Option>
           </Select>
         </Col>
         <Col>
@@ -618,13 +674,7 @@ const MainContent: React.FC = () => {
         </Col>
         <Col span={8}>
           <Card title="Performance">
-            <Progress type="circle" percent={75} /> 
-            <div style={{ marginTop: 24 }}>
-              <Progress type="circle" percent={50} status="exception" />
-            </div>
-            <div style={{ marginTop: 24 }}>
-            <Progress type="circle" percent={100} status="success" />
-            </div>
+          <PieChartComponent />
           </Card>
         </Col>
       </Row>
