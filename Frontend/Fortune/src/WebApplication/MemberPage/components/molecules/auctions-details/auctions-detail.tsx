@@ -147,9 +147,6 @@ function AuctionDetails() {
                     console.log('Join Auction Response:', response.data);
                     message.success('Successfully joined the auction');
 
-                    setTimeout(() => {
-                        navigate(`/mybidding/${id}`);
-                    }, 1000);
                 } else {
                     message.error('No bid data found for this auction');
                 }
@@ -212,6 +209,13 @@ function AuctionDetails() {
                             )}
                             {jewelry.materials.toLowerCase().includes('silver') && (
                                 <p><strong>Purity:</strong> {purity[jewelry.purity]}</p>
+                            )}
+                            {jewelry.materials.toLowerCase().includes('golddiamond') && (
+                                <>
+                                <p><strong>Gold Age:</strong> {goldAge[jewelry.goldAge]}</p>
+                                <p><strong>Clarity:</strong> {jewelry.clarity}</p>
+                                <p><strong>Carat:</strong> {jewelry.carat}</p>
+                                </>
                             )}
                         </div>
                     ))}

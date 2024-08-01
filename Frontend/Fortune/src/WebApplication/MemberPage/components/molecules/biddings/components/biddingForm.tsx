@@ -118,6 +118,19 @@ function BiddingForm() {
             })
             .build();
 
+        // const connection1 = new signalR.HubConnectionBuilder()
+        //     .configureLogging(signalR.LogLevel.Debug)
+        //     .withUrl("https://localhost:44361/auctionHub", {
+        //         skipNegotiation: true,
+        //         transport: signalR.HttpTransportType.WebSockets
+        //     })
+        //     .build();
+
+            // connection1.on("TimeRemaining", (time) => {
+            //     setRemainingTime(time);
+            //     message.info("Remaining time: " + time.toString());
+            // });
+
         connection.on("HighestPrice", (price) => {
             message.info(`Highest Price: ${price}`);
             setHighestPrice(price);

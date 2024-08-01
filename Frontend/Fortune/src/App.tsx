@@ -28,6 +28,7 @@ import MyWalletPg from './WebApplication/MemberPage/components/pages/member-my-w
 import UpdateWalletPg from './WebApplication/MemberPage/components/pages/member-update-wallet-pg/update-wallet-pg';
 import AdminPg from './WebApplication/AdminPage/page/AdminPg';
 import TableUser from './WebApplication/AdminPage/molecules/Users/TableUser';
+import MemberBidsRecordPg from './WebApplication/MemberPage/components/pages/member-bids-record-pg/member-bids-record-pag';
 
 const App: React.FC = () => {
   const { user, setUser } = useUser();
@@ -77,6 +78,7 @@ const App: React.FC = () => {
                   <Route path="/register-wallet/:page/:id" element={<MemberAccountWalletPg />} />
                   <Route path="/userWallet" element={<MyWalletPg />} />
                   <Route path="/update-wallet" element={<UpdateWalletPg />} />
+                  <Route path="/bids-record" element={<MemberBidsRecordPg />} />
                 </>
               )}
               {user?.role === 3 && (
