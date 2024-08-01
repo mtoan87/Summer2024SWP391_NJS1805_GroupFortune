@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Card, Statistic, Progress, Table, Modal, Button, Form, Input, Switch, Tabs } from 'antd';
+import { Select, Row, Col, Card, Statistic, Progress, Table, Modal, Button, Form, Input, Switch, Tabs } from 'antd';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { RubyOutlined, GoldOutlined, UsergroupAddOutlined, DollarOutlined, PlusOutlined, FileTextOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import api from '../../../../config/axios';
 import './maincontent.scss';
-
+const { Option } = Select;
 interface DataType {
   key: string;
   time: string;
@@ -15,8 +15,8 @@ interface DataType {
 
 interface ChartDataType {
   name: string;
-  totalPrice?: number;
-  totalFees?: number;
+  sales?: number;
+  profits?: number;
 }
 interface BiddingDataType {
   key: string;
@@ -86,6 +86,7 @@ const transactionsColumns = [
     title: 'Amount',
     dataIndex: 'amount',
     key: 'amount',
+    render: (text: string) => `${text}$`,
   },
   {
     title: 'Date',
@@ -113,11 +114,13 @@ const biddingColumns = [
     title: 'Min Price',
     dataIndex: 'minprice',
     key: 'minprice',
+    render: (text: string) => `${text}$`,
   },
   {
     title: 'Max Price',
     dataIndex: 'maxprice',
     key: 'maxprice',
+    render: (text: string) => `${text}$`,
   },
   {
     title: 'Date',
@@ -145,21 +148,25 @@ const paymentColumns = [
     title: 'Payment Method',
     dataIndex: 'paymentmethod',
     key: 'paymentmethod',
+    width: 100,
   },
   {
     title: 'Price',
     dataIndex: 'price',
     key: 'price',
+    render: (text: string) => `${text}$`,
   },
   {
     title: 'Total Price',
     dataIndex: 'totalprice',
     key: 'totalprice',
+    render: (text: string) => `${text}$`,
   },
   {
     title: 'Fee',
     dataIndex: 'fee',
     key: 'fee',
+    render: (text: string) => `${text}$`,
   },
   {
     title: 'Date',
@@ -246,8 +253,17 @@ const MainContent: React.FC = () => {
   const [biddingData, setBiddingData] = useState<BiddingDataType[]>([]);
   const [paymentData, setPaymentData] = useState<PaymentDataType[]>([]);
   const [transactionsData, setTransactionsData] = useState<TransactionDataType[]>([]);
-  const [isMonthlyView, setIsMonthlyView] = useState(true);
+  const [data, setData] = useState([]);
+  const [viewBy, setViewBy] = useState('month');
+  const [availableYears, setAvailableYears] = useState([]);
+  const [availableMonths, setAvailableMonths] = useState({});
+  const [selectedYear, setSelectedYear] = useState(null);
+  const [selectedMonth, setSelectedMonth] = useState(null);
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    fetchAvailableYearsAndMonths();
+  }, []);
 
   useEffect(() => {
     // Fetch total fees from the API
@@ -268,31 +284,7 @@ const MainContent: React.FC = () => {
         console.error('Error fetching total price:', error);
       });
 
-    // Fetch monthly statistics from the API
-    api.get('api/Payment/fees-statistics-by-month')
-      .then(response => {
-        const monthlyStats = response.data.$values.map((item: any) => ({
-          name: moment().month(item.month - 1).format('MMM YYYY'), // Format month and year
-          totalPrice: item.totalPrice,
-        }));
-        setMonthlyData(monthlyStats);
-      })
-      .catch(error => {
-        console.error('Error fetching monthly stats:', error);
-      });
-
-    // Fetch daily statistics from the API
-    api.get('api/Payment/fees-statistics-by-date')
-      .then(response => {
-        const dailyStats = response.data.$values.map((item: any) => ({
-          name: moment(item.date).format('YYYY-MM-DD'),
-          totalFees: item.totalFees,
-        }));
-        setDailyData(dailyStats);
-      })
-      .catch(error => {
-        console.error('Error fetching daily stats:', error);
-      });
+  
 
       api.get('api/Bid/GetAllBids')
       .then(response => {
@@ -382,11 +374,11 @@ const MainContent: React.FC = () => {
 
       api.get('api/Auctions/GetAllAuctions')
       .then(response => {
- 
+
         const auctions = response.data.$values || [];
   
         const totalAuctions = auctions.length;
-   
+  
         setAmountOfAuction(totalAuctions);
       })
       .catch(error => {
@@ -403,23 +395,84 @@ const MainContent: React.FC = () => {
         console.error('Error fetching account data:', error);
       });
     
-  }, []);
+      if (viewBy === 'month' && selectedYear !== null) {
+        fetchMonthlyData(selectedYear);
+      } else if (viewBy === 'year' && selectedYear !== null && selectedMonth !== null) {
+        fetchDailyData(selectedYear, selectedMonth);
+      }
 
-  
-  const combinedData = isMonthlyView
-    ? monthlyData
-    : dailyData;
+  }, [viewBy, selectedYear, selectedMonth]);
 
- 
-  const formatXAxis = (tickItem: string) => {
-    
-    if (tickItem.includes('-')) {
-      return moment(tickItem).format('YYYY-MM-DD'); // Return full date for daily data
-    } else {
-      return moment(tickItem, 'MMM YYYY').format('MMM YYYY'); // Return month and year for monthly data
+  const fetchAvailableYearsAndMonths = async () => {
+    try {
+      const [monthResponse, dateResponse] = await Promise.all([
+        api.get('api/Payment/fees-statistics-by-month'),
+        api.get('api/Payment/fees-statistics-by-date'),
+      ]);
+
+      const years = new Set();
+      const months = {};
+
+      monthResponse.data.$values.forEach(item => {
+        years.add(item.year);
+        if (!months[item.year]) {
+          months[item.year] = new Set();
+        }
+        months[item.year].add(item.month);
+      });
+
+      dateResponse.data.$values.forEach(item => {
+        const year = new Date(item.date).getFullYear();
+        const month = new Date(item.date).getMonth() + 1;
+        years.add(year);
+        if (!months[year]) {
+          months[year] = new Set();
+        }
+        months[year].add(month);
+      });
+
+      setAvailableYears(Array.from(years).sort((a, b) => b - a));
+      setAvailableMonths(months);
+    } catch (error) {
+      console.error('Error fetching available years and months:', error);
     }
   };
 
+  const fetchMonthlyData = async (year) => {
+    try {
+      const response = await api.get(`api/Payment/fees-statistics-by-month`);
+      const monthlyData = response.data.$values
+        .filter(item => item.year === year)
+        .map(item => ({
+          name: `${item.year}-${item.month}`,
+          profits: item.totalFees,
+          sales: item.totalPrice
+        }));
+      setData(monthlyData);
+    } catch (error) {
+      console.error('Error fetching monthly data:', error);
+    }
+  };
+
+  const fetchDailyData = async (year, month) => {
+    try {
+      const response = await api.get(`api/Payment/fees-statistics-by-date`);
+      const dailyData = response.data.$values
+        .filter(item => new Date(item.date).getFullYear() === year && new Date(item.date).getMonth() + 1 === month)
+        .map(item => ({
+          name: item.date.split('T')[0],
+          profits: item.totalFees,
+          sales: item.totalPrice
+        }));
+      setData(dailyData);
+    } catch (error) {
+      console.error('Error fetching daily data:', error);
+    }
+  };
+
+  
+
+  
   const showModal = () => {
     setIsModalVisible(true);
   };
@@ -448,7 +501,21 @@ const MainContent: React.FC = () => {
       maximumFractionDigits: 2
     }).format(value);
   };
+  const handleViewChange = (value) => {
+    setViewBy(value);
+    setSelectedYear(null);
+    setSelectedMonth(null);
+    setData([]);
+  };
 
+  const handleYearChange = (value) => {
+    setSelectedYear(value);
+    setSelectedMonth(null);
+  };
+
+  const handleMonthChange = (value) => {
+    setSelectedMonth(value);
+  };
   return (
     <div className="main-content">
       <h1>ADMIN</h1>
@@ -488,8 +555,8 @@ const MainContent: React.FC = () => {
         <Col span={6}>
           <Card>
             <Statistic
-              title="Revenue"
-              value={formatNumber(revenue)}
+              title="Profit"
+              value={formatNumber(totalFees)}
               precision={2}
               valueStyle={{ color: '#3f8600' }}
               prefix={<DollarOutlined />}
@@ -501,29 +568,52 @@ const MainContent: React.FC = () => {
       <Row gutter={16} style={{ marginTop: 16 }}>
         <Col span={16}>
           <Card title="Profits Overview">
-            <Switch
-              checked={isMonthlyView}
-              onChange={setIsMonthlyView}
-              checkedChildren="Month View"
-              unCheckedChildren="Date View"
-              style={{ marginBottom: 16 }}
-            />
-            <ResponsiveContainer width="100%" height={410}>
-              <LineChart
-                data={combinedData}
-                margin={{
-                  top: 5, right: 30, left: 20, bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" tickFormatter={formatXAxis} />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="totalPrice" stroke="#8884d8" dot={false} />
-                <Line type="monotone" dataKey="totalFees" stroke="#82ca9d" dot={false} />
-              </LineChart>
-            </ResponsiveContainer>
+          <Row style={{ marginBottom: 20 }}>
+        <Col>
+          <Select defaultValue="month" onChange={handleViewChange} style={{ width: 120, marginRight: 10 }}>
+            <Option value="month">Month</Option>
+            <Option value="year">Year</Option>
+          </Select>
+        </Col>
+        <Col>
+          <Select
+            placeholder="Select Year"
+            onChange={handleYearChange}
+            style={{ width: 120, marginRight: 10 }}
+            value={selectedYear}
+          >
+            {availableYears.map(year => (
+              <Option key={year} value={year}>{year}</Option>
+            ))}
+          </Select>
+        </Col>
+        {viewBy === 'year' && selectedYear !== null && (
+          <Col>
+            <Select
+              placeholder="Select Month"
+              onChange={handleMonthChange}
+              style={{ width: 120 }}
+              value={selectedMonth}
+              disabled={selectedYear === null}
+            >
+              {availableMonths[selectedYear] && Array.from(availableMonths[selectedYear]).map(month => (
+                <Option key={month} value={month}>{month}</Option>
+              ))}
+            </Select>
+          </Col>
+        )}
+      </Row>
+      <ResponsiveContainer width="100%" height={400}>
+        <LineChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Line type="monotone" dataKey="profits" stroke="#8884d8" activeDot={{ r: 8 }} />
+          <Line type="monotone" dataKey="sales" stroke="#82ca9d" />
+        </LineChart>
+      </ResponsiveContainer>
           </Card>
         </Col>
         <Col span={8}>
@@ -577,7 +667,7 @@ const MainContent: React.FC = () => {
       </Card>
 
 
-      <Row gutter={16} style={{ marginTop: 16 }}>
+      {/* <Row gutter={16} style={{ marginTop: 16 }}>
         <Col span={24}>
           <Card title="Tasks">
             <Table
@@ -625,10 +715,9 @@ const MainContent: React.FC = () => {
             <Input.TextArea />
           </Form.Item>
         </Form>
-      </Modal>
+      </Modal> */}
     </div>
   );
 };
 
 export default MainContent;
-
