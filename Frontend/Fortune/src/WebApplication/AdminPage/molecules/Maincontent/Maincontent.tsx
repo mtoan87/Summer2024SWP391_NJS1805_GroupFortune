@@ -266,12 +266,12 @@ const MainContent: React.FC = () => {
   const [selectedMonth, setSelectedMonth] = useState(null);
   const [form] = Form.useForm();
 
-  // useEffect(() => {
-  //   fetchAvailableYearsAndMonths();
-  // }, []);
+  useEffect(() => {
+    fetchAvailableYearsAndMonths();
+  }, []);
 
   useEffect(() => {
- 
+
 
     
     // Fetch total fees from the API
@@ -402,10 +402,7 @@ const MainContent: React.FC = () => {
       .catch(error => {
         console.error('Error fetching account data:', error);
       });
-    }, []);
-    useEffect(() => {
-      fetchAvailableYearsAndMonths();
-
+    
       if (viewBy === 'month' && selectedYear !== null) {
         fetchMonthlyData(selectedYear);
       } else if (viewBy === 'year' && selectedYear !== null && selectedMonth !== null) {
@@ -530,7 +527,6 @@ const MainContent: React.FC = () => {
   const PieChartComponent: React.FC = () => {
   const [data, setData] = useState<PieChartData[]>([]);
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -538,10 +534,13 @@ const MainContent: React.FC = () => {
         const totalPrice = totalPriceResponse.data;
         const totalFeesResponse = await api.get('api/Payment/total-fees');
         const totalFees = totalFeesResponse.data;
-
+        const priceResponse = await api.get('api/Payment/price');
+        const price = priceResponse.data;
+        const totalSales = totalFees + price;
         setData([
           { name: 'Profit', value: totalFees },
-          { name: 'Sales', value: totalPrice },
+          { name: 'Sales', value: price },
+          // { name: 'Total Sales', value: totalSales },
         ]);
       } catch (error) {
         console.error('Error fetching data', error);
@@ -550,7 +549,6 @@ const MainContent: React.FC = () => {
 
     fetchData();
   }, []);
- 
 
   return (
     <PieChart width={400} height={400}>
@@ -627,8 +625,8 @@ const MainContent: React.FC = () => {
           <Row style={{ marginBottom: 20 }}>
         <Col>
           <Select defaultValue="Select View Type" onChange={handleViewChange} style={{ width: 120, marginRight: 10 }}>
-            <Option value="View by year">Month</Option>
-            <Option value="View by month">Year</Option>
+            <Option value="year">Month</Option>
+            <Option value="month">Year</Option>
           </Select>
         </Col>
         <Col>

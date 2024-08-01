@@ -6,6 +6,7 @@ import TableUser from '../Users/TableUser';
 import './Admins.scss';
 import ProfileAdmin from '../Admin-Profile/AdminProfile';
 import TableAuctionAdmin from '../Auction/AuctionAdmin';
+import TableBiddings from '../Biddings/BiddingList';
 
 function Admins() {
   const [currentPage, setCurrentPage] = useState('overall'); 
@@ -23,6 +24,7 @@ function Admins() {
           {currentPage === 'users' && <TableUser />}
           {currentPage === 'about' && <ProfileAdmin />}
           {currentPage === 'auctions' && <TableAuctionAdmin />}
+          {currentPage === 'biddings' && <TableBiddings />}
         </div>
       </div>
       <footer className='footer-page'>

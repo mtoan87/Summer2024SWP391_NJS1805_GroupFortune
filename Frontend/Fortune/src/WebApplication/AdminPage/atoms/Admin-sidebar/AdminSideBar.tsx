@@ -24,6 +24,9 @@ const Sidebar: React.FC<{ onMenuClick: (e: any) => void }> = ({ onMenuClick }) =
       { key: 'overall', label: 'Overall', icon: <InfoCircleOutlined /> },
       { key: 'auctions', icon: <ProductOutlined />, label: 'Auctions' },
       { key: 'users', icon: <UsergroupAddOutlined />, label: 'Users' },
+      { key: 'biddings', icon: <UsergroupAddOutlined />, label: 'Bidding' },
+      { key: 'payments', icon: <UsergroupAddOutlined />, label: 'Payments' },
+      { key: 'transactions', icon: <UsergroupAddOutlined />, label: 'Transactions' },
     ],},
     {
       key: 'account',
