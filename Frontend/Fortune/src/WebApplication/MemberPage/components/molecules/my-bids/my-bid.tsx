@@ -5,6 +5,7 @@ import './my-bid.scss';
 
 function MyBids() {
   const [auctionsData, setAuctionsData] = useState([]);
+  const [auctionResultData, setAuctionResultData] = useState([]);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -28,6 +29,7 @@ function MyBids() {
         const response = await api.get(apiUrl);
         const imageUrl = response.data?.jewelryImg;
         const jewelryName = response.data?.name;
+
         return { imageUrl, jewelryName };
       }
     } catch (err) {
@@ -43,22 +45,27 @@ function MyBids() {
 
         const auctionResultResponse = await api.get(`/api/AuctionResults/GetByAccountId/${accountId}`);
         const auctionResults = auctionResultResponse.data?.$values || [];
+        setAuctionResultData(auctionResults);
 
-        //LATEST JOIN AUCTION FOR EACH AUCTION
-        const latestJoinAuctions = joinAuctions.reduce((acc, current) => {
-          const existing = acc.find(item => item.auctionId === current.auctionId);
-          if (!existing || new Date(existing.joindate) < new Date(current.joindate)) {
-            return acc.filter(item => item.auctionId !== current.auctionId).concat(current);
-          }
-          return acc;
-        }, []);
+        console.log('joinAuctions:', joinAuctions);
+        console.log('auctionResults:', auctionResults);
 
-        const auctionDetailsPromises = latestJoinAuctions.map(async (auction) => {
+        // Filter joinAuctions to only include those with matching auction results
+        const filteredJoinAuctions = joinAuctions.filter(auction =>
+          auctionResults.some(result => result.joinauctionId === auction.id)
+        );
+
+        console.log('filteredJoinAuctions:', filteredJoinAuctions);
+
+        const auctionDetailsPromises = filteredJoinAuctions.map(async (auction) => {
           const auctionResponse = await api.get(`/api/Auctions/GetById/${auction.auctionId}`);
           const auctionDetails = auctionResponse.data;
 
           const { imageUrl, jewelryName } = await fetchAuctionImage(auctionDetails);
-          const auctionResult = auctionResults.find(result => result.joinAuctionId === auction.id);
+          const auctionResult = auctionResults.find(result => result.joinauctionId === auction.id);
+
+          console.log(`Mapping join auction ID ${auction.id} to auction result:`, auctionResult);
+          console.log('auctionDetails:', auctionDetails);
 
           return {
             ...auction,
@@ -81,7 +88,7 @@ function MyBids() {
   }, [accountId]);
 
   const handleAuctionClick = (auction) => {
-    navigate('/bids-record', { state: { auction } });
+    navigate('/bids-record', { state: { auction, bidId: auction.bidId } });
   };
 
   return (
