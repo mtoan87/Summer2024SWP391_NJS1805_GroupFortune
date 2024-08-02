@@ -1,0 +1,94 @@
+// tableuser.scss
+
+.table-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    
+
+  .ant-table {
+    border-radius: 8px;
+    overflow: hidden;
+
+    .ant-table-thead > tr > th {
+      background-color: #741e1e;
+      color: white;
+      text-align: left;
+      font-weight: bold;
+    }
+
+    .ant-table-tbody > tr > td {
+      text-align: left;
+      vertical-align: middle;
+
+      .table-space {
+        display: flex;
+        justify-content: left;
+        align-items: left;
+
+        .anticon {
+          margin-right: 5px;
+        }
+
+        .table-text {
+          margin: 0;
+        }
+      }
+
+      .table-text {
+        margin: 0;
+      }
+
+      .toggle-button {
+        margin-left: 10px;
+        background-color: #ab5e5e;
+        color: white;
+        border: none;
+        &:hover {
+          background-color: #560404;
+          color: white;
+        }
+      }
+
+      &:hover {
+        background-color: #f1f1f1;
+      }
+    }
+
+    .ant-table-pagination {
+      display: flex;
+      justify-content: left;
+      margin-top: 20px;
+    }
+  }
+  // tableuser.scss
+
+  .search-bar {
+    width: 100%; // Độ rộng của thanh tìm kiếm
+    border-radius: 50px; // Bo góc của input
+  }
+  
+  .search-bar .ant-input {
+    background-color: #f0f0f0; // Màu nền của input
+  }
+
+  .search-bar .ant-input-search-icon {
+    color: #396691; // Màu sắc của icon search
+    ;
+  }
+
+  .search-bar .ant-input:hover,
+  .search-bar .ant-input:focus {
+    border-color: #e93f3f; // Màu viền khi hover hoặc focus vào thanh tìm kiếm
+  }
+
+    .ant-btn{
+      display: none;
+    }
+
+}
+
+

@@ -47,6 +47,10 @@ const StaffHeader: React.FC = () => {
                                             <UserOutlined style={{ marginRight: '8px' }} />
                                             My Profile
                                         </Dropdown.Item>
+                                        <Dropdown.Item href="/staff-auctions">
+                                            <UserOutlined style={{ marginRight: '8px' }} />
+                                            Auctions
+                                        </Dropdown.Item>
                                         <Dropdown.Item onClick={handleLogout}>
                                             <LogoutOutlined style={{ marginRight: '8px' }} />
                                             Logout

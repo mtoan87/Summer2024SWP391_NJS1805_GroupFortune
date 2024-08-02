@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import './App.scss';
 import { Route, Routes } from 'react-router-dom';
-import { Bounce, ToastContainer } from 'react-toastify';
 import GuestHomePg from './WebApplication/GuestPage/guest-home-page/guest-home-pg';
 import RegisterPg from './WebApplication/AccountRegister/components/pages/Register-pg';
 import Loginpg from './WebApplication/AccountRegister/components/pages/Loginpg';
@@ -28,6 +27,10 @@ import MyWalletPg from './WebApplication/MemberPage/components/pages/member-my-w
 import UpdateWalletPg from './WebApplication/MemberPage/components/pages/member-update-wallet-pg/update-wallet-pg';
 import AdminPg from './WebApplication/AdminPage/page/AdminPg';
 import TableUser from './WebApplication/AdminPage/molecules/Users/TableUser';
+import MemberBidsRecordPg from './WebApplication/MemberPage/components/pages/member-bids-record-pg/member-bids-record-pag';
+import MemberTransactionPg from './WebApplication/MemberPage/components/pages/member-transaction-pg/member-transaction-pg';
+import StaffAuctionsPg from './WebApplication/StaffPage/components/pages/staff-auctions-pg/staff-auctions-pg';
+import StaffAuctionDetailsPg from './WebApplication/StaffPage/components/pages/staff-auction-details-pg/staff-auction-details-pg';
 
 const App: React.FC = () => {
   const { user, setUser } = useUser();
@@ -77,6 +80,8 @@ const App: React.FC = () => {
                   <Route path="/register-wallet/:page/:id" element={<MemberAccountWalletPg />} />
                   <Route path="/userWallet" element={<MyWalletPg />} />
                   <Route path="/update-wallet" element={<UpdateWalletPg />} />
+                  <Route path="/bids-record" element={<MemberBidsRecordPg />} />
+                  <Route path="/userTransaction" element={<MemberTransactionPg />} />
                 </>
               )}
               {user?.role === 3 && (
@@ -84,6 +89,10 @@ const App: React.FC = () => {
                   <Route path='/' element={<StaffJewelryPg />} />
                   <Route path="/staff/update-jewelry/:id/:material" element={<StaffViewJewelryPg />} />
                   <Route path="/staffprofile" element={<ProfileStaff />} />
+                  <Route path="/staff-auctions" element={<StaffAuctionsPg />} />
+                  <Route path="/staff-auction-details/:id" element={<StaffAuctionDetailsPg />} />
+                  <Route path="/mybidding/:id" element={<BiddingPG />} />
+
                 </>
               )}
               {user?.role === 5 && (

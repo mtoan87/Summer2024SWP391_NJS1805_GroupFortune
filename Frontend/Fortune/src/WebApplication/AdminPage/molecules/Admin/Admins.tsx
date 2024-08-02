@@ -6,9 +6,12 @@ import TableUser from '../Users/TableUser';
 import './Admins.scss';
 import ProfileAdmin from '../Admin-Profile/AdminProfile';
 import TableAuctionAdmin from '../Auction/AuctionAdmin';
+import TableBiddings from '../Biddings/BiddingList';
+import TablePayment from '../Payment/PaymentList';
+import TableTransact from '../transactions/transacList';
 
 function Admins() {
-  const [currentPage, setCurrentPage] = useState('dashboard'); 
+  const [currentPage, setCurrentPage] = useState('overall'); 
 
   const handleMenuClick = (key) => {
     setCurrentPage(key); 
@@ -19,10 +22,13 @@ function Admins() {
       <div className="body-page">
         <Sidebar onMenuClick={handleMenuClick} /> 
         <div className="main-content">
-          {currentPage === 'dashboard' && <MainContent />}
+          {currentPage === 'overall' && <MainContent />}
           {currentPage === 'users' && <TableUser />}
           {currentPage === 'about' && <ProfileAdmin />}
           {currentPage === 'auctions' && <TableAuctionAdmin />}
+          {currentPage === 'biddings' && <TableBiddings />}
+          {currentPage === 'payments' && <TablePayment />}
+          {currentPage === 'transactions' && <TableTransact />}
         </div>
       </div>
       <footer className='footer-page'>

@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import * as signalR from '@microsoft/signalr';
 import '../Styles/bidding.scss';
 import api from '../../../../../../config/axios';
-import { message } from 'antd';
+import { Button, message } from 'antd';
 
 function BiddingForm() {
     const { id } = useParams();
@@ -118,6 +118,19 @@ function BiddingForm() {
             })
             .build();
 
+        // const connection1 = new signalR.HubConnectionBuilder()
+        //     .configureLogging(signalR.LogLevel.Debug)
+        //     .withUrl("https://localhost:44361/auctionHub", {
+        //         skipNegotiation: true,
+        //         transport: signalR.HttpTransportType.WebSockets
+        //     })
+        //     .build();
+
+        // connection1.on("TimeRemaining", (time) => {
+        //     setRemainingTime(time);
+        //     message.info("Remaining time: " + time.toString());
+        // });
+
         connection.on("HighestPrice", (price) => {
             message.info(`Highest Price: ${price}`);
             setHighestPrice(price);
@@ -186,7 +199,7 @@ function BiddingForm() {
             // Find the highest bid amount and determine the winner
             let highestBidAmount = 0;
             let winnerAccountId = null;
-    
+
             // Identify the highest bid
             bidRecords.forEach(record => {
                 if (record.bidAmount > highestBidAmount) {
@@ -194,31 +207,31 @@ function BiddingForm() {
                     winnerAccountId = record.accountId;
                 }
             });
-    
+
             if (winnerAccountId) {
                 try {
                     // Fetch the join auction records
                     const joinAuctionResponse = await api.get('/api/JoinAuction');
                     console.log('Join auction response:', joinAuctionResponse);
-    
+
                     const joinAuctionRecords = joinAuctionResponse.data.$values;
                     console.log('Join auction records:', joinAuctionRecords);
-    
+
                     // Find the latest join record for the winner
                     const filteredRecords = joinAuctionRecords.filter(record => record.accountId === winnerAccountId);
                     const latestJoinRecord = filteredRecords.length > 0 ? filteredRecords.reduce((latest, current) => {
                         return new Date(current.joindate) > new Date(latest.joindate) ? current : latest;
                     }) : null;
-    
+
                     const auctionResultData = {
                         joinauctionId: latestJoinRecord ? latestJoinRecord.id : 0,
                         status: 'Win',
                         price: highestBidAmount,
                         accountId: winnerAccountId,
                     };
-    
+
                     console.log('Auction result data:', auctionResultData);
-    
+
                     // Submit auction result
                     await api.post('/api/AuctionResults/CreateAuctionResult', auctionResultData);
                     message.success(`User ${winnerAccountId} with a bid of $${highestBidAmount} is the winner.`);
@@ -234,8 +247,8 @@ function BiddingForm() {
             message.info('No bids were placed in this auction.');
         }
     };
-    
-    
+
+
     const handleBidSubmit = async () => {
         if (!bidAmount || isNaN(bidAmount) || bidAmount <= 0) {
             message.error('Please enter a valid bid amount.');
@@ -280,10 +293,29 @@ function BiddingForm() {
         }
     };
 
+    const handleBidAmountChange = (e) => {
+        const value = parseFloat(e.target.value);
+        if (value >= 0 && value <= 50000) {
+            setBidAmount(value);
+        } else {
+            if (value < 0) {
+                message.error('Bid amount cannot be negative.');
+            } else if (value > 50000) {
+                message.error('Bid amount cannot exceed 50,000.');
+            }
+        }
+    };
+
     // const handleDisabledClick = () => {
     //     message.error('Your budget is insufficient to place a bid.');
     // };
-
+    const handleEndAuction = () => {
+        setIsAuctionActive(false);
+        announceWinnerAndSubmitResult();
+        setTimeout(() => {
+            navigate(`/staff-auction-details/${id}`);
+        }, 1000);
+    };
     return (
         <div className="bidding-form">
             <h2>Auction</h2>
@@ -319,25 +351,25 @@ function BiddingForm() {
             </div>
             <div className="infor-bidding">
                 <ul>
-                    <li>
-                        <input
-                            type="number"
-                            placeholder="Enter your bid"
-                            value={bidAmount}
-                            onChange={(e) => setBidAmount(e.target.value)}
-                        />
-                        {/* <button
-                            onClick={budget > highestPrice ? handleBidSubmit : handleDisabledClick}
-                            disabled={budget <= highestPrice}
-                        >
-                            Place Bid
-                        </button> */}
-                        <button
-                            onClick={handleBidSubmit}
-                        >
-                            Place Bid
-                        </button>
-                    </li>
+                    {user && user.role === 3 ? (
+                        <li>
+                            <Button type="primary" onClick={handleEndAuction}>
+                                End Auction
+                            </Button>
+                        </li>
+                    ) : (
+                        <li>
+                            <input
+                                type="number"
+                                placeholder="Enter your bid"
+                                value={bidAmount}
+                                onChange={handleBidAmountChange}
+                            />
+                            <Button type="primary" onClick={handleBidSubmit}>
+                                Place Bid
+                            </Button>
+                        </li>
+                    )}
                 </ul>
             </div>
         </div>
