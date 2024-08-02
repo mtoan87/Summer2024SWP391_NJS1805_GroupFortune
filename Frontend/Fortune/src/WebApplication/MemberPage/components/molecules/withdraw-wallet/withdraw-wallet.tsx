@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../../../../config/axios';
-import './update-wallet.scss';
+import './withdraw-wallet.scss';
 import { message } from 'antd';
 
-function UpdateWallet() {
+function WithdrawWallet() {
     const [formData, setFormData] = useState({
         accountwalletId: 0,
         bankName: '',
@@ -46,7 +46,7 @@ function UpdateWallet() {
             console.log(formData);
             const response = await api.put(`/AccountWallet/UpdateAccountWallet?id=${formData.accountwalletId}`, formData); 
             console.log('Wallet updated successfully:', response.data);
-            message.success('Charge budget successfully');
+            message.success('Withdraw wallet successfully');
             navigate('/userWallet');
         } catch (error) {
             console.error('Error updating wallet:', error);
@@ -87,12 +87,12 @@ function UpdateWallet() {
                                 name="budget"
                                 value={formData.budget}
                                 onChange={handleChange}
-                                min={initialBudget}
+                                max={initialBudget}
                                 required
                             />
                         </div>
                     </div>
-                    <button type="submit">Charge</button>
+                    <button type="submit">Withdraw</button>
                 </form>
             ) : (
                 <p>Loading wallet information...</p>
@@ -101,4 +101,4 @@ function UpdateWallet() {
     );
 }
 
-export default UpdateWallet;
+export default WithdrawWallet;

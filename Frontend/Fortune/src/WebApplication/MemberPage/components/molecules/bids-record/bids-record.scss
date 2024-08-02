@@ -3,7 +3,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    text-align: center;
+    text-align: left;
     min-height: 100vh;
     padding: 20px;
 
@@ -16,8 +16,7 @@
         margin-bottom: 20px;
     }
 
-    .auction-result-details,
-    .bid-records-list {
+    .auction-result-details {
         background-color: #f9f9f9;
         border: 1px solid #ccc;
         border-radius: 8px;
@@ -25,27 +24,13 @@
         margin-bottom: 20px;
         width: 100%;
         max-width: 600px;
-    }
 
-    .auction-result-details img {
-        width: 100%;
-        height: auto;
-        margin-bottom: 10px;
-    }
+        img {
+            width: 100%;
+            height: 25rem;
+            margin-bottom: 10px;
+        }
 
-    .jewelry-image {
-        max-width: 100%;
-        height: auto;
-        border-radius: 8px;
-    }
-
-    .bid-record-item {
-        border-bottom: 1px solid #ccc;
-        padding: 10px 0;
-    }
-
-    .bid-record-item:last-child {
-        border-bottom: none;
     }
 
     button {
@@ -61,6 +46,13 @@
 
         }
     }
+
+    .bids-record-table {
+        width: 100%; /* Ensure the table takes full width */
+        .ant-table {
+          width: 100%; /* Ensure the inner table takes full width */
+        }
+      }
 
     p {
         margin: 5px 0;

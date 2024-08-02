@@ -17,7 +17,7 @@ function AccountWallet() {
     const [formData, setFormData] = useState({
         accountId: loginedUser?.accountId || 0,
         bankName: '',
-        bankNo: '',
+        bankNo: 0,
         amount: 0,
     });
 
@@ -31,6 +31,13 @@ function AccountWallet() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (formData.amount < 0) {
+            message.error('Amount cannot be negative.');
+            return;
+        } else if (formData.bankNo < 0) {
+            message.error('Bank number cannot be negative.');
+            return;
+        }
         try {
             const response = await api.post('/AccountWallet/CreateAccountWallet', formData);
             console.log('Account wallet created successfully:', response.data);

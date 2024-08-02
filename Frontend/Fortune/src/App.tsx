@@ -31,6 +31,7 @@ import MemberBidsRecordPg from './WebApplication/MemberPage/components/pages/mem
 import MemberTransactionPg from './WebApplication/MemberPage/components/pages/member-transaction-pg/member-transaction-pg';
 import StaffAuctionsPg from './WebApplication/StaffPage/components/pages/staff-auctions-pg/staff-auctions-pg';
 import StaffAuctionDetailsPg from './WebApplication/StaffPage/components/pages/staff-auction-details-pg/staff-auction-details-pg';
+import WithdrawWalletPg from './WebApplication/MemberPage/components/pages/member-withdraw-wallet-pg/member-withdraw-wallet-pg';
 
 const App: React.FC = () => {
   const { user, setUser } = useUser();
@@ -80,6 +81,7 @@ const App: React.FC = () => {
                   <Route path="/register-wallet/:page/:id" element={<MemberAccountWalletPg />} />
                   <Route path="/userWallet" element={<MyWalletPg />} />
                   <Route path="/update-wallet" element={<UpdateWalletPg />} />
+                  <Route path="/withdraw-wallet" element={<WithdrawWalletPg />} />
                   <Route path="/bids-record" element={<MemberBidsRecordPg />} />
                   <Route path="/userTransaction" element={<MemberTransactionPg />} />
                 </>

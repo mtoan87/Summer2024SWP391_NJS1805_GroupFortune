@@ -222,6 +222,7 @@ function AuctionDetails() {
                         </div>
                     ))}
 
+                    <p><strong>Date:</strong> {new Date(auction.starttime).toLocaleDateString()}</p>
                     <p><strong>Start Time:</strong> {new Date(auction.starttime).toLocaleString('en-US', { hour: '2-digit', minute: '2-digit' })}</p>
                     <p><strong>End Time:</strong> {new Date(auction.endtime).toLocaleString('en-US', { hour: '2-digit', minute: '2-digit' })}</p>
                     <p><strong>Number of Attendees:</strong> {attendeeCount}</p>

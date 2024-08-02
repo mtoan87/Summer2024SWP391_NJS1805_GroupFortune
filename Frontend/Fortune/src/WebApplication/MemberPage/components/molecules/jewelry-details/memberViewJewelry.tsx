@@ -33,6 +33,12 @@ function MemberViewJewelry() {
     Gold14: '14K'
   };
 
+  const materials = {
+    'Gold': 'Gold',
+    'Silver': 'Silver',
+    'GoldDiamond': 'Gold, Diamond'
+  }
+
   useEffect(() => {
     const fetchGoldJewelry = async () => {
       try {
@@ -148,14 +154,11 @@ function MemberViewJewelry() {
                 className="item-img"
                 src={`https://localhost:44361/${jewelry.jewelryImg}`}
                 alt={jewelry.name}
-                onError={(e) => {
-                  e.target.src = 'src/assets/img/jewelry_introduction.jpg';
-                }}
               />
               <h3>{jewelry.name}</h3>
               <p>Description: {jewelry.description}</p>
               <p>Category: {jewelry.category}</p>
-              <p>Materials: {jewelry.materials}</p>
+              <p>Materials: {materials[jewelry.materials]}</p>
               <p>Gold Age: {goldAge[jewelry.goldAge]}</p>
               <p>Weight: {jewelry.weight}</p>
               {
@@ -218,14 +221,11 @@ function MemberViewJewelry() {
                 className="item-img"
                 src={`https://localhost:44361/${jewelry.jewelryImg}`}
                 alt={jewelry.name}
-                onError={(e) => {
-                  e.target.src = 'src/assets/img/jewelry_introduction.jpg';
-                }}
               />
               <h3>{jewelry.name}</h3>
               <p>Description: {jewelry.description}</p>
               <p>Category: {jewelry.category}</p>
-              <p>Materials: {jewelry.materials}</p>
+              <p>Materials: {materials[jewelry.materials]}</p>
               <p>Purity: {purity[jewelry.purity]}</p>
               <p>Weight: {jewelry.weight}</p>
               {
@@ -286,14 +286,11 @@ function MemberViewJewelry() {
                 className="item-img"
                 src={`https://localhost:44361/${jewelry.jewelryImg}`}
                 alt={jewelry.name}
-                onError={(e) => {
-                  e.target.src = 'src/assets/img/jewelry_introduction.jpg';
-                }}
               />
               <h3>{jewelry.name}</h3>
               <p>Description: {jewelry.description}</p>
               <p>Category: {jewelry.category}</p>
-              <p>Materials: {jewelry.materials}</p>
+              <p>Materials: {materials[jewelry.materials]}</p>
               <p>Gold Age: {goldAge[jewelry.goldAge]}</p>
               <p>Clarity: {jewelry.clarity}</p>
               <p>Carat: {jewelry.carat}</p>

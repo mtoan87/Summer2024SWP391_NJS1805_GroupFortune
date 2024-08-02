@@ -57,18 +57,12 @@ function MemberViewAuctions() {
 
     const renderDateFromData = (data: string) => {
         const date = new Date(data);
-        const day = date.getDate();
-        const month = date.getMonth() + 1;
-        const year = date.getFullYear();
-        return `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
+        return date.toLocaleDateString();
     };
 
     const renderTimeFromData = (data: string) => {
         const date = new Date(data);
-        const hours = date.getHours();
-        const minutes = date.getMinutes();
-        const seconds = date.getSeconds();
-        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        return date.toLocaleTimeString('en-us', { hour: '2-digit', minute: '2-digit' });
     };
 
     return (

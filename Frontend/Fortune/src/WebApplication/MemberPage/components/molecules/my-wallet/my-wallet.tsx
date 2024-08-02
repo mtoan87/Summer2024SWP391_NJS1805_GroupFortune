@@ -48,7 +48,7 @@ function MyWallet() {
                     <div className="wallet-info">
                         <p>Bank Name: {walletInfo.bankName}</p>
                         <p>Bank Number: {walletInfo.bankNo}</p>
-                        <p>Budget: {walletInfo.budget}</p>
+                        <p>Budget: {walletInfo.budget}$</p>
                     </div>
                     <div className="action-button">
                         <button onClick={handleChargeWallet}>Charge</button>
