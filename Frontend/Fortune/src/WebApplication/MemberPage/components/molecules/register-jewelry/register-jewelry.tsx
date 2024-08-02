@@ -59,7 +59,6 @@ function RegisterJewelryForAuction() {
     }
   }, [jewelryId, material]);
 
-
   const handleChange = e => {
     const { name, value } = e.target;
     setFormData(prevState => ({
@@ -144,8 +143,14 @@ function RegisterJewelryForAuction() {
     }
   };
   
-  
-  
+  // Function to get today's date in YYYY-MM-DD format
+  const getTodayDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
 
   return (
     <div className="register-jewelry-form">
@@ -196,6 +201,7 @@ function RegisterJewelryForAuction() {
                 value={formData.date}
                 onChange={handleChange}
                 required
+                min={getTodayDate()} // Disable past dates
               />
             </div>
             <div className="form-group">

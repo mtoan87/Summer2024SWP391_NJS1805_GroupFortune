@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Table, message } from 'antd';
 import api from '../../../../../config/axios';
 import './my-transaction.scss';
 
@@ -17,7 +18,6 @@ function MyTransaction() {
         const walletData = response.data;
         setWallet(walletData);
         console.log(walletData);
-        
 
         const transactionResponse = await api.get(`/api/Transaction/GetTransactionByWalletId`, {
           params: { id: walletData.accountwalletId },
@@ -26,6 +26,7 @@ function MyTransaction() {
       } catch (error) {
         console.error('Error fetching data:', error);
         setError('Failed to fetch data. Please try again later.');
+        message.error('Failed to fetch data. Please try again later.');
       }
     };
 
@@ -34,23 +35,38 @@ function MyTransaction() {
     }
   }, [accountId]);
 
+  const columns = [
+    {
+      title: 'Date',
+      dataIndex: 'dateTime',
+      key: 'date',
+      render: (text) => new Date(text).toLocaleDateString(),
+    },
+    {
+      title: 'Time',
+      dataIndex: 'dateTime',
+      key: 'time',
+      render: (text) => new Date(text).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+    },
+    {
+      title: 'Amount',
+      dataIndex: 'amount',
+      key: 'amount',
+      render: (amount) => (amount < 0 ? '' : '+') + amount + '$',
+    },
+  ];
+
   return (
     <div className="my-transaction-container">
       <h1>My Transactions</h1>
       {error && <p className="error-message">{error}</p>}
-      <div className="transactions-list">
-        {transactions.length === 0 ? (
-          <p>No transactions found for this wallet.</p>
-        ) : (
-          transactions.map((transaction) => (
-            <div key={transaction.transactionId} className="transaction-item">
-              <p>Date: {new Date(transaction.dateTime).toLocaleDateString()}</p>
-              <p>Time: {new Date(transaction.dateTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</p>
-              <p>Amount: {transaction.amount}$</p>
-            </div>
-          ))
-        )}
-      </div>
+      <Table 
+        columns={columns} 
+        dataSource={transactions} 
+        rowKey="transactionId" 
+        pagination={false} 
+        className="transactions-table" 
+      />
     </div>
   );
 }
