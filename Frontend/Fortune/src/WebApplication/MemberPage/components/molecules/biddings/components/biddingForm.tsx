@@ -18,7 +18,6 @@ function BiddingForm() {
     const [bidAmount, setBidAmount] = useState(0);
     const [currentHightPrice, setCurrentHightPrice] = useState(0);
     const [highestPrice, setHighestPrice] = useState(null);
-    const [isAuctionActive, setIsAuctionActive] = useState(true);
     const [remainingTime, setRemainingTime] = useState(null);
     const [bidRecords, setBidRecords] = useState([]); // Initialize as an array
     const [lastBidderId, setLastBidderId] = useState(null);
@@ -135,7 +134,10 @@ function BiddingForm() {
             message.info(`Highest Price: ${price}`);
             setHighestPrice(price);
         });
-
+        connection.on("AuctionInactive", () => {
+            message.info("Auction has ended.");
+            navigate('/');
+        });
         connection.on("BidStep", (bids) => {
             const newBidInstance = bids.$values[0];
 
@@ -168,24 +170,69 @@ function BiddingForm() {
 
     useEffect(() => {
         // Countdown timer
-        const intervalId = setInterval(() => {
+        const intervalId = setInterval(async () => {
             setRemainingTime(prevTime => {
                 if (prevTime <= 1000) {
                     clearInterval(intervalId);
-                    setIsAuctionActive(false);
                     announceWinnerAndSubmitResult();
+                    updateAuctionStatus();
                     setTimeout(() => {
-                        navigate(`/auction/${id}`);
+                        navigate('/');
                     }, 5000);
                     return 0;
                 }
                 return prevTime - 1000;
             });
         }, 1000);
-
+    
         return () => clearInterval(intervalId);
-    }, [bidRecords])
+    }, [bidRecords]);
+    
+    const updateAuctionStatus = async () => {
+        try {
+            let updateUrl = '';
+            let auctionData = {};
 
+            if (auction?.jewelryGoldId) {
+                updateUrl = `/api/Auctions/UpdateGoldAuction?id=${auction.auctionId}`;
+                auctionData = {
+                    accountId: auction.accountId,
+                    jewelryGoldId: auction.jewelryGoldId,
+                    starttime: auction.starttime,
+                    endtime: auction.endtime,
+                    status: 'UnActive'
+                };
+            } else if (auction?.jewelrySilverId) {
+                updateUrl = `/api/Auctions/UpdateSilverAuction?id=${auction.auctionId}`;
+                auctionData = {
+                    accountId: auction.accountId,
+                    jewelrySilverId: auction.jewelrySilverId,
+                    starttime: auction.starttime,
+                    endtime: auction.endtime,
+                    status: 'UnActive'
+                };
+            } else if (auction?.jewelryGolddiaId) {
+                updateUrl = `/api/Auctions/UpdateGoldDiamondAuction?id=${auction.auctionId}`;
+                auctionData = {
+                    accountId: auction.accountId,
+                    jewelryGolddiaId: auction.jewelryGolddiaId,
+                    starttime: auction.starttime,
+                    endtime: auction.endtime,
+                    status: 'UnActive'
+                };
+            } else {
+                console.error('Unknown jewelry type');
+                return;
+            }
+
+            await api.put(updateUrl, auctionData);
+            message.success('Auction has ended');
+        } catch (error) {
+            console.error('Error updating auction status:', error);
+            message.error('Error updating auction status. Please try again.');
+        }
+    };
+    
     const formatRemainingTime = (milliseconds) => {
         const totalSeconds = Math.floor(milliseconds / 1000);
         const hours = Math.floor(totalSeconds / 3600);
@@ -310,10 +357,10 @@ function BiddingForm() {
     //     message.error('Your budget is insufficient to place a bid.');
     // };
     const handleEndAuction = () => {
-        setIsAuctionActive(false);
+        updateAuctionStatus();
         announceWinnerAndSubmitResult();
         setTimeout(() => {
-            navigate(`/staff-auction-details/${id}`);
+            navigate('/staff-auctions');
         }, 1000);
     };
     return (
