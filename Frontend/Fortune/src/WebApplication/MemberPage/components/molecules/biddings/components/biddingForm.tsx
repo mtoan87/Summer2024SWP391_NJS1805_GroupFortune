@@ -43,18 +43,7 @@ function BiddingForm() {
         try {
             const response = await api.get(`api/Auctions/GetById/${id}`);
             const auctionData = response.data;
-            console.log(auctionData);
-
             setAuction(auctionData);
-
-            const responseTime = await api.get('/api/Auctions/remaining-time');
-            const timeData = responseTime.data?.$values || [];
-            const filterTimeData = timeData.find(record => record.auctionId === auctionData.auctionId);
-            if (filterTimeData) {
-                const remainingTimeMilliseconds = convertTimeStringToMilliseconds(filterTimeData.remainingTime);
-                setRemainingTime(remainingTimeMilliseconds);
-                console.log(remainingTimeMilliseconds);
-            }
 
             const startDate = new Date(auctionData.starttime);
             const endDate = new Date(auctionData.endtime);
@@ -91,9 +80,15 @@ function BiddingForm() {
             const topBidRecords = allBidRecords.slice(0, 5);
             setBidRecords(Array.isArray(topBidRecords) ? topBidRecords : []);
 
+
             const highPrice = auctionBids.length > 0 ? Math.max(...auctionBids.map(bid => bid.maxprice)) : fetchedStartingPrice;
             setHighestPrice(highPrice);
             setCurrentHightPrice(highPrice);
+
+            // Calculate remaining time
+            const totalTime = endDate.getTime() - Date.now(); // Calculate remaining time from current time
+            setRemainingTime(totalTime);
+
         } catch (err) {
             console.error('Error fetching auction details:', err);
             message.error('Error fetching auction details. Please try again.');
@@ -103,16 +98,6 @@ function BiddingForm() {
         }
     };
 
-    const convertTimeStringToMilliseconds = (timeString) => {
-        const [hours, minutes, seconds] = timeString.split(':');
-        const [sec, ms] = seconds.split('.');
-        return (
-            parseInt(hours, 10) * 60 * 60 * 1000 +
-            parseInt(minutes, 10) * 60 * 1000 +
-            parseInt(sec, 10) * 1000 +
-            parseInt(ms, 10)
-        );
-    };
 
     // SIGNALR
     useEffect(() => {
@@ -132,11 +117,27 @@ function BiddingForm() {
             })
             .build();
 
+        // const connection1 = new signalR.HubConnectionBuilder()
+        //     .configureLogging(signalR.LogLevel.Debug)
+        //     .withUrl("https://localhost:44361/auctionHub", {
+        //         skipNegotiation: true,
+        //         transport: signalR.HttpTransportType.WebSockets
+        //     })
+        //     .build();
+
+        // connection1.on("TimeRemaining", (time) => {
+        //     setRemainingTime(time);
+        //     message.info("Remaining time: " + time.toString());
+        // });
+
         connection.on("HighestPrice", (price) => {
             message.info(`Highest Price: ${price}`);
             setHighestPrice(price);
         });
-
+        // connection.on("AuctionInactive", () => {
+        //     message.info("Auction has ended.");
+        //     navigate('/');
+        // });
         connection.on("BidStep", (bids) => {
             const newBidInstance = bids.$values[0];
 
@@ -183,10 +184,10 @@ function BiddingForm() {
                 return prevTime - 1000;
             });
         }, 1000);
-
+    
         return () => clearInterval(intervalId);
     }, [bidRecords]);
-
+    
     const updateAuctionStatus = async () => {
         try {
             let updateUrl = '';
@@ -231,7 +232,7 @@ function BiddingForm() {
             message.error('Error updating auction status. Please try again.');
         }
     };
-
+    
     const formatRemainingTime = (milliseconds) => {
         const totalSeconds = Math.floor(milliseconds / 1000);
         const hours = Math.floor(totalSeconds / 3600);
@@ -281,6 +282,7 @@ function BiddingForm() {
                     // Submit auction result
                     await api.post('/api/AuctionResults/CreateAuctionResult', auctionResultData);
                     message.success(`User ${winnerAccountId} with a bid of $${highestBidAmount} is the winner.`);
+                    message.success('Auction results submitted successfully.');
                 } catch (error) {
                     console.error(`Error submitting auction result for account ${winnerAccountId}:`, error);
                     message.error('Error submitting auction result. Please try again.');
@@ -292,6 +294,7 @@ function BiddingForm() {
             message.info('No bids were placed in this auction.');
         }
     };
+
 
     const handleBidSubmit = async () => {
         if (!bidAmount || isNaN(bidAmount) || bidAmount <= 0) {
@@ -350,6 +353,9 @@ function BiddingForm() {
         }
     };
 
+    // const handleDisabledClick = () => {
+    //     message.error('Your budget is insufficient to place a bid.');
+    // };
     const handleEndAuction = () => {
         updateAuctionStatus();
         announceWinnerAndSubmitResult();
@@ -357,7 +363,6 @@ function BiddingForm() {
             navigate('/staff-auctions');
         }, 1000);
     };
-
     return (
         <div className="bidding-form">
             <h2>Auction</h2>
