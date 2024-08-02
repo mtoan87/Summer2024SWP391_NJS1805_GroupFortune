@@ -248,6 +248,7 @@ function BiddingForm() {
         }
     };
 
+
     const handleBidSubmit = async () => {
         if (!bidAmount || isNaN(bidAmount) || bidAmount <= 0) {
             message.error('Please enter a valid bid amount.');
