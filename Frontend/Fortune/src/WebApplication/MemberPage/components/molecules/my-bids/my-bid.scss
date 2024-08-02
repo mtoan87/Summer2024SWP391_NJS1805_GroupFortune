@@ -27,6 +27,7 @@
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
       transition: transform 0.2s ease-in-out;
+      flex: 1 1 calc(33.333% - 20px); /* Adjust width as a percentage of the container width */
 
       &:hover {
         transform: translateY(-5px);
