@@ -9,4 +9,6 @@
 
 [DocumentSRS](https://docs.google.com/document/d/1NoY8wpff-sYAZXHdvEl5Mt5T106OcOeK/edit?usp=sharing&ouid=115472949965342184419&rtpof=true&sd=true) 
 
-[Database](https://drive.google.com/drive/folders/1ncDS4u5FojiS1-PGLkVzuwG_1vA22J38?usp=sharing)
+[Database](https://drive.google.com/file/d/1kfQEVWseXmHlJ8RvlNd9q47APLC-Nuss/view?usp=sharing)
+
+[BE](https://github.com/mtoan87/Summer2024SWP391_NJS1805_GroupFortune_BE)
